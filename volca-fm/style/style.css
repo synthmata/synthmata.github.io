@@ -1,0 +1,88 @@
+body {
+    font-family: 'Montserrat', sans-serif; 
+    background-color: #898989;
+}
+#title-head {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 13vw; 
+    font-weight: 700;
+    text-align: center;
+    color: #ffffff;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+#title-byline{
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 2vw; 
+    font-weight: 400;
+    text-align: center;
+    color: #ffffff;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+#title-byline a{
+    color: #ffffff;
+}
+
+#subtitle-head{
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 3vw; 
+    font-weight: 700;
+    text-align: center;
+    color: #ffffff;
+    padding: 1rem;
+}
+#main-content{
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 0.8em;
+}
+
+.table{
+    display:table;
+    background-color: #eeeeee;
+    margin-bottom: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1em;
+}
+.table-row{display:table-row;}
+.table-cell{
+    display:table-cell;
+}
+.controlpanel {
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
+    margin-top: 1em;
+    padding: 1em;
+    border-color: #bbbbbb;
+    border-width: 2px;
+    border-style: dashed;   
+    background: #cccccc;
+}
+
+#portSelector {
+    display: block;
+}
+
+#channelSelector{
+    display: block;
+}
+
+
+
+#saveLoadShare input, button{
+    display: block;
+    width: 25%;
+}

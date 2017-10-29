@@ -49,10 +49,16 @@ function buildSetupPanel(midiAccess) {
     // Port selection.
     let former = document.createElement("form");
     former.id = "midiSetupForm"
+    
+    let portSelectLabel = document.createElement("lable");
+    portSelectLabel.textContent = "Select MIDI Device";
+
     let portSelecter = document.createElement("select");
     portSelecter.id = "portSelector";
     portSelecter.onchange = function (event) { selectedMidiPort = midiOutPorts[event.target.value]; console.log(selectedMidiPort); testTone(); };
-    former.appendChild(portSelecter);
+    
+    portSelectLabel.appendChild(portSelecter);
+    former.appendChild(portSelectLabel);
     midiOutPorts.forEach(
         function (port, idx) {
             let optioner = document.createElement("option");
@@ -63,9 +69,14 @@ function buildSetupPanel(midiAccess) {
     selectedMidiPort = midiOutPorts[0]; // TODO: check there's not a more idiomatic way of doing this
 
     // Channel selection
+    let channelSelectLabel = document.createElement("lable");
+    channelSelectLabel.textContent = "Select MIDI Channel";
+
     let channelSelector = document.createElement("select");
+    channelSelector.id = "channelSelector";
     channelSelector.onchange = function (event) { selectedMidiChannel = parseInt(event.target.value); console.log(selectedMidiChannel); testTone(); };
-    former.appendChild(channelSelector);
+    channelSelectLabel.appendChild(channelSelector);
+    former.appendChild(channelSelectLabel);
     for (let i = 0; i < 16; i++) {
         let optioner = document.createElement("option");
         optioner.setAttribute("label", i + 1);

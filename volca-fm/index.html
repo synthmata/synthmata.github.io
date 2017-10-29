@@ -3,649 +3,822 @@
 
 <head>
     <title>synthmata: Volca FM</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="style/style.css" />
     <script src="../script/base64js.min.js"></script>
     <script type="text/javascript" src="../script/synthmata.js"></script>
 </head>
 
 <body>
-    <div id="midiSetup"></div>
-    <div id="saveLoadShare"></div>
-    <div id="OP6 Controls" class="controlpanel">
-        <h2>Operator 6</h2>
-        <label>EG R1</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="0" data-sysexdumpbytepos="0" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R2</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="1" data-sysexdumpbytepos="1" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R3</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="2" data-sysexdumpbytepos="2" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R4</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="3" data-sysexdumpbytepos="3" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L1</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="4" data-sysexdumpbytepos="4" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L2</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="5" data-sysexdumpbytepos="5" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L3</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="6" data-sysexdumpbytepos="6" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L4</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="7" data-sysexdumpbytepos="7" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Break Point</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="8" data-sysexdumpbytepos="8" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Left Depth</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="9" data-sysexdumpbytepos="9" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Right Depth</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="10" data-sysexdumpbytepos="10" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Left Curve</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="11" data-sysexdumpbytepos="11" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Level Scale Right Curve</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="12" data-sysexdumpbytepos="11" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Operator Rate Scale</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="13" data-sysexdumpbytepos="12" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x07" min="0" max="7" />
-        <br>
-        <label>Detune</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="20" data-sysexdumpbytepos="12" data-sysexdumpbyteshift="3"
-            data-sysexdumpbytemask="0x1f" min="0" max="14" />
-        <br>
-        <label>Amp Mod Sense</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="14" data-sysexdumpbytepos="13" data-sysexdumpbyteshift="3"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Key Velocity Sense</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="15" data-sysexdumpbytepos="13" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x07" min="0" max="7" />
-        <br>
-        <label>Operator Output Level</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="16" data-sysexdumpbytepos="14" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x07" min="0" max="99" />
-        <br>
-        <label>Operator Mode</label>
-        <select class="sysexParameter" data-sysexparameterno="17" data-sysexdumpbytepos="15" data-sysexdumpbyteshift="0" data-sysexdumpbytemask="0x01">
-            <br>
-            <option label="Ratio" value="0" />
-            <option label="Fixed" value="1" />
-        </select>
-        <br>
-        <label>Frequency Coarse</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="18" data-sysexdumpbytepos="15" data-sysexdumpbyteshift="1"
-            data-sysexdumpbytemask="0x1f" min="0" max="31" />
-        <br>
-        <label>Frequency Fine</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="19" data-sysexdumpbytepos="16" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
+    <div id="title-head">
+        <span>synthmata</span>
     </div>
-    <div id="OP5 Controls" class="controlpanel">
-        <h2>Operator 5</h2>
-        <label>EG R1</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="21" data-sysexdumpbytepos="17" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R2</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="22" data-sysexdumpbytepos="18" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R3</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="23" data-sysexdumpbytepos="19" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R4</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="24" data-sysexdumpbytepos="20" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L1</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="25" data-sysexdumpbytepos="21" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L2</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="26" data-sysexdumpbytepos="22" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L3</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="27" data-sysexdumpbytepos="23" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L4</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="28" data-sysexdumpbytepos="24" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Break Point</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="29" data-sysexdumpbytepos="25" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Left Depth</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="30" data-sysexdumpbytepos="26" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Right Depth</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="31" data-sysexdumpbytepos="27" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Left Curve</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="32" data-sysexdumpbytepos="28" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Level Scale Right Curve</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="33" data-sysexdumpbytepos="28" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Operator Rate Scale</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="34" data-sysexdumpbytepos="29" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x07" min="0" max="7" />
-        <br>
-        <label>Detune</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="41" data-sysexdumpbytepos="29" data-sysexdumpbyteshift="3"
-            data-sysexdumpbytemask="0x1f" min="0" max="14" />
-        <br>
-        <label>Amp Mod Sense</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="35" data-sysexdumpbytepos="30" data-sysexdumpbyteshift="3"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Key Velocity Sense</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="36" data-sysexdumpbytepos="30" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x07" min="0" max="7" />
-        <br>
-        <label>Operator Output Level</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="37" data-sysexdumpbytepos="31" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x07" min="0" max="99" />
-        <br>
-        <label>Operator Mode</label>
-        <select class="sysexParameter" data-sysexparameterno="38" data-sysexdumpbytepos="32" data-sysexdumpbyteshift="0" data-sysexdumpbytemask="0x01">
-            <br>
-            <option label="Ratio" value="0" />
-            <option label="Fixed" value="1" />
-        </select>
-        <br>
-        <label>Frequency Coarse</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="39" data-sysexdumpbytepos="32" data-sysexdumpbyteshift="1"
-            data-sysexdumpbytemask="0x1f" min="0" max="31" />
-        <br>
-        <label>Frequency Fine</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="40" data-sysexdumpbytepos="33" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
+    <div id="title-byline">
+        <span>by <a href="http://oscillatorsink.com">oscillatorsink</a></span>
+    </div>
+    <div id="subtitle-head">
+        <span>free online patch editor for Volca FM + DX7
+            <br>BETA VERSION</span>
+    </div>
+    <div id="main-content">
+        <div id="midiSetup" class="controlpanel">
+            <h2>Midi Device Setup</h2>
+        </div>
+        <div id="saveLoadShare" class="controlpanel">
+            <h2>Save/Load/Share</h2>
+        </div>
+
+        <div class="table">
+            <div class="table-row">
+                <div id="OP1 Controls" class="controlpanel table-cell">
+                    <h2>Operator 1</h2>
+                    <label>EG R1
+                        <input type="range" class="sysexParameter" data-sysexparameterno="105" data-sysexdumpbytepos="85" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R2
+                        <input type="range" class="sysexParameter" data-sysexparameterno="106" data-sysexdumpbytepos="86" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R3
+                        <input type="range" class="sysexParameter" data-sysexparameterno="107" data-sysexdumpbytepos="87" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R4
+                        <input type="range" class="sysexParameter" data-sysexparameterno="108" data-sysexdumpbytepos="88" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L1
+                        <input type="range" class="sysexParameter" data-sysexparameterno="109" data-sysexdumpbytepos="89" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L2
+                        <input type="range" class="sysexParameter" data-sysexparameterno="110" data-sysexdumpbytepos="90" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L3
+                        <input type="range" class="sysexParameter" data-sysexparameterno="111" data-sysexdumpbytepos="91" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L4
+                        <input type="range" class="sysexParameter" data-sysexparameterno="112" data-sysexdumpbytepos="92" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Break Point
+                        <input type="range" class="sysexParameter" data-sysexparameterno="113" data-sysexdumpbytepos="93" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Left Depth
+                        <input type="range" class="sysexParameter" data-sysexparameterno="114" data-sysexdumpbytepos="94" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Right Depth
+                        <input type="range" class="sysexParameter" data-sysexparameterno="115" data-sysexdumpbytepos="95" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Left Curve
+                        <input type="range" class="sysexParameter" data-sysexparameterno="116" data-sysexdumpbytepos="96" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Level Scale Right Curve
+                        <input type="range" class="sysexParameter" data-sysexparameterno="117" data-sysexdumpbytepos="96" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Operator Rate Scale
+                        <input type="range" class="sysexParameter" data-sysexparameterno="118" data-sysexdumpbytepos="97" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x07" min="0" max="7" />
+                    </label>
+                    <br>
+                    <label>Detune
+                        <input type="range" class="sysexParameter" data-sysexparameterno="125" data-sysexdumpbytepos="97" data-sysexdumpbyteshift="3"
+                            data-sysexdumpbytemask="0x1f" min="0" max="14" />
+                    </label>
+                    <br>
+                    <label>Amp Mod Sense
+                        <input type="range" class="sysexParameter" data-sysexparameterno="119" data-sysexdumpbytepos="98" data-sysexdumpbyteshift="3"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Key Velocity Sense
+                        <input type="range" class="sysexParameter" data-sysexparameterno="120" data-sysexdumpbytepos="98" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x07" min="0" max="7" />
+                    </label>
+                    <br>
+                    <label>Operator Output Level
+                        <input type="range" class="sysexParameter" data-sysexparameterno="121" data-sysexdumpbytepos="99" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x07" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Operator Mode
+                        <select class="sysexParameter" data-sysexparameterno="122" data-sysexdumpbytepos="100" data-sysexdumpbyteshift="0" data-sysexdumpbytemask="0x01">
+                    </label>
+                    <br>
+                    <option label="Ratio" value="0" />
+                    <option label="Fixed" value="1" />
+                    </select>
+                    </label>
+                    <br>
+                    <label>Frequency Coarse
+                        <input type="range" class="sysexParameter" data-sysexparameterno="123" data-sysexdumpbytepos="100" data-sysexdumpbyteshift="1"
+                            data-sysexdumpbytemask="0x1f" min="0" max="31" />
+                    </label>
+                    <br>
+                    <label>Frequency Fine
+                        <input type="range" class="sysexParameter" data-sysexparameterno="124" data-sysexdumpbytepos="101" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0xff" min="0" max="99" />
+                    </label>
+                    <br>
+                </div>
+
+                <div id="OP2 Controls" class="controlpanel table-cell">
+                    <h2>Operator 2</h2>
+                    <label>EG R1
+                        <input type="range" class="sysexParameter" data-sysexparameterno="84" data-sysexdumpbytepos="68" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R2
+                        <input type="range" class="sysexParameter" data-sysexparameterno="85" data-sysexdumpbytepos="69" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R3
+                        <input type="range" class="sysexParameter" data-sysexparameterno="86" data-sysexdumpbytepos="70" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R4
+                        <input type="range" class="sysexParameter" data-sysexparameterno="87" data-sysexdumpbytepos="71" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L1
+                        <input type="range" class="sysexParameter" data-sysexparameterno="88" data-sysexdumpbytepos="72" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L2
+                        <input type="range" class="sysexParameter" data-sysexparameterno="89" data-sysexdumpbytepos="73" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L3
+                        <input type="range" class="sysexParameter" data-sysexparameterno="90" data-sysexdumpbytepos="74" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L4
+                        <input type="range" class="sysexParameter" data-sysexparameterno="91" data-sysexdumpbytepos="75" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Break Point
+                        <input type="range" class="sysexParameter" data-sysexparameterno="92" data-sysexdumpbytepos="76" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Left Depth
+                        <input type="range" class="sysexParameter" data-sysexparameterno="93" data-sysexdumpbytepos="77" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Right Depth
+                        <input type="range" class="sysexParameter" data-sysexparameterno="94" data-sysexdumpbytepos="78" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Left Curve
+                        <input type="range" class="sysexParameter" data-sysexparameterno="95" data-sysexdumpbytepos="79" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Level Scale Right Curve
+                        <input type="range" class="sysexParameter" data-sysexparameterno="96" data-sysexdumpbytepos="79" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Operator Rate Scale
+                        <input type="range" class="sysexParameter" data-sysexparameterno="97" data-sysexdumpbytepos="80" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x07" min="0" max="7" />
+                    </label>
+                    <br>
+                    <label>Detune
+                        <input type="range" class="sysexParameter" data-sysexparameterno="104" data-sysexdumpbytepos="80" data-sysexdumpbyteshift="3"
+                            data-sysexdumpbytemask="0x1f" min="0" max="14" />
+                    </label>
+                    <br>
+                    <label>Amp Mod Sense
+                        <input type="range" class="sysexParameter" data-sysexparameterno="98" data-sysexdumpbytepos="81" data-sysexdumpbyteshift="3"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Key Velocity Sense
+                        <input type="range" class="sysexParameter" data-sysexparameterno="99" data-sysexdumpbytepos="81" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x07" min="0" max="7" />
+                    </label>
+                    <br>
+                    <label>Operator Output Level
+                        <input type="range" class="sysexParameter" data-sysexparameterno="100" data-sysexdumpbytepos="82" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x07" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Operator Mode
+                        <select class="sysexParameter" data-sysexparameterno="101" data-sysexdumpbytepos="83" data-sysexdumpbyteshift="0" data-sysexdumpbytemask="0x01">
+                    </label>
+                    <br>
+                    <option label="Ratio" value="0" />
+                    <option label="Fixed" value="1" />
+                    </select>
+                    </label>
+                    <br>
+                    <label>Frequency Coarse
+                        <input type="range" class="sysexParameter" data-sysexparameterno="102" data-sysexdumpbytepos="83" data-sysexdumpbyteshift="1"
+                            data-sysexdumpbytemask="0x1f" min="0" max="31" />
+                    </label>
+                    <br>
+                    <label>Frequency Fine
+                        <input type="range" class="sysexParameter" data-sysexparameterno="103" data-sysexdumpbytepos="84" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0xff" min="0" max="99" />
+                    </label>
+                    <br>
+                </div>
+
+                <div id="OP3 Controls" class="controlpanel table-cell">
+                    <h2>Operator 3</h2>
+                    <label>EG R1
+                        <input type="range" class="sysexParameter" data-sysexparameterno="63" data-sysexdumpbytepos="51" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R2
+                        <input type="range" class="sysexParameter" data-sysexparameterno="64" data-sysexdumpbytepos="52" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R3
+                        <input type="range" class="sysexParameter" data-sysexparameterno="65" data-sysexdumpbytepos="53" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R4
+                        <input type="range" class="sysexParameter" data-sysexparameterno="66" data-sysexdumpbytepos="54" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L1
+                        <input type="range" class="sysexParameter" data-sysexparameterno="67" data-sysexdumpbytepos="55" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L2
+                        <input type="range" class="sysexParameter" data-sysexparameterno="68" data-sysexdumpbytepos="56" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L3
+                        <input type="range" class="sysexParameter" data-sysexparameterno="69" data-sysexdumpbytepos="57" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L4
+                        <input type="range" class="sysexParameter" data-sysexparameterno="70" data-sysexdumpbytepos="58" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Break Point
+                        <input type="range" class="sysexParameter" data-sysexparameterno="71" data-sysexdumpbytepos="59" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Left Depth
+                        <input type="range" class="sysexParameter" data-sysexparameterno="72" data-sysexdumpbytepos="60" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Right Depth
+                        <input type="range" class="sysexParameter" data-sysexparameterno="73" data-sysexdumpbytepos="61" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Left Curve
+                        <input type="range" class="sysexParameter" data-sysexparameterno="74" data-sysexdumpbytepos="62" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Level Scale Right Curve
+                        <input type="range" class="sysexParameter" data-sysexparameterno="75" data-sysexdumpbytepos="62" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Operator Rate Scale
+                        <input type="range" class="sysexParameter" data-sysexparameterno="76" data-sysexdumpbytepos="63" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x07" min="0" max="7" />
+                    </label>
+                    <br>
+                    <label>Detune
+                        <input type="range" class="sysexParameter" data-sysexparameterno="83" data-sysexdumpbytepos="63" data-sysexdumpbyteshift="3"
+                            data-sysexdumpbytemask="0x1f" min="0" max="14" />
+                    </label>
+                    <br>
+                    <label>Amp Mod Sense
+                        <input type="range" class="sysexParameter" data-sysexparameterno="77" data-sysexdumpbytepos="64" data-sysexdumpbyteshift="3"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Key Velocity Sense
+                        <input type="range" class="sysexParameter" data-sysexparameterno="78" data-sysexdumpbytepos="64" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x07" min="0" max="7" />
+                    </label>
+                    <br>
+                    <label>Operator Output Level
+                        <input type="range" class="sysexParameter" data-sysexparameterno="79" data-sysexdumpbytepos="65" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x07" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Operator Mode
+                        <select class="sysexParameter" data-sysexparameterno="80" data-sysexdumpbytepos="66" data-sysexdumpbyteshift="0" data-sysexdumpbytemask="0x01">
+                    </label>
+                    <br>
+                    <option label="Ratio" value="0" />
+                    <option label="Fixed" value="1" />
+                    </select>
+                    </label>
+                    <br>
+                    <label>Frequency Coarse
+                        <input type="range" class="sysexParameter" data-sysexparameterno="81" data-sysexdumpbytepos="66" data-sysexdumpbyteshift="1"
+                            data-sysexdumpbytemask="0x1f" min="0" max="31" />
+                    </label>
+                    <br>
+                    <label>Frequency Fine
+                        <input type="range" class="sysexParameter" data-sysexparameterno="82" data-sysexdumpbytepos="67" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0xff" min="0" max="99" />
+                    </label>
+                    <br>
+                </div>
+            </div>
+            <div class="table-row">
+                <div id="OP4 Controls" class="controlpanel table-cell">
+                    <h2>Operator 4</h2>
+                    <label>EG R1
+                        <input type="range" class="sysexParameter" data-sysexparameterno="42" data-sysexdumpbytepos="34" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R2
+                        <input type="range" class="sysexParameter" data-sysexparameterno="43" data-sysexdumpbytepos="35" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R3
+                        <input type="range" class="sysexParameter" data-sysexparameterno="44" data-sysexdumpbytepos="36" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R4
+                        <input type="range" class="sysexParameter" data-sysexparameterno="45" data-sysexdumpbytepos="37" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L1
+                        <input type="range" class="sysexParameter" data-sysexparameterno="46" data-sysexdumpbytepos="38" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L2
+                        <input type="range" class="sysexParameter" data-sysexparameterno="47" data-sysexdumpbytepos="39" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L3
+                        <input type="range" class="sysexParameter" data-sysexparameterno="48" data-sysexdumpbytepos="40" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L4
+                        <input type="range" class="sysexParameter" data-sysexparameterno="49" data-sysexdumpbytepos="41" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Break Point
+                        <input type="range" class="sysexParameter" data-sysexparameterno="50" data-sysexdumpbytepos="42" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Left Depth
+                        <input type="range" class="sysexParameter" data-sysexparameterno="51" data-sysexdumpbytepos="43" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Right Depth
+                        <input type="range" class="sysexParameter" data-sysexparameterno="52" data-sysexdumpbytepos="44" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Left Curve
+                        <input type="range" class="sysexParameter" data-sysexparameterno="53" data-sysexdumpbytepos="45" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Level Scale Right Curve
+                        <input type="range" class="sysexParameter" data-sysexparameterno="54" data-sysexdumpbytepos="45" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Operator Rate Scale
+                        <input type="range" class="sysexParameter" data-sysexparameterno="55" data-sysexdumpbytepos="46" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x07" min="0" max="7" />
+                    </label>
+                    <br>
+                    <label>Detune
+                        <input type="range" class="sysexParameter" data-sysexparameterno="62" data-sysexdumpbytepos="46" data-sysexdumpbyteshift="3"
+                            data-sysexdumpbytemask="0x1f" min="0" max="14" />
+                    </label>
+                    <br>
+                    <label>Amp Mod Sense
+                        <input type="range" class="sysexParameter" data-sysexparameterno="56" data-sysexdumpbytepos="47" data-sysexdumpbyteshift="3"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Key Velocity Sense
+                        <input type="range" class="sysexParameter" data-sysexparameterno="57" data-sysexdumpbytepos="47" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x07" min="0" max="7" />
+                    </label>
+                    <br>
+                    <label>Operator Output Level
+                        <input type="range" class="sysexParameter" data-sysexparameterno="58" data-sysexdumpbytepos="48" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x07" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Operator Mode
+                        <select class="sysexParameter" data-sysexparameterno="59" data-sysexdumpbytepos="49" data-sysexdumpbyteshift="0" data-sysexdumpbytemask="0x01">
+                    </label>
+                    <br>
+                    <option label="Ratio" value="0" />
+                    <option label="Fixed" value="1" />
+                    </select>
+                    </label>
+                    <br>
+                    <label>Frequency Coarse
+                        <input type="range" class="sysexParameter" data-sysexparameterno="60" data-sysexdumpbytepos="49" data-sysexdumpbyteshift="1"
+                            data-sysexdumpbytemask="0x1f" min="0" max="31" />
+                    </label>
+                    <br>
+                    <label>Frequency Fine
+                        <input type="range" class="sysexParameter" data-sysexparameterno="61" data-sysexdumpbytepos="50" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0xff" min="0" max="99" />
+                    </label>
+                    <br>
+                </div>
+
+                <div id="OP5 Controls" class="controlpanel table-cell">
+                    <h2>Operator 5</h2>
+                    <label>EG R1
+                        <input type="range" class="sysexParameter" data-sysexparameterno="21" data-sysexdumpbytepos="17" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R2
+                        <input type="range" class="sysexParameter" data-sysexparameterno="22" data-sysexdumpbytepos="18" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R3
+                        <input type="range" class="sysexParameter" data-sysexparameterno="23" data-sysexdumpbytepos="19" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R4
+                        <input type="range" class="sysexParameter" data-sysexparameterno="24" data-sysexdumpbytepos="20" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L1
+                        <input type="range" class="sysexParameter" data-sysexparameterno="25" data-sysexdumpbytepos="21" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L2
+                        <input type="range" class="sysexParameter" data-sysexparameterno="26" data-sysexdumpbytepos="22" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L3
+                        <input type="range" class="sysexParameter" data-sysexparameterno="27" data-sysexdumpbytepos="23" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L4
+                        <input type="range" class="sysexParameter" data-sysexparameterno="28" data-sysexdumpbytepos="24" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Break Point
+                        <input type="range" class="sysexParameter" data-sysexparameterno="29" data-sysexdumpbytepos="25" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Left Depth
+                        <input type="range" class="sysexParameter" data-sysexparameterno="30" data-sysexdumpbytepos="26" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Right Depth
+                        <input type="range" class="sysexParameter" data-sysexparameterno="31" data-sysexdumpbytepos="27" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Left Curve
+                        <input type="range" class="sysexParameter" data-sysexparameterno="32" data-sysexdumpbytepos="28" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Level Scale Right Curve
+                        <input type="range" class="sysexParameter" data-sysexparameterno="33" data-sysexdumpbytepos="28" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Operator Rate Scale
+                        <input type="range" class="sysexParameter" data-sysexparameterno="34" data-sysexdumpbytepos="29" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x07" min="0" max="7" />
+                    </label>
+                    <br>
+                    <label>Detune
+                        <input type="range" class="sysexParameter" data-sysexparameterno="41" data-sysexdumpbytepos="29" data-sysexdumpbyteshift="3"
+                            data-sysexdumpbytemask="0x1f" min="0" max="14" />
+                    </label>
+                    <br>
+                    <label>Amp Mod Sense
+                        <input type="range" class="sysexParameter" data-sysexparameterno="35" data-sysexdumpbytepos="30" data-sysexdumpbyteshift="3"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Key Velocity Sense
+                        <input type="range" class="sysexParameter" data-sysexparameterno="36" data-sysexdumpbytepos="30" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x07" min="0" max="7" />
+                    </label>
+                    <br>
+                    <label>Operator Output Level
+                        <input type="range" class="sysexParameter" data-sysexparameterno="37" data-sysexdumpbytepos="31" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x07" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Operator Mode
+                        <select class="sysexParameter" data-sysexparameterno="38" data-sysexdumpbytepos="32" data-sysexdumpbyteshift="0" data-sysexdumpbytemask="0x01">
+                    </label>
+                    <br>
+                    <option label="Ratio" value="0" />
+                    <option label="Fixed" value="1" />
+                    </select>
+                    </label>
+                    <br>
+                    <label>Frequency Coarse
+                        <input type="range" class="sysexParameter" data-sysexparameterno="39" data-sysexdumpbytepos="32" data-sysexdumpbyteshift="1"
+                            data-sysexdumpbytemask="0x1f" min="0" max="31" />
+                    </label>
+                    <br>
+                    <label>Frequency Fine
+                        <input type="range" class="sysexParameter" data-sysexparameterno="40" data-sysexdumpbytepos="33" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0xff" min="0" max="99" />
+                    </label>
+                    <br>
+                </div>
+                <div id="OP6 Controls" class="controlpanel table-cell">
+                    <h2>Operator 6</h2>
+                    <label>EG R1
+                        <input type="range" class="sysexParameter" data-sysexparameterno="0" data-sysexdumpbytepos="0" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R2
+                        <input type="range" class="sysexParameter" data-sysexparameterno="1" data-sysexdumpbytepos="1" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R3
+                        <input type="range" class="sysexParameter" data-sysexparameterno="2" data-sysexdumpbytepos="2" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG R4
+                        <input type="range" class="sysexParameter" data-sysexparameterno="3" data-sysexdumpbytepos="3" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L1
+                        <input type="range" class="sysexParameter" data-sysexparameterno="4" data-sysexdumpbytepos="4" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L2
+                        <input type="range" class="sysexParameter" data-sysexparameterno="5" data-sysexdumpbytepos="5" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L3
+                        <input type="range" class="sysexParameter" data-sysexparameterno="6" data-sysexdumpbytepos="6" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>EG L4
+                        <input type="range" class="sysexParameter" data-sysexparameterno="7" data-sysexdumpbytepos="7" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Break Point
+                        <input type="range" class="sysexParameter" data-sysexparameterno="8" data-sysexdumpbytepos="8" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Left Depth
+                        <input type="range" class="sysexParameter" data-sysexparameterno="9" data-sysexdumpbytepos="9" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Right Depth
+                        <input type="range" class="sysexParameter" data-sysexparameterno="10" data-sysexdumpbytepos="10" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x7f" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Level Scale Left Curve
+                        <input type="range" class="sysexParameter" data-sysexparameterno="11" data-sysexdumpbytepos="11" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Level Scale Right Curve
+                        <input type="range" class="sysexParameter" data-sysexparameterno="12" data-sysexdumpbytepos="11" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Operator Rate Scale
+                        <input type="range" class="sysexParameter" data-sysexparameterno="13" data-sysexdumpbytepos="12" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0x07" min="0" max="7" />
+                    </label>
+                    <br>
+                    <label>Detune
+                        <input type="range" class="sysexParameter" data-sysexparameterno="20" data-sysexdumpbytepos="12" data-sysexdumpbyteshift="3"
+                            data-sysexdumpbytemask="0x1f" min="0" max="14" />
+                    </label>
+                    <br>
+                    <label>Amp Mod Sense
+                        <input type="range" class="sysexParameter" data-sysexparameterno="14" data-sysexdumpbytepos="13" data-sysexdumpbyteshift="3"
+                            data-sysexdumpbytemask="0x03" min="0" max="3" />
+                    </label>
+                    <br>
+                    <label>Key Velocity Sense
+                        <input type="range" class="sysexParameter" data-sysexparameterno="15" data-sysexdumpbytepos="13" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x07" min="0" max="7" />
+                    </label>
+                    <br>
+                    <label>Operator Output Level
+                        <input type="range" class="sysexParameter" data-sysexparameterno="16" data-sysexdumpbytepos="14" data-sysexdumpbyteshift="2"
+                            data-sysexdumpbytemask="0x07" min="0" max="99" />
+                    </label>
+                    <br>
+                    <label>Operator Mode
+                        <select class="sysexParameter" data-sysexparameterno="17" data-sysexdumpbytepos="15" data-sysexdumpbyteshift="0" data-sysexdumpbytemask="0x01">
+                    </label>
+                    <br>
+                    <option label="Ratio" value="0" />
+                    <option label="Fixed" value="1" />
+                    </select>
+                    </label>
+                    <br>
+                    <label>Frequency Coarse
+                        <input type="range" class="sysexParameter" data-sysexparameterno="18" data-sysexdumpbytepos="15" data-sysexdumpbyteshift="1"
+                            data-sysexdumpbytemask="0x1f" min="0" max="31" />
+                    </label>
+                    <br>
+                    <label>Frequency Fine
+                        <input type="range" class="sysexParameter" data-sysexparameterno="19" data-sysexdumpbytepos="16" data-sysexdumpbyteshift="0"
+                            data-sysexdumpbytemask="0xff" min="0" max="99" />
+                    </label>
+                    <br>
+                </div>
+            </div>
+        </div>
+        <div class="table">
+            <div id="Global Voice Controls" class="controlpanel">
+                <h2>Global Voice Controls</h2>
+                <label>Pitch EG R1
+                    <input type="range" class="sysexParameter" data-sysexparameterno="126" data-sysexdumpbytepos="102" data-sysexdumpbyteshift="0"
+                        data-sysexdumpbytemask="0xff" min="0" max="99" />
+                </label>
+                <br>
+                <label>Pitch EG R2
+                    <input type="range" class="sysexParameter" data-sysexparameterno="127" data-sysexdumpbytepos="103" data-sysexdumpbyteshift="0"
+                        data-sysexdumpbytemask="0xff" min="0" max="99" />
+                </label>
+                <br>
+                <label>Pitch EG R3
+                    <input type="range" class="sysexParameter" data-sysexparameterno="128" data-sysexdumpbytepos="104" data-sysexdumpbyteshift="0"
+                        data-sysexdumpbytemask="0xff" min="0" max="99" />
+                </label>
+                <br>
+                <label>Pitch EG R4
+                    <input type="range" class="sysexParameter" data-sysexparameterno="129" data-sysexdumpbytepos="105" data-sysexdumpbyteshift="0"
+                        data-sysexdumpbytemask="0xff" min="0" max="99" />
+                </label>
+                <br>
+                <label>Pitch EG L1
+                    <input type="range" class="sysexParameter" data-sysexparameterno="130" data-sysexdumpbytepos="106" data-sysexdumpbyteshift="0"
+                        data-sysexdumpbytemask="0xff" min="0" max="99" />
+                </label>
+                <br>
+                <label>Pitch EG L2
+                    <input type="range" class="sysexParameter" data-sysexparameterno="131" data-sysexdumpbytepos="107" data-sysexdumpbyteshift="0"
+                        data-sysexdumpbytemask="0xff" min="0" max="99" />
+                </label>
+                <br>
+                <label>Pitch EG L3
+                    <input type="range" class="sysexParameter" data-sysexparameterno="132" data-sysexdumpbytepos="108" data-sysexdumpbyteshift="0"
+                        data-sysexdumpbytemask="0xff" min="0" max="99" />
+                </label>
+                <br>
+                <label>Pitch EG L4
+                    <input type="range" class="sysexParameter" data-sysexparameterno="133" data-sysexdumpbytepos="109" data-sysexdumpbyteshift="0"
+                        data-sysexdumpbytemask="0xff" min="0" max="99" />
+                </label>
+                <br>
+                <label>Algorithm
+                    <input type="range" class="sysexParameter" data-sysexparameterno="134" data-sysexdumpbytepos="110" data-sysexdumpbyteshift="0"
+                        data-sysexdumpbytemask="0x1f" min="0" max="31" />
+                </label>
+                <br>
+                <label>Feedback
+                    <input type="range" class="sysexParameter" data-sysexparameterno="135" data-sysexdumpbytepos="111" data-sysexdumpbyteshift="0"
+                        data-sysexdumpbytemask="0x07" min="0" max="7" />
+                </label>
+                <br>
+                <label>Operator Key Sync
+                    <select type="range" class="sysexParameter" data-sysexparameterno="136" data-sysexdumpbytepos="111" data-sysexdumpbyteshift="3"
+                        data-sysexdumpbytemask="0x01">
+                        <option value="0" label="Off" />
+                        <option value="1" label="On" />
+                    </select>
+                </label>
+                <br>
+                <label>LFO Speed
+                    <input type="range" class="sysexParameter" data-sysexparameterno="137" data-sysexdumpbytepos="112" data-sysexdumpbyteshift="0"
+                        data-sysexdumpbytemask="0xff" min="0" max="99" />
+                </label>
+                <br>
+                <label>LFO Delay
+                    <input type="range" class="sysexParameter" data-sysexparameterno="138" data-sysexdumpbytepos="113" data-sysexdumpbyteshift="0"
+                        data-sysexdumpbytemask="0xff" min="0" max="99" />
+                </label>
+                <br>
+                <label>LFO Pitch Mod Depth
+                    <input type="range" class="sysexParameter" data-sysexparameterno="139" data-sysexdumpbytepos="114" data-sysexdumpbyteshift="0"
+                        data-sysexdumpbytemask="0xff" min="0" max="99" />
+                </label>
+                <br>
+                <label>LFO Amp Mod Depth
+                    <input type="range" class="sysexParameter" data-sysexparameterno="140" data-sysexdumpbytepos="115" data-sysexdumpbyteshift="0"
+                        data-sysexdumpbytemask="0xff" min="0" max="99" />
+                </label>
+                <br>
+                <label>LFO Key Sync
+                    <select type="range" class="sysexParameter" data-sysexparameterno="141" data-sysexdumpbytepos="116" data-sysexdumpbyteshift="0"
+                        data-sysexdumpbytemask="0x01">
+                        <option value="0" label="Off" />
+                        <option value="1" label="On" />
+                    </select>
+                </label>
+                <br>
+                <label>LFO Wave Shape
+                    <input type="range" class="sysexParameter" data-sysexparameterno="142" data-sysexdumpbytepos="116" data-sysexdumpbyteshift="1"
+                        data-sysexdumpbytemask="0x07" min="0" max="5" />
+                    <label>Pitch Mod Sensitivity
+                        <input type="range" class="sysexParameter" data-sysexparameterno="143" data-sysexdumpbytepos="116" data-sysexdumpbyteshift="4"
+                            data-sysexdumpbytemask="0x07" min="0" max="7" />
+                    </label>
+                    <br>
+                    <label>Transpose
+                        <input type="range" class="sysexParameter" data-sysexparameterno="144" data-sysexdumpbytepos="117" data-sysexdumpbyteshift="4"
+                            data-sysexdumpbytemask="0x07" min="0" max="48" />
+                    </label>
+                    <br>
+                    <label>Name
+                        <input type="text" class="sysexParameterText" data-sysexparameterno="145" data-sysexdumpbytepos="118" />
+                    </label>
+                    <br>
+            </div>
+        </div>
     </div>
 
-
-    <div id="OP4 Controls" class="controlpanel">
-        <h2>Operator 4</h2>
-        <label>EG R1</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="42" data-sysexdumpbytepos="34" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R2</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="43" data-sysexdumpbytepos="35" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R3</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="44" data-sysexdumpbytepos="36" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R4</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="45" data-sysexdumpbytepos="37" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L1</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="46" data-sysexdumpbytepos="38" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L2</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="47" data-sysexdumpbytepos="39" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L3</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="48" data-sysexdumpbytepos="40" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L4</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="49" data-sysexdumpbytepos="41" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Break Point</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="50" data-sysexdumpbytepos="42" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Left Depth</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="51" data-sysexdumpbytepos="43" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Right Depth</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="52" data-sysexdumpbytepos="44" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Left Curve</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="53" data-sysexdumpbytepos="45" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Level Scale Right Curve</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="54" data-sysexdumpbytepos="45" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Operator Rate Scale</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="55" data-sysexdumpbytepos="46" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x07" min="0" max="7" />
-        <br>
-        <label>Detune</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="62" data-sysexdumpbytepos="46" data-sysexdumpbyteshift="3"
-            data-sysexdumpbytemask="0x1f" min="0" max="14" />
-        <br>
-        <label>Amp Mod Sense</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="56" data-sysexdumpbytepos="47" data-sysexdumpbyteshift="3"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Key Velocity Sense</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="57" data-sysexdumpbytepos="47" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x07" min="0" max="7" />
-        <br>
-        <label>Operator Output Level</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="58" data-sysexdumpbytepos="48" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x07" min="0" max="99" />
-        <br>
-        <label>Operator Mode</label>
-        <select class="sysexParameter" data-sysexparameterno="59" data-sysexdumpbytepos="49" data-sysexdumpbyteshift="0" data-sysexdumpbytemask="0x01">
-            <br>
-            <option label="Ratio" value="0" />
-            <option label="Fixed" value="1" />
-        </select>
-        <br>
-        <label>Frequency Coarse</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="60" data-sysexdumpbytepos="49" data-sysexdumpbyteshift="1"
-            data-sysexdumpbytemask="0x1f" min="0" max="31" />
-        <br>
-        <label>Frequency Fine</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="61" data-sysexdumpbytepos="50" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
-    </div>
-
-
-    <div id="OP3 Controls" class="controlpanel">
-        <h2>Operator 3</h2>
-        <label>EG R1</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="63" data-sysexdumpbytepos="51" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R2</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="64" data-sysexdumpbytepos="52" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R3</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="65" data-sysexdumpbytepos="53" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R4</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="66" data-sysexdumpbytepos="54" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L1</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="67" data-sysexdumpbytepos="55" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L2</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="68" data-sysexdumpbytepos="56" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L3</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="69" data-sysexdumpbytepos="57" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L4</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="70" data-sysexdumpbytepos="58" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Break Point</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="71" data-sysexdumpbytepos="59" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Left Depth</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="72" data-sysexdumpbytepos="60" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Right Depth</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="73" data-sysexdumpbytepos="61" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Left Curve</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="74" data-sysexdumpbytepos="62" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Level Scale Right Curve</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="75" data-sysexdumpbytepos="62" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Operator Rate Scale</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="76" data-sysexdumpbytepos="63" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x07" min="0" max="7" />
-        <br>
-        <label>Detune</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="83" data-sysexdumpbytepos="63" data-sysexdumpbyteshift="3"
-            data-sysexdumpbytemask="0x1f" min="0" max="14" />
-        <br>
-        <label>Amp Mod Sense</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="77" data-sysexdumpbytepos="64" data-sysexdumpbyteshift="3"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Key Velocity Sense</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="78" data-sysexdumpbytepos="64" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x07" min="0" max="7" />
-        <br>
-        <label>Operator Output Level</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="79" data-sysexdumpbytepos="65" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x07" min="0" max="99" />
-        <br>
-        <label>Operator Mode</label>
-        <select class="sysexParameter" data-sysexparameterno="80" data-sysexdumpbytepos="66" data-sysexdumpbyteshift="0" data-sysexdumpbytemask="0x01">
-            <br>
-            <option label="Ratio" value="0" />
-            <option label="Fixed" value="1" />
-        </select>
-        <br>
-        <label>Frequency Coarse</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="81" data-sysexdumpbytepos="66" data-sysexdumpbyteshift="1"
-            data-sysexdumpbytemask="0x1f" min="0" max="31" />
-        <br>
-        <label>Frequency Fine</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="82" data-sysexdumpbytepos="67" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
-    </div>
-
-
-    <div id="OP2 Controls" class="controlpanel">
-        <h2>Operator 2</h2>
-        <label>EG R1</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="84" data-sysexdumpbytepos="68" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R2</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="85" data-sysexdumpbytepos="69" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R3</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="86" data-sysexdumpbytepos="70" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R4</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="87" data-sysexdumpbytepos="71" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L1</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="88" data-sysexdumpbytepos="72" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L2</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="89" data-sysexdumpbytepos="73" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L3</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="90" data-sysexdumpbytepos="74" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L4</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="91" data-sysexdumpbytepos="75" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Break Point</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="92" data-sysexdumpbytepos="76" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Left Depth</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="93" data-sysexdumpbytepos="77" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Right Depth</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="94" data-sysexdumpbytepos="78" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Left Curve</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="95" data-sysexdumpbytepos="79" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Level Scale Right Curve</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="96" data-sysexdumpbytepos="79" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Operator Rate Scale</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="97" data-sysexdumpbytepos="80" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x07" min="0" max="7" />
-        <br>
-        <label>Detune</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="104" data-sysexdumpbytepos="80" data-sysexdumpbyteshift="3"
-            data-sysexdumpbytemask="0x1f" min="0" max="14" />
-        <br>
-        <label>Amp Mod Sense</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="98" data-sysexdumpbytepos="81" data-sysexdumpbyteshift="3"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Key Velocity Sense</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="99" data-sysexdumpbytepos="81" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x07" min="0" max="7" />
-        <br>
-        <label>Operator Output Level</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="100" data-sysexdumpbytepos="82" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x07" min="0" max="99" />
-        <br>
-        <label>Operator Mode</label>
-        <select class="sysexParameter" data-sysexparameterno="101" data-sysexdumpbytepos="83" data-sysexdumpbyteshift="0" data-sysexdumpbytemask="0x01">
-            <br>
-            <option label="Ratio" value="0" />
-            <option label="Fixed" value="1" />
-        </select>
-        <br>
-        <label>Frequency Coarse</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="102" data-sysexdumpbytepos="83" data-sysexdumpbyteshift="1"
-            data-sysexdumpbytemask="0x1f" min="0" max="31" />
-        <br>
-        <label>Frequency Fine</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="103" data-sysexdumpbytepos="84" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
-    </div>
-
-
-    <div id="OP1 Controls" class="controlpanel">
-        <h2>Operator 1</h2>
-        <label>EG R1</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="105" data-sysexdumpbytepos="85" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R2</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="106" data-sysexdumpbytepos="86" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R3</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="107" data-sysexdumpbytepos="87" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG R4</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="108" data-sysexdumpbytepos="88" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L1</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="109" data-sysexdumpbytepos="89" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L2</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="110" data-sysexdumpbytepos="90" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L3</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="111" data-sysexdumpbytepos="91" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>EG L4</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="112" data-sysexdumpbytepos="92" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Break Point</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="113" data-sysexdumpbytepos="93" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Left Depth</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="114" data-sysexdumpbytepos="94" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Right Depth</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="115" data-sysexdumpbytepos="95" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x7f" min="0" max="99" />
-        <br>
-        <label>Level Scale Left Curve</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="116" data-sysexdumpbytepos="96" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Level Scale Right Curve</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="117" data-sysexdumpbytepos="96" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Operator Rate Scale</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="118" data-sysexdumpbytepos="97" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x07" min="0" max="7" />
-        <br>
-        <label>Detune</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="125" data-sysexdumpbytepos="97" data-sysexdumpbyteshift="3"
-            data-sysexdumpbytemask="0x1f" min="0" max="14" />
-        <br>
-        <label>Amp Mod Sense</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="119" data-sysexdumpbytepos="98" data-sysexdumpbyteshift="3"
-            data-sysexdumpbytemask="0x03" min="0" max="3" />
-        <br>
-        <label>Key Velocity Sense</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="120" data-sysexdumpbytepos="98" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x07" min="0" max="7" />
-        <br>
-        <label>Operator Output Level</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="121" data-sysexdumpbytepos="99" data-sysexdumpbyteshift="2"
-            data-sysexdumpbytemask="0x07" min="0" max="99" />
-        <br>
-        <label>Operator Mode</label>
-        <select class="sysexParameter" data-sysexparameterno="122" data-sysexdumpbytepos="100" data-sysexdumpbyteshift="0" data-sysexdumpbytemask="0x01">
-            <br>
-            <option label="Ratio" value="0" />
-            <option label="Fixed" value="1" />
-        </select>
-        <br>
-        <label>Frequency Coarse</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="123" data-sysexdumpbytepos="100" data-sysexdumpbyteshift="1"
-            data-sysexdumpbytemask="0x1f" min="0" max="31" />
-        <br>
-        <label>Frequency Fine</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="124" data-sysexdumpbytepos="101" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
-    </div>
-
-    <div id="Global Voice Controls" class="controlpanel">
-        <h2>Global Voice Controls</h2>
-        <label>Pitch EG R1</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="126" data-sysexdumpbytepos="102" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
-        <label>Pitch EG R2</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="127" data-sysexdumpbytepos="103" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
-        <label>Pitch EG R3</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="128" data-sysexdumpbytepos="104" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
-        <label>Pitch EG R4</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="129" data-sysexdumpbytepos="105" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
-        <label>Pitch EG L1</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="130" data-sysexdumpbytepos="106" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
-        <label>Pitch EG L2</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="131" data-sysexdumpbytepos="107" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
-        <label>Pitch EG L3</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="132" data-sysexdumpbytepos="108" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
-        <label>Pitch EG L4</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="133" data-sysexdumpbytepos="109" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
-        <label>Algorithm</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="134" data-sysexdumpbytepos="110" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x1f" min="0" max="31" />
-        <br>
-        <label>Feedback</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="135" data-sysexdumpbytepos="111" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x07" min="0" max="7" />
-        <br>
-        <label>Operator Key Sync</label>
-        <select type="range" class="sysexParameter" data-sysexparameterno="136" data-sysexdumpbytepos="111" data-sysexdumpbyteshift="3"
-            data-sysexdumpbytemask="0x01">
-            <option value="0" label="Off" />
-            <option value="1" label="On" />
-        </select>
-        <br>
-        <label>LFO Speed</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="137" data-sysexdumpbytepos="112" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
-        <label>LFO Delay</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="138" data-sysexdumpbytepos="113" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
-        <label>LFO Pitch Mod Depth</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="139" data-sysexdumpbytepos="114" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
-        <label>LFO Amp Mod Depth</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="140" data-sysexdumpbytepos="115" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0xff" min="0" max="99" />
-        <br>
-        <label>LFO Key Sync</label>
-        <select type="range" class="sysexParameter" data-sysexparameterno="141" data-sysexdumpbytepos="116" data-sysexdumpbyteshift="0"
-            data-sysexdumpbytemask="0x01">
-            <option value="0" label="Off" />
-            <option value="1" label="On" />
-        </select>
-        <br>
-        <label>LFO Wave Shape</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="142" data-sysexdumpbytepos="116" data-sysexdumpbyteshift="1"
-            data-sysexdumpbytemask="0x07" min="0" max="5" />
-        <label>Pitch Mod Sensitivity</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="143" data-sysexdumpbytepos="116" data-sysexdumpbyteshift="4"
-            data-sysexdumpbytemask="0x07" min="0" max="7" />
-        <br>
-        <label>Transpose</label>
-        <input type="range" class="sysexParameter" data-sysexparameterno="144" data-sysexdumpbytepos="117" data-sysexdumpbyteshift="4"
-            data-sysexdumpbytemask="0x07" min="0" max="48" />
-        <br>
-        <label>Name</label>
-        <input type="text" class="sysexParameterText" data-sysexparameterno="145" data-sysexdumpbytepos="118" />
-        <br>
-    </div>
 </body>
 
 </html>
