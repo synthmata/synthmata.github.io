@@ -27,7 +27,10 @@ function onMIDISuccess(result) {
     buildSaveLoadSharePanel();
     setupParameterControls();
     fullRefreshSysexData(); // for Volca FM
-    loadSharablePatchLink(window.location);
+    if(!loadSharablePatchLink(window.location)){
+        let patchRaw = base64js.toByteArray(__init_patch__);
+        loadSysex(patchRaw)
+    }
 
 }
 
@@ -384,14 +387,15 @@ function loadSharablePatchLink(url){
     let queryString = parser.search;
     var searchParams = new URLSearchParams(queryString);
     if(!searchParams.has("p")){
-        return;
+        return false;
     }
     let patchAsB64 = searchParams.get("p");
     let patchRaw = base64js.toByteArray(patchAsB64);
     if(!validateSysexData(patchRaw)){
-        return;
+        return false;
     }
     loadSysex(patchRaw)
+    return true;
 }
 
 function storeOutputs(midiAccess) {
