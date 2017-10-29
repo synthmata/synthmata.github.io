@@ -118,9 +118,9 @@ function buildSaveLoadSharePanel() {
     }
     container.appendChild(initPatchButton);
 
-    let sharableLinkTextbox = document.createElement("input");
+    let sharableLinkTextbox = document.createElement("textarea");
     sharableLinkTextbox.id = "sharableLinkTextbox";
-    sharableLinkTextbox.setAttribute("type", "text");
+    //sharableLinkTextbox.setAttribute("type", "text");
     sharableLinkTextbox.setAttribute("readonly", true);
     
     let createSharableLinkButton = document.createElement("button");

@@ -80,9 +80,12 @@ body {
     display: block;
 }
 
-
-
-#saveLoadShare input, button{
+#saveLoadShare input, button, textarea{
     display: block;
-    width: 25%;
+    width: 50%;
+    margin-bottom: 5px;
+}
+
+#saveLoadShare  textarea{
+    height: 6em;
 }
