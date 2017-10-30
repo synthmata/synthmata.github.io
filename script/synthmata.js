@@ -13,6 +13,7 @@ var goodFile = null;
 var sysexThrottleTimer = null;
 var sysexThrottleTimerMs = 300;
 
+// TODO: better plan for this to have user of module put it in a hidden textbox?
 var __init_patch__ = "8EMAAAEbWgAAVGMAAAAyAAACAgAAAGMAAQAAWAAAU2MAAAAyMjICAgQAAGMAAgAAWAAAU2MAAAAyAAACAgAAAGMAAgAAWQAAUmMAAAAyMjICAgAAAGMAAgAAWQAATmMAAAAyAAAAAAAAAF4AAQAAVgAATWMAAAAyAAAAAAAAAF4AAgAAMjIyMjIyMjIfAAAAAAAAAAAAGHN5bnRobWF0YSB_HPc=";
 
 function onMIDISuccess(result) {
@@ -31,7 +32,6 @@ function onMIDISuccess(result) {
         let patchRaw = base64js.toByteArray(__init_patch__);
         loadSysex(patchRaw)
     }
-
 }
 
 function onMIDIFailure(msg) {
@@ -42,7 +42,7 @@ function testTone() {
     if (selectedMidiChannel != null && selectedMidiPort != null) {
         console.log("sending test tone");
         let noteOnMessage = [0x90 | selectedMidiChannel, 60, 0x7f];
-        let noteOffMessage = [0x80, 60, 0x7f];
+        let noteOffMessage = [0x80 | selectedMidiChannel, 60, 0x7f];
         selectedMidiPort.send(noteOnMessage);
         selectedMidiPort.send(noteOffMessage, window.performance.now() + 1000.0);
     }
@@ -88,7 +88,6 @@ function buildSetupPanel(midiAccess) {
     }
     selectedMidiChannel = 0;
     document.getElementById("midiSetup").appendChild(former);
-
 }
 
 function buildSaveLoadSharePanel() {
@@ -152,7 +151,6 @@ function fullRefreshSysexData() {
         let value = parseInt(ele.value);
 
         sysexDumpData[parameterNo] = value & 0x7f;
-
     }
     // temporary solution for the name
     for (let i = 0; i < 10; i++) {
@@ -310,8 +308,8 @@ function validateSysexData(data) {
         console.log("length indicator is not correct");
         return false; // length indicator is not correct
     }
+    
     // checksum check
-
     let sum = 0;
     for (let i = 6; i < 162; i++) {
         sum += data[i];
@@ -377,7 +375,6 @@ function createSharablePatchLink(){
     parser.href = window.location;
     let result =  parser.origin + parser.pathname + "?p=" + patchAsB64;
     return result;
-    
 }
 
 function loadSharablePatchLink(url){
