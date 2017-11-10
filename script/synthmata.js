@@ -180,7 +180,7 @@ function fullRefreshSysexData(){
 }
 */
 
-// So, this probably works for the DX-7 (should try on TX81z), but the volca-fm onlt reads bulk data...)
+// So, this probably works for the DX-7 (should try on TX81z), but the volca-fm only reads bulk data...)
 function handleValueChange(event) {
     if (selectedMidiChannel != null && selectedMidiPort != null) {
         if (event.target.classList.contains("sysexParameter")) {
@@ -371,9 +371,23 @@ function checkSysexFileLoad(event) {
 function loadSysex(sysexData) {
    // let data = new Uint8ClampedArray(readerEvent.target.result);
     let data = new Uint8ClampedArray(sysexData);
-    let paramArray = data.slice(6, 161);
+    let paramArray = data.slice(6, 161); // TODO generalise for other dumps - currently DX7 specific.
+    // numeric perameters
     let paramControls = new Array(...document.getElementsByClassName("sysexParameter"));
-    paramControls.forEach(function (element) { element.value = paramArray[element.dataset.sysexparameterno]; })
+    paramControls.forEach(function (element) { element.value = paramArray[element.dataset.sysexparameterno]; });
+    
+    // text paramenters
+    let textControls = new Array(...document.getElementsByClassName("sysexParameterText"));
+    textControls.forEach(function(element){
+        let startOffset = parseInt(element.dataset.sysexparameterno);
+        let textLength = parseInt(element.dataset.sysextextlength);
+        let chararray = [];
+        for(let i = 0; i < textLength; i++){
+            chararray.push(String.fromCharCode(paramArray[i + startOffset]))
+        }
+        
+        element.value = chararray.join("");
+    })
     sysexDumpData = paramArray;
     sendSysexDump();
 }
