@@ -141,6 +141,9 @@ function setupParameterControls() {
     for (let sysexControl of document.getElementsByClassName("sysexParameter")) {
         sysexControl.oninput = handleValueChangeVoiceDump;
     }
+    for (let sysexControl of document.getElementsByClassName("sysexParameterText")) {
+        sysexControl.oninput = handleValueChangeVoiceDump;
+    }
 }
 
 function fullRefreshSysexData() {
@@ -241,9 +244,26 @@ function handleValueChangeVoiceDump(event) {
             let value = parseInt(ele.value);
 
             sysexDumpData[parameterNo] = value & 0x7f;
-            sendSysexDump()
-
+            //sendSysexDump()
+        }else if (event.target.classList.contains("sysexParameterText")){
+            let ele = event.target;
+            let parameterNo = parseInt(ele.dataset.sysexparameterno);
+            let stringLength = parseInt(ele.dataset.sysextextlength);
+            let value = ele.value.toString();
+            
+            for(let i = 0; i < stringLength; i++){
+                if(i < value.length){
+                    let ordinal = value.charCodeAt(i);
+                    if(ordinal <= 0x20 || ordinal >= 0x7f){
+                        ordinal = 0x3f; // ?
+                    }
+                    sysexDumpData[i + parameterNo] = ordinal;
+                }else{
+                    sysexDumpData[i + parameterNo] = 0x20;
+                }
+            }
         }
+        sendSysexDump()
     }
 }
 

@@ -205,6 +205,11 @@ input[type=range] {
     background: rgb(41, 163, 67);
     cursor: pointer;
   }
+
+  .envelopedisplay{
+      background-color: #444444;
+      color: rgb(41, 163, 67);
+  }
   /*
   input[type=range]::-ms-track {
     width: 100%;
