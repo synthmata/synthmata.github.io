@@ -134,7 +134,6 @@ function buildSaveLoadSharePanel() {
 
     container.appendChild(createSharableLinkButton);
     container.appendChild(sharableLinkTextbox);
-
 }
 
 function setupParameterControls() {
@@ -164,24 +163,6 @@ function fullRefreshSysexData() {
     }
     console.log(sysexDumpData);
 }
-
-// This would work for a bulk dump of 32 voices... but we probably don't need that
-// so adding all that extra data to the html probably wasn't required...
-/*
-function fullRefreshSysexData(){
-  sysexDumpData = new Array(128);
-  sysexDumpData.fill(0);
-  for(let param of document.getElementsByClassName("sysexParameter")){
-    let dumpOffset = parseInt(param.dataset.sysexdumpbytepos);
-    let mask = parseInt(param.dataset.sysexdumpbytemask);
-    let shift = parseInt(param.dataset.sysexdumpbyteshift);
-    let value = parseInt(param.value);
-
-    sysexDumpData[dumpOffset] &= ~(mask << shift);
-    sysexDumpData[dumpOffset] |= ((mask & value) << shift);
-  }
-}
-*/
 
 // So, this probably works for the DX-7 (should try on TX81z), but the volca-fm only reads bulk data...)
 function handleValueChange(event) {
