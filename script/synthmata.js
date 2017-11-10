@@ -268,7 +268,7 @@ function handleValueChangeVoiceDump(event) {
             let parameterNo = parseInt(ele.dataset.sysexparameterno);
             let mask = parseInt(ele.dataset.sysexparameterbitmask) & 0x7f;
             let value = ele.value;
-            if(ele.type == "checkbox"){
+            if(ele.type == "checkbox" || ele.type == "radio"){
                 value = ele.checked
             }
             if(value){
@@ -403,7 +403,18 @@ function loadSysex(sysexData) {
         }
         
         element.value = chararray.join("");
-    })
+    });
+
+    let bitSwitchControls = new Array(...document.getElementsByClassName("sysexParameterBitswitch"));
+    bitSwitchControls.forEach(function(element){
+        let mask = parseInt(element.dataset.sysexparameterbitmask);
+        let switched = (paramArray[element.dataset.sysexparameterno] & mask) != 0;
+        if(element.type == "checkbox" || element.type == "radio"){
+            element.checked = switched;
+        }else{
+            element.value = mask; // TODO: mask? or the switched bool?
+        }
+    });
     sysexDumpData = paramArray;
     sendSysexDump();
 }
