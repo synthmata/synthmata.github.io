@@ -144,10 +144,13 @@ function setupParameterControls() {
     for (let sysexControl of document.getElementsByClassName("sysexParameterText")) {
         sysexControl.oninput = handleValueChangeVoiceDump;
     }
+    for(let sysexControl of document.getElementsByClassName("sysexParameterBitswitch")) {
+        sysexControl.onchange = handleValueChangeVoiceDump; // usually checkboxes and they don't have oninputs
+    }
 }
 
 function fullRefreshSysexData() {
-    sysexDumpData = new Array(155); // TODO: probably don't hard code this?
+    sysexDumpData = new Array(156); // TODO: probably don't hard code this?
     sysexDumpData.fill(0);
     for (let ele of document.getElementsByClassName("sysexParameter")) {
         let parameterNo = parseInt(ele.dataset.sysexparameterno);
@@ -212,7 +215,7 @@ function createSysexDumpBuffer() {
     for (let i = 0; i < sysexDumpData.length; i++) {
         sum += sysexDumpData[i];
     }
-    sum += 0x7f // TODO: remove once operator on-off isn't hardcoded
+    //sum += 0x7f // TODO: remove once operator on-off isn't hardcoded
     sum &= 0xff;
     sum = (~sum) + 1;
     sum &= 0x7f;
@@ -225,7 +228,7 @@ function createSysexDumpBuffer() {
         0x01,                         // 0b0bbbbbbb data byte count msb
         0x1b,                         // 0b0bbbbbbb data byte count lsb
         ...sysexDumpData,
-        0x7f,                         // TODO: remove once operator on-off isn't hardcoded
+        //0x7f,                         // TODO: remove once operator on-off isn't hardcoded
         sum,                          // checksum
         0xf7                          // 0b1111_0111 ; EOX
     ];
@@ -238,15 +241,14 @@ function createSysexDumpBuffer() {
 // but the handleValueChange doesn't.
 function handleValueChangeVoiceDump(event) {
     if (selectedMidiChannel != null && selectedMidiPort != null) {
+        let ele = event.target;
         if (event.target.classList.contains("sysexParameter")) {
-            let ele = event.target;
             let parameterNo = parseInt(ele.dataset.sysexparameterno);
             let value = parseInt(ele.value);
 
             sysexDumpData[parameterNo] = value & 0x7f;
             //sendSysexDump()
         }else if (event.target.classList.contains("sysexParameterText")){
-            let ele = event.target;
             let parameterNo = parseInt(ele.dataset.sysexparameterno);
             let stringLength = parseInt(ele.dataset.sysextextlength);
             let value = ele.value.toString();
@@ -261,6 +263,20 @@ function handleValueChangeVoiceDump(event) {
                 }else{
                     sysexDumpData[i + parameterNo] = 0x20;
                 }
+            }
+        }else if(event.target.classList.contains("sysexParameterBitswitch")){
+            let parameterNo = parseInt(ele.dataset.sysexparameterno);
+            let mask = parseInt(ele.dataset.sysexparameterbitmask) & 0x7f;
+            let value = ele.value;
+            if(ele.type == "checkbox"){
+                value = ele.checked
+            }
+            if(value){
+                console.log(ele.value)
+                sysexDumpData[parameterNo] |= mask;
+            }else{
+                console.log(ele.value)
+                sysexDumpData[parameterNo] &= ~mask;
             }
         }
         sendSysexDump()
@@ -371,7 +387,7 @@ function checkSysexFileLoad(event) {
 function loadSysex(sysexData) {
    // let data = new Uint8ClampedArray(readerEvent.target.result);
     let data = new Uint8ClampedArray(sysexData);
-    let paramArray = data.slice(6, 161); // TODO generalise for other dumps - currently DX7 specific.
+    let paramArray = data.slice(6, 162); // TODO generalise for other dumps - currently DX7 specific.
     // numeric perameters
     let paramControls = new Array(...document.getElementsByClassName("sysexParameter"));
     paramControls.forEach(function (element) { element.value = paramArray[element.dataset.sysexparameterno]; });

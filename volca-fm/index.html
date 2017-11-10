@@ -26,14 +26,50 @@
             <h2>Setup</h2>
             <div class="controlflexlayout">
                 <div class="controlitemgroup" id="midiSetup">
-                        <h3>Midi Device Setup</h3>
+                    <h3>Midi Device Setup</h3>
                 </div>
                 <div class="controlitemgroup" id="saveLoadShare">
-                        <h3>Save/Load/Share</h3>
+                    <h3>Save/Load/Share</h3>
                 </div>
 
             </div>
         </div>
+        <div class="controlpanel">
+            <h2>Operator On/Off</h2>
+            <div class="controlflexlayout">
+                <div class="controlitemgroup">
+                    <h3>Operator 1</h3>
+                    <label for="sysex155_1" style="display:none">Operator 1</label>
+                    <input id="sysex155_1" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="1" type="checkbox">
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator 2</h3>
+                    <label for="sysex155_2" style="display:none">Operator 2</label>
+                    <input id="sysex155_2" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="2" type="checkbox">
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator 3</h3>
+                    <label for="sysex155_4" style="display:none">Operator 3</label>
+                    <input id="sysex155_4" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="4" type="checkbox">
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator 4</h3>
+                    <label for="sysex155_8" style="display:none">Operator 4</label>
+                    <input id="sysex155_8" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="8" type="checkbox">
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator 5</h3>
+                    <label for="sysex155_16" style="display:none">Operator 5</label>
+                    <input id="sysex155_16" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="16" type="checkbox">
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator 6</h3>
+                    <label for="sysex155_32" style="display:none">Operator 6</label>
+                    <input id="sysex155_32" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="32" type="checkbox">
+                </div>
+            </div>
+        </div>
+
         <div class="controlpanel">
             <h2>Operator 1</h2>
             <div class="controlflexlayout">
@@ -779,7 +815,8 @@
                     <h3>Patch Settings</h3>
                     <div class="controller">
                         <label for="sysex145">Name </label>
-                        <input class="sysexParameterText" data-sysexparameterno="145" data-sysextextlength="10" id="sysex145" type="text" maxlength="10" />
+                        <input class="sysexParameterText" data-sysexparameterno="145" data-sysextextlength="10" id="sysex145" type="text" maxlength="10"
+                        />
                     </div>
                 </div>
             </div>
