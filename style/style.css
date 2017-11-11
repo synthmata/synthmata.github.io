@@ -1,0 +1,107 @@
+body {
+    font-family: 'Montserrat', sans-serif; 
+    background-color: #898989;
+}
+#title-head {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 13vw; 
+    font-weight: 700;
+    text-align: center;
+    color: #ffffff;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+#title-byline{
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 2vw; 
+    font-weight: 400;
+    text-align: center;
+    color: #ffffff;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+#title-byline a{
+    color: #ffffff;
+}
+
+#subtitle-head{
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 3vw; 
+    font-weight: 700;
+    text-align: center;
+    color: #ffffff;
+    padding: 1rem;
+}
+#main-content{
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 0.8em;
+}
+.content-section{
+    background-color: #eeeeee;
+    margin-bottom: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1em;
+    padding-right: 1em;
+    padding-bottom: 0.5em;
+}
+
+.story {
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    border-color: #bbbbbb;
+    border-width: 2px;
+    border-style: dashed;    
+}
+
+.content-section p{
+    text-align: justify;
+    margin-left: 2rem;
+    margin-right: 2rem;
+}
+
+.content-section p a{
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.content-section h1{
+    font-size: 3em;
+    font-weight: 700;
+    margin: 0;
+    margin-bottom: 0.5em;
+}
+
+.content-section h2{
+    font-size: 1.9em;
+    font-weight: 400;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    margin-top: 0;
+}
+
+.youtube-box{
+    float: right;
+    padding: 1rem;
+    background-color: #444444;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 0.5rem;
+
+    
+    display: inline-block;
+}
