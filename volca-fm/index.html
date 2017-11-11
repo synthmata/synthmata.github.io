@@ -4,12 +4,40 @@
 <head>
     <title>synthmata: Volca FM</title>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" />
-    <link href="style/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet" />
+    <link href="style/style.css" rel="stylesheet" />
     <script src="../script/base64js.min.js"></script>
-    <script src="../script/synthmata.js" type="text/javascript"></script> </link>
+    <script src="../script/synthmata.js" type="text/javascript"></script>
+    <script>
+        var valueDisplayTimeout = null;
+        var valueDisplayTimeoutIntervalMs = 1000;
+        function doValueDisplay(event){
+            let targetElementBounding = event.target.getBoundingClientRect();
+            let valueDisplayer = document.getElementById("valueDisplay");
+            valueDisplayer.innerText = parseInt(event.target.value);
+            valueDisplayer.style.display = "block";
+            if (valueDisplayTimeout != null) {
+                clearTimeout(valueDisplayTimeout);
+            }
+            valueDisplayTimeout = setTimeout(function () {
+                valueDisplayer.style.display = "none";
+            }, valueDisplayTimeoutIntervalMs);
+        }
+
+        function setupValueDisplay(){
+            for (let sysexControl of document.getElementsByClassName("sysexParameter")) {
+                sysexControl.addEventListener("input", doValueDisplay);
+                sysexControl.addEventListener("mouseover", doValueDisplay);
+            }
+        }
+        
+        function initialise(){
+            setupValueDisplay();
+        }
+    </script>
 </head>
 
-<body>
+<body onload="initialise()">
     <div id="title-head">
         <span>synthmata</span>
     </div>
@@ -21,6 +49,7 @@
     <div id="subtitle-head">
         <span>free online patch editor for Volca FM + DX7 BETA VERSION</span>
     </div>
+    <div id="valueDisplay">100</div>
     <div id="main-content">
         <div class="controlpanel">
             <h2>Setup</h2>

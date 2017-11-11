@@ -88,6 +88,48 @@ body {
     height: 10em;
 }
 
+#valueDisplay {
+    position: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    top: 1em;
+    width: 3em;
+    left: 0;
+    right: 0;
+    color: rgb(41, 163, 67);
+    background-color: #444444;
+    border-color: #aaaaaa;
+    border-width: 2px;
+    border-style: dashed;  
+    opacity: 0.7;
+    float: right;
+    display: none;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 3.5vw;
+    text-align: center;
+    
+}
+/*
+.fadingIn{
+    -webkit-animation: fade 0.3s linear forwards;
+    animation: fade 0.3s linear forwards;
+}
+
+.fadingOut{
+    -webkit-animation: fade 0.3s linear backwards;
+    animation: fade 0.3s linear backwards;
+}
+
+@-webkit-keyframes fade {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  
+@keyframes fade {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+*/
 
 .controlpanel h2{
     margin-top: 0;
