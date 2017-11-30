@@ -14,7 +14,7 @@ var sysexThrottleTimer = null;
 var sysexThrottleTimerMs = 300;
 
 // TODO: better plan for this to have user of module put it in a hidden textbox?
-var __init_patch__ = "8EMAAAEbWgAAVGMAAAAyAAACAgAAAGMAAQAAWAAAU2MAAAAyMjICAgQAAGMAAgAAWAAAU2MAAAAyAAACAgAAAGMAAgAAWQAAUmMAAAAyMjICAgAAAGMAAgAAWQAATmMAAAAyAAAAAAAAAF4AAQAAVgAATWMAAAAyAAAAAAAAAF4AAgAAMjIyMjIyMjIfAAAAAAAAAAAAGHN5bnRobWF0YSB_HPc=";
+var __init_patch__ = "8EMAAAEbUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAUGMAAAAyAAAAAAAAAFwAAgAAUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAT2MAAAAyAAAAAAAAAFwAAgAAUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAUGMAAAAyAAAAAAAAAGMAAgAAMjIyMjIyMjIfAAAAAAAAAAAAGHN5bnRobWF0YSB/TPc=";
 
 function onMIDISuccess(result) {
     console.log("MIDI ready!");
@@ -35,6 +35,7 @@ function onMIDISuccess(result) {
 }
 
 function onMIDIFailure(msg) {
+    alert("Could not get MIDI access.\nPlease note that MIDI in the browser currently only works in Chrome and Opera.\nIf you declined MIDI access when prompted, please refresh the page.")
     console.log("Failed to get MIDI access - " + msg);
 }
 
