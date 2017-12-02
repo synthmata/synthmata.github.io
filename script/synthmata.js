@@ -59,7 +59,12 @@ function buildSetupPanel(midiAccess) {
 
     let portSelecter = document.createElement("select");
     portSelecter.id = "portSelector";
-    portSelecter.onchange = function (event) { selectedMidiPort = midiOutPorts[event.target.value]; console.log(selectedMidiPort); testTone(); };
+    portSelecter.onchange = function (event) { 
+        selectedMidiPort = midiOutPorts[event.target.value]; 
+        console.log(selectedMidiPort); 
+        sendSysexDump();
+        //testTone();   // this is interacting with the sysex change - need to address this longterm, because I think it's useful, but disabled for now
+    };
     
     portSelectLabel.appendChild(portSelecter);
     former.appendChild(portSelectLabel);
@@ -78,7 +83,12 @@ function buildSetupPanel(midiAccess) {
 
     let channelSelector = document.createElement("select");
     channelSelector.id = "channelSelector";
-    channelSelector.onchange = function (event) { selectedMidiChannel = parseInt(event.target.value); console.log(selectedMidiChannel); testTone(); };
+    channelSelector.onchange = function (event) { 
+        selectedMidiChannel = parseInt(event.target.value); 
+        console.log(selectedMidiChannel); 
+        sendSysexDump();
+        //testTone();  // this is interacting with the sysex change - need to address this longterm, because I think it's useful, but disabled for now
+    };
     channelSelectLabel.appendChild(channelSelector);
     former.appendChild(channelSelectLabel);
     for (let i = 0; i < 16; i++) {
