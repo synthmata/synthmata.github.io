@@ -8,6 +8,7 @@
     <link href="style/style.css" rel="stylesheet" />
     <script src="../script/base64js.min.js"></script>
     <script src="../script/synthmata.js" type="text/javascript"></script>
+    <script src="../script/dx7envdisplay.js" type="text/javascript"></script>
     <script>
         var valueDisplayTimeout = null;
         var valueDisplayTimeoutIntervalMs = 1000;
@@ -30,9 +31,25 @@
                 sysexControl.addEventListener("mouseover", doValueDisplay);
             }
         }
+
+        function setupEnvelopes(){
+            let envelopeSysexes = [
+                ["sysex105", "sysex106", "sysex107", "sysex108", "sysex109", "sysex110", "sysex111", "sysex112", "op1EnvCanvas"],
+                ["sysex84", "sysex85", "sysex86", "sysex87", "sysex88", "sysex89", "sysex90", "sysex91", "op2EnvCanvas"],
+                ["sysex63", "sysex64", "sysex65", "sysex66", "sysex67", "sysex68", "sysex69", "sysex70", "op3EnvCanvas"],
+                ["sysex42", "sysex43", "sysex44", "sysex45", "sysex46", "sysex47", "sysex48", "sysex49", "op4EnvCanvas"],
+                ["sysex21", "sysex22", "sysex23", "sysex24", "sysex25", "sysex26", "sysex27", "sysex28", "op5EnvCanvas"],
+                ["sysex0", "sysex1", "sysex2", "sysex3", "sysex4", "sysex5", "sysex7", "sysex7", "op6EnvCanvas"]
+            ];
+            
+            for(let params of envelopeSysexes){
+                makeEnvelope(...params.map(x => document.getElementById(x)));
+            }
+        }
         
         function initialise(){
             setupValueDisplay();
+            setupEnvelopes();
         }
     </script>
 </head>
@@ -205,6 +222,11 @@
                         <input class="sysexParameter" data-sysexparameterno="121" id="sysex121" max="99" min="0" type="range" />
                     </div>
                 </div>
+                <div class="controlitemgroup">
+                    <div class="envelopeCanvasContainer">
+                        <canvas id="op1EnvCanvas" />
+                    </div>
+                </div>
             </div>
         </div>
         <div class="controlpanel">
@@ -310,6 +332,11 @@
                     <div class="controller">
                         <label for="sysex100">Operator Output Level </label>
                         <input class="sysexParameter" data-sysexparameterno="100" id="sysex100" max="99" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <div class="envelopeCanvasContainer">
+                        <canvas id="op2EnvCanvas" />
                     </div>
                 </div>
             </div>
@@ -420,6 +447,11 @@
                     </div>
 
                 </div>
+                <div class="controlitemgroup">
+                    <div class="envelopeCanvasContainer">
+                        <canvas id="op3EnvCanvas" />
+                    </div>
+                </div>
             </div>
         </div>
         <div class="controlpanel">
@@ -525,6 +557,11 @@
                     <div class="controller">
                         <label for="sysex58">Operator Output Level </label>
                         <input class="sysexParameter" data-sysexparameterno="58" id="sysex58" max="99" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <div class="envelopeCanvasContainer">
+                        <canvas id="op4EnvCanvas" />
                     </div>
                 </div>
             </div>
@@ -634,6 +671,11 @@
                         <input class="sysexParameter" data-sysexparameterno="37" id="sysex37" max="99" min="0" type="range" />
                     </div>
                 </div>
+                <div class="controlitemgroup">
+                    <div class="envelopeCanvasContainer">
+                        <canvas id="op5EnvCanvas" />
+                    </div>
+                </div>
             </div>
         </div>
         <div class="controlpanel">
@@ -739,6 +781,11 @@
                     <div class="controller">
                         <label for="sysex16">Operator Output Level </label>
                         <input class="sysexParameter" data-sysexparameterno="16" id="sysex16" max="99" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <div class="envelopeCanvasContainer">
+                        <canvas id="op6EnvCanvas" />
                     </div>
                 </div>
             </div>
