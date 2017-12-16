@@ -25,8 +25,6 @@ function makeEnvelope(r1Ele, r2Ele, r3Ele, r4Ele, l1Ele, l2Ele, l3Ele, l4Ele, ca
         canvasParentStyle = getComputedStyle(canvas.parentElement);
         let currentParentWidth = parseInt(canvasParentStyle.width, 10);
         let currentParentHeight = parseInt(canvasParentStyle.height, 10);
-        //console.log(currentParentWidth);
-        //console.log(parentWidth);
         if(parentWidth != currentParentWidth){
             console.log("width");
             canvas.width = parseInt(canvasParentStyle.width, 10) - parseInt(canvasParentStyle.paddingLeft, 10) - parseInt(canvasParentStyle.paddingRight, 10);
@@ -123,6 +121,8 @@ function makeEnvelope(r1Ele, r2Ele, r3Ele, r4Ele, l1Ele, l2Ele, l3Ele, l4Ele, ca
         envInputs[prop].addEventListener("input", function(event) {update();});
     }
 
+    // Hook resizing of canvas to animation frame because that should be way lower maintanence than trying to do it on a timer tick
+    // (this gets reassigned inside that function, as is required)
     window.requestAnimationFrame(checkResizeCanvas);
 
     update();
