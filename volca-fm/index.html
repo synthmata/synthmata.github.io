@@ -43,7 +43,8 @@
             ];
             
             for(let params of envelopeSysexes){
-                makeEnvelope(...params.map(x => document.getElementById(x)));
+                let updateFunc = makeEnvelope(...params.map(x => document.getElementById(x)));
+                window.addEventListener("synthmataPatchLoaded", x => updateFunc());
             }
         }
         

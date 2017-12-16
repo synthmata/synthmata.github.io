@@ -13,6 +13,8 @@ var goodFile = null;
 var sysexThrottleTimer = null;
 var sysexThrottleTimerMs = 300;
 
+var patchLoadedEvent = new Event("synthmataPatchLoaded");
+
 // TODO: better plan for this to have user of module put it in a hidden textbox?
 var __init_patch__ = "8EMAAAEbUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAUGMAAAAyAAAAAAAAAFwAAgAAUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAT2MAAAAyAAAAAAAAAFwAAgAAUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAUGMAAAAyAAAAAAAAAGMAAgAAMjIyMjIyMjIfAAAAAAAAAAAAGHN5bnRobWF0YSB/TPc=";
 
@@ -409,6 +411,7 @@ function loadSysex(sysexData) {
     });
     sysexDumpData = paramArray;
     sendSysexDump();
+    window.dispatchEvent(patchLoadedEvent);
 }
 
 function tryLoadSysex(event) {
