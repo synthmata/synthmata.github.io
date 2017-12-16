@@ -10,12 +10,23 @@
     <script src="../script/synthmata.js" type="text/javascript"></script>
     <script src="../script/dx7envdisplay.js" type="text/javascript"></script>
     <script>
+
+        var valueDisplayFunctions = {
+            "addOne": x => x + 1,
+            "opScaling": x => ["-ln", "-ex", "+ex", "+ln"][x],
+            "lfoShape": x => ["tri", "sup", "sdn", "sqr", "sin", "s+h"][x],
+        }
         var valueDisplayTimeout = null;
         var valueDisplayTimeoutIntervalMs = 1000;
         function doValueDisplay(event){
             let targetElementBounding = event.target.getBoundingClientRect();
             let valueDisplayer = document.getElementById("valueDisplay");
-            valueDisplayer.innerText = parseInt(event.target.value);
+            let disFunc = valueDisplayFunctions[event.target.dataset.displayvaluefunc];
+            if(disFunc){
+                valueDisplayer.innerText = disFunc(parseInt(event.target.value));
+            }else{
+                valueDisplayer.innerText = parseInt(event.target.value);
+            }
             valueDisplayer.style.display = "block";
             if (valueDisplayTimeout != null) {
                 clearTimeout(valueDisplayTimeout);
@@ -171,15 +182,15 @@
                     </div>
                     <div class="controller">
                         <label for="sysex115">Level Scale Right Depth </label>
-                        <input class="sysexParameter" data-sysexparameterno="115" id="sysex115" max="99" min="0" type="range" />
+                        <input class="sysexParameter" data-sysexparameterno="115" data-displayvaluefunc="addOne" id="sysex115" max="99" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="sysex116">Level Scale Left Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="116" id="sysex116" max="3" min="0" type="range" />
+                        <input class="sysexParameter" data-sysexparameterno="116" data-displayvaluefunc="opScaling" id="sysex116" max="3" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="sysex117">Level Scale Right Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="117" id="sysex117" max="3" min="0" type="range" />
+                        <input class="sysexParameter" data-sysexparameterno="117" data-displayvaluefunc="opScaling" id="sysex117" max="3" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="sysex118">Operator Rate Scale </label>
@@ -287,11 +298,11 @@
                     </div>
                     <div class="controller">
                         <label for="sysex95">Level Scale Left Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="95" id="sysex95" max="3" min="0" type="range" />
+                        <input class="sysexParameter" data-sysexparameterno="95" data-displayvaluefunc="opScaling" id="sysex95" max="3" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="sysex96">Level Scale Right Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="96" id="sysex96" max="3" min="0" type="range" />
+                        <input class="sysexParameter" data-sysexparameterno="96" data-displayvaluefunc="opScaling" id="sysex96" max="3" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="sysex97">Operator Rate Scale </label>
@@ -399,11 +410,11 @@
                     </div>
                     <div class="controller">
                         <label for="sysex74">Level Scale Left Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="74" id="sysex74" max="3" min="0" type="range" />
+                        <input class="sysexParameter" data-sysexparameterno="74" data-displayvaluefunc="opScaling" id="sysex74" max="3" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="sysex75">Level Scale Right Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="75" id="sysex75" max="3" min="0" type="range" />
+                        <input class="sysexParameter" data-sysexparameterno="75" data-displayvaluefunc="opScaling" id="sysex75" max="3" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="sysex76">Operator Rate Scale </label>
@@ -512,11 +523,11 @@
                     </div>
                     <div class="controller">
                         <label for="sysex53">Level Scale Left Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="53" id="sysex53" max="3" min="0" type="range" />
+                        <input class="sysexParameter" data-sysexparameterno="53" data-displayvaluefunc="opScaling" id="sysex53" max="3" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="sysex54">Level Scale Right Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="54" id="sysex54" max="3" min="0" type="range" />
+                        <input class="sysexParameter" data-sysexparameterno="54" data-displayvaluefunc="opScaling" id="sysex54" max="3" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="sysex55">Operator Rate Scale </label>
@@ -624,11 +635,11 @@
                     </div>
                     <div class="controller">
                         <label for="sysex32">Level Scale Left Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="32" id="sysex32" max="3" min="0" type="range" />
+                        <input class="sysexParameter" data-sysexparameterno="32" data-displayvaluefunc="opScaling" id="sysex32" max="3" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="sysex33">Level Scale Right Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="33" id="sysex33" max="3" min="0" type="range" />
+                        <input class="sysexParameter" data-sysexparameterno="33" data-displayvaluefunc="opScaling" id="sysex33" max="3" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="sysex34">Operator Rate Scale </label>
@@ -736,11 +747,11 @@
                     </div>
                     <div class="controller">
                         <label for="sysex11">Level Scale Left Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="11" id="sysex11" max="3" min="0" type="range" />
+                        <input class="sysexParameter" data-sysexparameterno="11" data-displayvaluefunc="opScaling" id="sysex11" max="3" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="sysex12">Level Scale Right Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="12" id="sysex12" max="3" min="0" type="range" />
+                        <input class="sysexParameter" data-sysexparameterno="12" data-displayvaluefunc="opScaling" id="sysex12" max="3" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="sysex13">Operator Rate Scale </label>
@@ -799,7 +810,7 @@
                     <h3>Operator Settings</h3>
                     <div class="controller">
                         <label for="sysex134">Algorithm </label>
-                        <input class="sysexParameter" data-sysexparameterno="134" id="sysex134" max="31" min="0" type="range" />
+                        <input class="sysexParameter" data-sysexparameterno="134" data-displayvaluefunc="addOne" id="sysex134" max="31" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="sysex135">Feedback </label>
@@ -863,7 +874,7 @@
                     </div>
                     <div class="controller">
                         <label for="sysex142">LFO Wave Shape </label>
-                        <input class="sysexParameter" data-sysexparameterno="142" id="sysex142" max="5" min="0" type="range" />
+                        <input class="sysexParameter" data-sysexparameterno="142" data-displayvaluefunc="lfoShape" id="sysex142" max="5" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="sysex139">LFO Pitch Mod Depth </label>
@@ -893,8 +904,7 @@
                     <h3>Patch Settings</h3>
                     <div class="controller">
                         <label for="sysex145">Name </label>
-                        <input class="sysexParameterText" data-sysexparameterno="145" data-sysextextlength="10" id="sysex145" type="text" maxlength="10"
-                        />
+                        <input class="sysexParameterText" data-sysexparameterno="145" data-sysextextlength="10" id="sysex145" type="text" maxlength="10"/>
                     </div>
                 </div>
             </div>
