@@ -80,9 +80,12 @@ function makeEnvelope(r1Ele, r2Ele, r3Ele, r4Ele, l1Ele, l2Ele, l3Ele, l4Ele, ca
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
         // set scale if required to fit
         
+        /*
         if(scale > 1){
             ctx.scale(1/scale, 1);
         }
+        */
+        ctx.scale(1/scale, 1);
         
         let x = 0;
         ctx.beginPath();
@@ -101,7 +104,8 @@ function makeEnvelope(r1Ele, r2Ele, r3Ele, r4Ele, l1Ele, l2Ele, l3Ele, l4Ele, ca
         x += easeInWidth;
         ctx.lineTo(x, baseLine - (l4 * envHeight) / 100);
 
-        ctx.lineWidth = 5;
+        //ctx.lineWidth = 5;
+        ctx.lineWidth = 5 * scale;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
         ctx.strokeStyle = "rgb(41, 163, 67)";
@@ -109,7 +113,8 @@ function makeEnvelope(r1Ele, r2Ele, r3Ele, r4Ele, l1Ele, l2Ele, l3Ele, l4Ele, ca
 
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         // draw text information
-        let scaleText = "x" + (scale > 1 ? scale.toLocaleString(undefined, {"maximumFractionDigits": 3}) : "1");
+        //let scaleText = "x" + (scale > 1 ? scale.toLocaleString(undefined, {"maximumFractionDigits": 3}) : "1");
+        let scaleText = "x" + scale.toLocaleString(undefined, {"maximumFractionDigits": 3});
         ctx.fillStyle = "rgb(41, 163, 67)";
         ctx.font = "16px 'Press Start 2P', cursive"
         ctx.textBaseline = "top";
