@@ -429,7 +429,7 @@ function createSharablePatchLink(){
     // abusing dom to parse the current url
     var parser = document.createElement('a');
     parser.href = window.location;
-    let result =  parser.origin + parser.pathname + "?p=" + patchAsB64;
+    let result =  parser.origin + parser.pathname + "?p=" + encodeURIComponent(patchAsB64);
     return result;
 }
 
