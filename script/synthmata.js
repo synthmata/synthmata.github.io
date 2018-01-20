@@ -170,6 +170,21 @@ function fullRefreshSysexData() {
 
         sysexDumpData[parameterNo] = value & 0x7f;
     }
+    
+    let bitSwitchControls = new Array(...document.getElementsByClassName("sysexParameterBitswitch"));
+    bitSwitchControls.forEach(function(element){
+        let mask = parseInt(element.dataset.sysexparameterbitmask);
+        let switched = element.type == "checkbox" || element.type == "radio" ? element.checked : element.value != 0;
+        let parameterNo = parseInt(element.dataset.sysexparameterno);
+
+        if(switched){
+            sysexDumpData[parameterNo] |= (0xff & mask)
+        }else{
+            sysexDumpData[parameterNo] &= ~(0xff & mask)
+        }
+
+    });
+
     // temporary solution for the name
     for (let i = 0; i < 10; i++) {
         sysexDumpData[i + 145] = tempTitle[i] & 0x7f;
