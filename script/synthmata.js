@@ -18,6 +18,11 @@ var patchLoadedEvent = new Event("synthmataPatchLoaded");
 // TODO: better plan for this to have user of module put it in a hidden textbox?
 var __init_patch__ = "8EMAAAEbUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAUGMAAAAyAAAAAAAAAFwAAgAAUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAT2MAAAAyAAAAAAAAAFwAAgAAUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAUGMAAAAyAAAAAAAAAGMAAgAAMjIyMjIyMjIfAAAAAAAAAAAAGHN5bnRobWF0YSB/TPc=";
 
+function loadInitPatch(){
+    let patchRaw = base64js.toByteArray(__init_patch__);
+    loadSysex(patchRaw)
+}
+
 function onMIDISuccess(result) {
     console.log("MIDI ready!");
     midi = result;
@@ -31,8 +36,7 @@ function onMIDISuccess(result) {
     setupParameterControls();
     fullRefreshSysexData(); // for Volca FM
     if(!loadSharablePatchLink(window.location)){
-        let patchRaw = base64js.toByteArray(__init_patch__);
-        loadSysex(patchRaw)
+        loadInitPatch();
     }
 }
 
@@ -129,7 +133,8 @@ function buildSaveLoadSharePanel() {
     initPatchButton.id = "initPatchButton";
     initPatchButton.textContent = "Init Patch";
     initPatchButton.onclick = function(){
-        loadSysex(base64js.toByteArray(__init_patch__));
+        //loadSysex(base64js.toByteArray(__init_patch__));
+        loadInitPatch();
     }
     container.appendChild(initPatchButton);
 

@@ -72,6 +72,9 @@
                     document.getElementById("random_hit").value,
                     document.getElementById("random_twang").value,
                     document.getElementById("random_longness").value,
+                    document.getElementById("random_wobble").value,
+                    document.getElementById("random_wubble").value,
+                    document.getElementById("random_velocity").value,
                 );
                 fullRefreshSysexData(); // have to do this because no onchange events will be thrown 
                 sendSysexDump();
@@ -965,6 +968,21 @@
                     <div class="controller">
                         <label for="random_longness">Longness</label>
                         <input id="random_longness" value="50" max="99" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Movement</h3>
+                    <div class="controller">
+                        <label for="random_wobble">Wobble</label>
+                        <input id="random_wobble" value="0" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="random_wubble">Wubble</label>
+                        <input id="random_wubble" value="0" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="random_velocity">Velocity</label>
+                        <input id="random_velocity" value="0" max="99" min="0" type="range" />
                     </div>
                 </div>
                 <div class="controlitemgroup">

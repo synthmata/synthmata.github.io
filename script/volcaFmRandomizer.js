@@ -77,6 +77,7 @@ var ALGO_COMPLEXITY_LOOKUP = [
 
 var ATONALILTY_DIVIDERS = [1, 2, 4, 3, 5];
 
+var LFO_SHAPE_COMPLEXITY = [0, 4, 3, 1, 2]; // sample/hold not included because i think it's broken on the volca
 
 function randomInt(min, max) {
     min = Math.ceil(min);
@@ -94,7 +95,7 @@ function randomizer(doc){
         doc.getElementById("sysex60"),
         doc.getElementById("sysex39"),
         doc.getElementById("sysex18"),
-    ]
+    ];
     var op_fineTuners = [
         doc.getElementById("sysex124"),
         doc.getElementById("sysex103"),
@@ -102,7 +103,7 @@ function randomizer(doc){
         doc.getElementById("sysex61"),
         doc.getElementById("sysex40"),
         doc.getElementById("sysex19"),
-    ]
+    ];
     var op_deTuners = [
         doc.getElementById("sysex125"),
         doc.getElementById("sysex104"),
@@ -110,7 +111,7 @@ function randomizer(doc){
         doc.getElementById("sysex62"),
         doc.getElementById("sysex41"),
         doc.getElementById("sysex20"),
-    ]
+    ];
     var op_levels = [
         doc.getElementById("sysex121"),
         doc.getElementById("sysex100"),
@@ -118,7 +119,23 @@ function randomizer(doc){
         doc.getElementById("sysex58"),
         doc.getElementById("sysex37"),
         doc.getElementById("sysex16"),
-    ]
+    ];
+    var op_am = [
+        doc.getElementById("sysex119"),
+        doc.getElementById("sysex98"),
+        doc.getElementById("sysex77"),
+        doc.getElementById("sysex56"),
+        doc.getElementById("sysex35"),
+        doc.getElementById("sysex14"),
+    ];
+    var op_kvs = [
+        doc.getElementById("sysex120"),
+        doc.getElementById("sysex99"),
+        doc.getElementById("sysex78"),
+        doc.getElementById("sysex57"),
+        doc.getElementById("sysex36"),
+        doc.getElementById("sysex15"),
+    ];
 
     var envelopes = [
         ["sysex105", "sysex106", "sysex107", "sysex108", "sysex109", "sysex110", "sysex111", "sysex112"].map(x => doc.getElementById(x)),
@@ -129,9 +146,17 @@ function randomizer(doc){
         ["sysex0", "sysex1", "sysex2", "sysex3", "sysex4", "sysex5", "sysex6", "sysex7"].map(x => doc.getElementById(x))
     ];
 
+    var feedbackInput = doc.getElementById("sysex135")
     var algorithmInput = doc.getElementById("sysex134");
+    var lfoSpeedInput =  doc.getElementById("sysex137");
+    var pitchModDepthInput = doc.getElementById("sysex139");
+    var pitchModSenseInput = doc.getElementById("sysex143");
+    var ampModDepthInput = doc.getElementById("sysex140");
+    var waveShapeInput = doc.getElementById("sysex142");
 
-    function randomize(atonality, complexity, brightness, hardness, hitness, twang, long){
+    function randomize(atonality, complexity, brightness, 
+        hardness, hitness, twang, long,
+        wobble, wubble, velocity){
         if(atonality < 0 || atonality > 99){
             throw "atonality out of bounds";
         }
@@ -139,19 +164,28 @@ function randomizer(doc){
             throw "complexity out of bounds";
         }
         if(brightness < 0 || brightness > 99){
-            throw "atonality out of bounds";
+            throw "brightness out of bounds";
         }
         if(hardness < 0 || hardness > 99){
-            throw "atonality out of bounds";
+            throw "hardness out of bounds";
         }
         if(hitness < 0 || hitness > 99){
-            throw "atonality out of bounds";
+            throw "hitness out of bounds";
         }
         if(twang < 0 || twang > 99){
-            throw "atonality out of bounds";
+            throw "twang out of bounds";
         }
         if(long < 0 || long > 99){
-            throw "atonality out of bounds";
+            throw "long out of bounds";
+        }
+        if(wobble < 0 || wobble > 99){
+            throw "wobble out of bounds";
+        }
+        if(wubble < 0 || wubble > 99){
+            throw "wubble out of bounds";
+        }
+        if(velocity < 0 || velocity > 99){
+            throw "velocity out of bounds";
         }
 
         atonality = parseInt(atonality);
@@ -161,6 +195,9 @@ function randomizer(doc){
         hitness = parseInt(hitness);
         twang = parseInt(twang);
         long = parseInt(long);
+        wobble = parseInt(wobble);
+        wubble = parseInt(wubble);
+        velocity = parseInt(velocity);
 
         //choose algorithm
         let algorithm = ALGO_COMPLEXITY_LOOKUP[ 
@@ -226,6 +263,22 @@ function randomizer(doc){
             op_fineTuners[op - 1].value = fine;
             op_deTuners[op - 1].value = randomInt(0, maxDetune + 1);
         }
+
+        // feedback i'm going to give both complexity and brightness a go at. They get a roll of the dice
+        // multiple times based on their values. Each roll has a chance to increase feedback.
+        let fb = 0;
+        for(let i = 20; i < brightness; i+= 20){
+            if(randomInt(0, 3) == 2){
+                fb += 1
+            }
+        }
+        for(let i = 20; i < complexity; i+= 20){
+            if(randomInt(0, 3) == 2){
+                fb += 1
+            }
+        }
+
+        feedbackInput.value = fb;
 
         // and on to the envelope
         // i'm allowing a little more randomness in here, because the envelope is less likely
@@ -304,7 +357,7 @@ function randomizer(doc){
             // r4 - about dat longness
             r4 = 0;
             for(let i = 0; i < 100; i += (long + 1)){
-                r4 += randomInt(0, 20);
+                r4 += randomInt(0, 30);
             }
             
             envelopes[op - 1][0].value = r1;
@@ -316,6 +369,89 @@ function randomizer(doc){
             envelopes[op - 1][6].value = l3;
             envelopes[op - 1][7].value = l4;
         }
+
+        // movement stuff (lfos and velocity)
+        // velocity - dice rolls, more likely to modulators
+        for(let op = 1; op <= 6; op++){
+            let odds = carriers.includes(op) ? 8 : 3;
+            let kvs = 0;
+            for(let i = 0 ; i < 7; i++){
+                if(randomInt(0, odds * 100) < velocity){
+                    kvs += 1;
+                }
+            }
+            op_kvs[op - 1].value = kvs;
+        }
+
+        // wubble (am)
+        // for the operators it's dice rolls as above, but we also need to set
+        // the global depth
+        for(let op = 1; op <= 6; op++){
+            let odds = carriers.includes(op) ? 5 : 3;
+            let ams = 0;
+            for(let i = 0 ; i < 7; i++){
+                if(randomInt(0, odds * 100) < wubble){
+                    ams += 1;
+                }
+            }
+            op_am[op - 1].value = ams;
+        }
+
+        ampModDepthInput.value = Math.max(0, Math.min(99, wubble + randomInt(-40, 40)));
+
+        // wobble (pitch mod)
+        // so this is 2 global parameters pitch mod depth and pitch mod sensitivity.
+        // to my ears, each notch on the PMS doubles the sensitivity, so depth 99 on 
+        // sensitity 1 is roughly the same as depth 50 on sensitivity 2, which is the
+        // same as depth 25 on sensitivity 3, and so on
+        // so that basically gives us a pitch mod amount that runs from 0 to 6400 more
+        // or less.
+        // of course, if the user has the slider set to 0, we don't do anything
+        if(wobble > 0){
+            // To make the slider even remotely useful though, we need to log scale it:
+            let minWobp = 0;
+            let maxWobp = 100;
+
+            let minWobv = Math.log(1);
+            let maxWobv = Math.log(6400);
+
+            let wobScale = (maxWobv - minWobv) / (maxWobp - minWobp);
+            wobbleLog = Math.exp(minWobv + wobScale * (wobble - minWobp));
+
+            let wobbleVarience = 50; // arbitrary, tweak for best results
+            let wobbleValue = Math.max(0, Math.min(6400, wobbleLog + randomInt(-wobbleVarience, wobbleVarience)));
+
+            // once we have that value, we work out the most precise place to put it
+            let pSensitivty = 1;
+            let i = 100;
+            while(wobbleValue > i){
+                pSensitivty += 1;
+                i = 100 * (1 << (pSensitivty - 1));
+            }
+            let pitchModDepth = wobbleValue / (1 << (pSensitivty - 1));
+
+            pitchModSenseInput.value = pSensitivty;
+            pitchModDepthInput.value = pitchModDepth;
+        }
+        // lfo speed
+        // so, my theory here is that there's a sweet spot in the middle which sounds
+        // "right" on a lot of patches. Somewhere between 20 and 60. Outside of that it's
+        // more "complex" or more "seasick" (wobbly). So i'm going to have stuff pulling in
+        // different directions from that sweetspot.
+
+        let lfoSpeed = 40;
+        lfoSpeed += randomInt(0, complexity * 0.6);
+        lfoSpeed -= randomInt(0, wobble * 0.6);
+
+        // finally, just add some generic, arbitrary randomness, yo
+        lfoSpeed += randomInt(-20, 20);
+        lfoSpeed = Math.max(0, Math.min(99, lfoSpeed));
+        
+        lfoSpeedInput.value = lfoSpeed;
+
+        // finally the lfo shape - just down to complexity
+        waveShapeInput.value = LFO_SHAPE_COMPLEXITY[Math.floor(randomInt(0, complexity) / LFO_SHAPE_COMPLEXITY.length)];
+        
     }
 
     return randomize;
