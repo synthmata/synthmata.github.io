@@ -42,6 +42,10 @@
                 sysexControl.addEventListener("input", doValueDisplay);
                 sysexControl.addEventListener("mouseover", doValueDisplay);
             }
+            for (let sysexControl of document.getElementsByClassName("randomizerParameter")) {
+                sysexControl.addEventListener("input", doValueDisplay);
+                sysexControl.addEventListener("mouseover", doValueDisplay);
+            }
         }
 
         function setupEnvelopes(){
@@ -64,18 +68,20 @@
             let randomize = randomizer(document);
             document.getElementById("random_newpatch").addEventListener(
                 "click", 
-                x => {randomize(
-                    document.getElementById("random_atonality").value,
-                    document.getElementById("random_complexity").value,
-                    document.getElementById("random_brightness").value,
-                    document.getElementById("random_hardness").value,
-                    document.getElementById("random_hit").value,
-                    document.getElementById("random_twang").value,
-                    document.getElementById("random_longness").value,
-                    document.getElementById("random_wobble").value,
-                    document.getElementById("random_wubble").value,
-                    document.getElementById("random_velocity").value,
-                );
+                x => {
+                    loadInitPatch();
+                    randomize(
+                        document.getElementById("random_atonality").value,
+                        document.getElementById("random_complexity").value,
+                        document.getElementById("random_brightness").value,
+                        document.getElementById("random_hardness").value,
+                        document.getElementById("random_hit").value,
+                        document.getElementById("random_twang").value,
+                        document.getElementById("random_longness").value,
+                        document.getElementById("random_wobble").value,
+                        document.getElementById("random_wubble").value,
+                        document.getElementById("random_velocity").value,
+                    );
                 fullRefreshSysexData(); // have to do this because no onchange events will be thrown 
                 sendSysexDump();
                 window.dispatchEvent(patchLoadedEvent);
@@ -940,49 +946,49 @@
                     <h3>Timbre</h3>
                     <div class="controller">
                         <label for="random_atonality">Atonality</label>
-                        <input id="random_atonality" value="0" max="99" min="0" type="range" />
+                        <input id="random_atonality" class="randomizerParameter" value="0" max="99" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="random_complexity">Complexity</label>
-                        <input id="random_complexity" value="0" max="99" min="0" type="range" />
+                        <input id="random_complexity" class="randomizerParameter" value="0" max="99" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="random_brightness">Brightness</label>
-                        <input id="random_brightness" value="0" max="99" min="0" type="range" />
+                        <input id="random_brightness" class="randomizerParameter" value="0" max="99" min="0" type="range" />
                     </div>
                 </div>
                 <div class="controlitemgroup">
                     <h3>Envelope</h3>
                     <div class="controller">
                         <label for="random_hardness">Hardness</label>
-                        <input id="random_hardness" value="50" max="99" min="0" type="range" />
+                        <input id="random_hardness" class="randomizerParameter" value="50" max="99" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="random_hit">Hit</label>
-                        <input id="random_hit" value="50" max="99" min="0" type="range" />
+                        <input id="random_hit" class="randomizerParameter" value="50" max="99" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="random_twang">Twang</label>
-                        <input id="random_twang" value="50" max="99" min="0" type="range" />
+                        <input id="random_twang" class="randomizerParameter" value="50" max="99" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="random_longness">Longness</label>
-                        <input id="random_longness" value="50" max="99" min="0" type="range" />
+                        <input id="random_longness" class="randomizerParameter" value="50" max="99" min="0" type="range" />
                     </div>
                 </div>
                 <div class="controlitemgroup">
                     <h3>Movement</h3>
                     <div class="controller">
                         <label for="random_wobble">Wobble</label>
-                        <input id="random_wobble" value="0" max="99" min="0" type="range" />
+                        <input id="random_wobble" class="randomizerParameter" value="0" max="99" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="random_wubble">Wubble</label>
-                        <input id="random_wubble" value="0" max="99" min="0" type="range" />
+                        <input id="random_wubble" class="randomizerParameter" value="0" max="99" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="random_velocity">Velocity</label>
-                        <input id="random_velocity" value="0" max="99" min="0" type="range" />
+                        <input id="random_velocity" class="randomizerParameter" value="0" max="99" min="0" type="range" />
                     </div>
                 </div>
                 <div class="controlitemgroup">
