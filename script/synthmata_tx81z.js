@@ -6,21 +6,24 @@ var midiOutPorts = null;
 var selectedMidiPort = null;
 var selectedMidiChannel = null;
 
-var sysexDumpData = null;  // we have to use this for Volca FM which only reponds to bulk data
+var sysexDumpData = null;  
+var sysexDumpDataAced = null;
 
 var goodFile = null;
 
 var sysexThrottleTimer = null;
-var sysexThrottleTimerMs = 300;
+var sysexThrottleTimerMs = 30;
 
 var patchLoadedEvent = new Event("synthmataPatchLoaded");
 
 // TODO: better plan for this to have user of module put it in a hidden textbox?
-var __init_patch__ = "8EMAAAEbUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAUGMAAAAyAAAAAAAAAFwAAgAAUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAT2MAAAAyAAAAAAAAAFwAAgAAUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAUGMAAAAyAAAAAAAAAGMAAgAAMjIyMjIyMjIfAAAAAAAAAAAAGHN5bnRobWF0YSB/TPc=";
-
+var __init_patch__ = "8EMEAwBdHx8ADw8AAAAAAGMAAx8fAA8PAAAAAABjCAMfHwAPDwAAAAAAYwgDHx8ADw8AAAAAAGMEAwcAAAAAAAACAAAYAAIAAAAAAAAKAAAAAABTeW50aG1hdGEgAAAAAAAAXvc=";
+var __init_patch_aced__ = "8EMEfgAhTE0gIDg5NzZBRQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ/c=";
 function loadInitPatch(){
     let patchRaw = base64js.toByteArray(__init_patch__);
-    loadSysex(patchRaw)
+    loadSysex(patchRaw, false)
+    patchRaw = base64js.toByteArray(__init_patch_aced__);
+    loadSysex(patchRaw, true);
 }
 
 function onMIDISuccess(result) {
@@ -114,6 +117,7 @@ function buildSaveLoadSharePanel() {
     loadInput.setAttribute("type", "file");
     loadInput.id = "sysexFileChooser"
     loadInput.onchange = checkSysexFileLoad;
+    loadInput.disabled = true;
     container.appendChild(loadInput);
 
     let loadButton = document.createElement("button");
@@ -121,12 +125,14 @@ function buildSaveLoadSharePanel() {
     loadButton.textContent = "Load Sysex";
     loadButton.setAttribute("disabled", true);
     loadButton.onclick = tryLoadSysex;
+    loadButton.disabled = true;
     container.appendChild(loadButton);
 
     let saveButton = document.createElement("button");
     saveButton.id = "sysexSaveButton";
     saveButton.textContent = "Save Sysex";
     saveButton.onclick = saveSysex;
+    saveButton.disabled = true;
     container.appendChild(saveButton); // TODO: hook up event
 
     let initPatchButton = document.createElement("button");
@@ -156,24 +162,28 @@ function buildSaveLoadSharePanel() {
 
 function setupParameterControls() {
     for (let sysexControl of document.getElementsByClassName("sysexParameter")) {
-        sysexControl.oninput = handleValueChangeVoiceDump;
+        sysexControl.oninput = handleValueChange;
     }
     for (let sysexControl of document.getElementsByClassName("sysexParameterText")) {
-        sysexControl.oninput = handleValueChangeVoiceDump;
+        sysexControl.oninput = handleValueChange;
     }
     for(let sysexControl of document.getElementsByClassName("sysexParameterBitswitch")) {
-        sysexControl.onchange = handleValueChangeVoiceDump; // usually checkboxes and they don't have oninputs
+        sysexControl.onchange = handleValueChange; // usually checkboxes and they don't have oninputs
     }
 }
 
 function fullRefreshSysexData() {
-    sysexDumpData = new Array(156); // TODO: probably don't hard code this?
+    sysexDumpData = new Array(93); 
     sysexDumpData.fill(0);
+
+    sysexDumpDataAced = new Array(23);
+    sysexDumpDataAced.fill(0);
+
     for (let ele of document.getElementsByClassName("sysexParameter")) {
         let parameterNo = parseInt(ele.dataset.sysexparameterno);
         let value = parseInt(ele.value);
-
-        sysexDumpData[parameterNo] = value & 0x7f;
+        let sysexBuffer = ele.dataset.txaced != undefined ? sysexDumpDataAced : sysexDumpData;
+        sysexBuffer[parameterNo] = value & 0x7f;
     }
     
     let bitSwitchControls = new Array(...document.getElementsByClassName("sysexParameterBitswitch"));
@@ -181,13 +191,12 @@ function fullRefreshSysexData() {
         let mask = parseInt(element.dataset.sysexparameterbitmask);
         let switched = element.type == "checkbox" || element.type == "radio" ? element.checked : element.value != 0;
         let parameterNo = parseInt(element.dataset.sysexparameterno);
-
+        let sysexBuffer = element.dataset.txaced != undefined ? sysexDumpDataAced : sysexDumpData;
         if(switched){
-            sysexDumpData[parameterNo] |= (0xff & mask)
+            sysexBuffer[parameterNo] |= (0xff & mask)
         }else{
-            sysexDumpData[parameterNo] &= ~(0xff & mask)
+            sysexBuffer[parameterNo] &= ~(0xff & mask)
         }
-
     });
 
     let textControls = new Array(...document.getElementsByClassName("sysexParameterText"));
@@ -195,43 +204,25 @@ function fullRefreshSysexData() {
         let parameterNo = parseInt(element.dataset.sysexparameterno);
         let stringLength = parseInt(element.dataset.sysextextlength);
         let value = element.value.toString();
+        let sysexBuffer = element.dataset.txaced != undefined ? sysexDumpDataAced : sysexDumpData;
         for(let i = 0; i < stringLength; i++){
             if(i < value.length){
                 let ordinal = value.charCodeAt(i);
                 if(ordinal <= 0x20 || ordinal >= 0x7f){
                     ordinal = 0x3f; // ?
                 }
-                sysexDumpData[i + parameterNo] = ordinal;
+                sysexBuffer[i + parameterNo] = ordinal;
             }else{
-                sysexDumpData[i + parameterNo] = 0x20;
+                sysexBuffer[i + parameterNo] = 0x20;
             }
         }
     });
-    console.log(sysexDumpData);
-}
 
-// So, this probably works for the DX-7 (should try on TX81z), but the volca-fm only reads bulk data...)
-function handleValueChange(event) {
-    if (selectedMidiChannel != null && selectedMidiPort != null) {
-        if (event.target.classList.contains("sysexParameter")) {
-            let ele = event.target;
-            let parameterNo = parseInt(ele.dataset.sysexparameterno);
-            let value = parseInt(ele.value);
-
-            // build the sysex message
-            paramChangeMessage = [
-                0xf0,                         // status byte (sysex)
-                0x43,                           // id number (Yamaha)
-                0x10 | selectedMidiChannel,   // sub status 0b0001_nnnn; n is channel
-                0x00 | (parameterNo >> 7),    // 0b0ggg_ggpp ; g is paramater group no. (0 = voice); p is (part of) paramater number
-                parameterNo & 0x7f,           // 0b0ppp_pppp ; rest of parameter number
-                value & 0x7f,                 // 0b0ddd_dddd ; value data
-                0xf7                          // 0b1111_0111 ; EOX
-            ]
-            //console.log(paramChangeMessage);
-            selectedMidiPort.send(paramChangeMessage);
-        }
-    }
+    // // temporary solution for the name
+    // for (let i = 0; i < 10; i++) {
+    //     sysexDumpData[i + 145] = tempTitle[i] & 0x7f;
+    // }
+    // console.log(sysexDumpData);
 }
 
 function createSysexDumpBuffer() {
@@ -239,10 +230,10 @@ function createSysexDumpBuffer() {
     // dump data, masked back against 0x7f
     // if i want to micro-optimise this, I can. I don't really want to though.
     let sum = 0;
-    for (let i = 0; i < sysexDumpData.length; i++) {
+    for (let i = 0; i < 0x5d; i++) {
         sum += sysexDumpData[i];
     }
-    //sum += 0x7f // TODO: remove once operator on-off isn't hardcoded
+    
     sum &= 0xff;
     sum = (~sum) + 1;
     sum &= 0x7f;
@@ -250,31 +241,99 @@ function createSysexDumpBuffer() {
     let buffer = [
         0xF0,                         // status - start sysex
         0x43,                         // id - yamaha (67)
-        0x00 | selectedMidiChannel,   // 0b0sssnnnn substatus (0), channel (n)
-        0x00,                         // format number (0 = 1 voice)
-        0x01,                         // 0b0bbbbbbb data byte count msb
-        0x1b,                         // 0b0bbbbbbb data byte count lsb
-        ...sysexDumpData,
-        //0x7f,                         // TODO: remove once operator on-off isn't hardcoded
+        0x00 | selectedMidiChannel,   // channel 
+        0x03,                         // format number (3 = 1 voice)
+        0x00,                         // 0b0bbbbbbb data byte count msb
+        0x5d,                         // 0b0bbbbbbb data byte count lsb
+        ...sysexDumpData.slice(0, sysexDumpData.length - 1),
         sum,                          // checksum
         0xf7                          // 0b1111_0111 ; EOX
     ];
 
-    //console.log(buffer);
+    console.log(buffer);
     return buffer;
 }
 
-// volca fm only responds to bulk voice messages, so this version works
-// but the handleValueChange doesn't.
-function handleValueChangeVoiceDump(event) {
+function createAcedSysexDumpBuffer() {
+    // checksum is a byte which is the twos complement of the sum of the
+    // dump data, masked back against 0x7f
+    // if i want to micro-optimise this, I can. I don't really want to though.
+    acedId = [0x4c, 0x4d, 0x20, 0x20, 0x38, 0x39, 0x37, 0x36, 0x41, 0x45]
+    
+    let sum = 0;
+    for (let i = 0; i < acedId.length; i++){
+        sum += acedId[i];
+    }
+
+    for (let i = 0; i < sysexDumpDataAced.length - 1; i++) {
+        sum += sysexDumpDataAced[i];
+    }
+    
+    sum &= 0xff;
+    sum = (~sum) + 1;
+    sum &= 0x7f;
+
+    let buffer = [
+        0xF0,                         // status - start sysex
+        0x43,                         // id - yamaha (67)
+        0x00 | selectedMidiChannel,   // channel 
+        0x7e,                         // format number (7e = aced voice)
+        0x00,                         // 0b0bbbbbbb data byte count msb
+        0x21,                         // 0b0bbbbbbb data byte count lsb
+        ...acedId, 
+        ...sysexDumpDataAced,
+        sum,                          // checksum
+        0xf7                          // 0b1111_0111 ; EOX
+    ];
+
+    console.log(buffer);
+    return buffer;
+}
+
+
+// On these synths we can send invididual parameters, but we will still maintain
+// our patch array for convenience...
+function sendParameterChange(paramNumber, isAced, value){
+    let message = [
+        0xf0,                       // start sysex
+        0x43,                       // ID - Yamaha 
+        0x10 | selectedMidiChannel, // channel
+        0x10 | (isAced ? 3 : 2),    // 0b 0ggggghh ggggg = group (always 4) hh = subgroup (2 for basic, 3 for aced)
+        paramNumber & 0x7f,         // param number
+        value & 0x7f,               // value
+        0xf7                        // end sysex
+    ]
+
+    console.log(message);
+    selectedMidiPort.send(message);
+
+}
+
+function handleValueChange(event) {
+    let isAced = event.target.dataset.txaced != undefined;
     if (selectedMidiChannel != null && selectedMidiPort != null) {
         let ele = event.target;
+        let sysexBuffer = ele.dataset.txaced != undefined ? sysexDumpDataAced : sysexDumpData;
         if (event.target.classList.contains("sysexParameter")) {
             let parameterNo = parseInt(ele.dataset.sysexparameterno);
             let value = parseInt(ele.value);
+            sysexBuffer[parameterNo] = value & 0x7f;
+            
+            // throttle these changes so we don't overflow the buffer on the
+            // synth. if we were being very paranoid, we'd put in a safegaurd
+            // to always send the last value of any session of value changes
+            // on a control before moving to another, but that seems a lot like
+            // solving an issue before we know it can exist. Something to 
+            // consider if we get lost parameter changes though.
+            if (sysexThrottleTimer != null) {
+                clearTimeout(sysexThrottleTimer);
+            }
 
-            sysexDumpData[parameterNo] = value & 0x7f;
-            //sendSysexDump()
+            sysexThrottleTimer = setTimeout(function () {
+                sendParameterChange(parameterNo, isAced, value);
+            }, sysexThrottleTimerMs);
+            //sendParameterChange(parameterNo, isAced, value);
+
         }else if (event.target.classList.contains("sysexParameterText")){
             let parameterNo = parseInt(ele.dataset.sysexparameterno);
             let stringLength = parseInt(ele.dataset.sysextextlength);
@@ -283,12 +342,14 @@ function handleValueChangeVoiceDump(event) {
             for(let i = 0; i < stringLength; i++){
                 if(i < value.length){
                     let ordinal = value.charCodeAt(i);
-                    if(ordinal <= 0x20 || ordinal >= 0x7f){
+                    if(ordinal < 0x20 || ordinal >= 0x7f){
                         ordinal = 0x3f; // ?
                     }
-                    sysexDumpData[i + parameterNo] = ordinal;
+                    sysexBuffer[i + parameterNo] = ordinal;
+                    sendParameterChange(i + parameterNo, isAced, ordinal)
                 }else{
-                    sysexDumpData[i + parameterNo] = 0x20;
+                    sysexBuffer[i + parameterNo] = 0x20;
+                    sendParameterChange(i + parameterNo, isAced, 0x20)
                 }
             }
         }else if(event.target.classList.contains("sysexParameterBitswitch")){
@@ -299,19 +360,20 @@ function handleValueChangeVoiceDump(event) {
                 value = ele.checked
             }
             if(value){
-                console.log(ele.value)
-                sysexDumpData[parameterNo] |= mask;
+                //console.log(ele.value)
+                sysexBuffer[parameterNo] |= mask;
             }else{
-                console.log(ele.value)
-                sysexDumpData[parameterNo] &= ~mask;
+                //console.log(ele.value)
+                sysexBuffer[parameterNo] &= ~mask;
             }
+            sendParameterChange(parameterNo, isAced, sysexBuffer[parameterNo]);
         }
-        sendSysexDump()
+        //sendSysexDump()
     }
 }
 
 function sendSysexDump() {
-    let buffer = createSysexDumpBuffer();
+    let buffer = createSysexDumpBuffer().concat(createAcedSysexDumpBuffer());
 
     if (sysexThrottleTimer != null) {
         clearTimeout(sysexThrottleTimer);
@@ -343,7 +405,7 @@ function saveSysex() {
 }
 
 function validateSysexData(data) {
-    if (data.length != 164) {
+    if (data.length != 101) {
         console.log("wrong length");
         return false;  // wrong length
     }
@@ -355,32 +417,72 @@ function validateSysexData(data) {
         console.log("not a yamaha sysex");
         return false; // not a yamaha sysex
     }
-    if (data[163] != 0xf7) {
+    if (data[100] != 0xf7) {
         console.log("doesn't end with EOX");
         return false; // doesn't end with EOX
     }
-    if (data[2] & 0x70 != 0) {
-        console.log("sub status is not correct");
-        return false; // sub status is not correct
-    }
-    if (data[3] != 0) {
+    if (data[3] != 3) {
         console.log("format isn't voice");
         return false; // format isn't voice
     }
-    if (data[4] != 0x01 || data[5] != 0x1b) {
+    if (data[4] != 0x00 || data[5] != 0x5d) {
         console.log("length indicator is not correct");
         return false; // length indicator is not correct
     }
     
     // checksum check
     let sum = 0;
-    for (let i = 6; i < 162; i++) {
+    for (let i = 6; i < 99; i++) {
         sum += data[i];
     }
     sum &= 0xff;
     sum = (~sum) + 1;
     sum &= 0x7f;
-    if (sum != data[162]) {
+    if (sum != data[99]) {
+        console.log("checksum failed");
+        return false; // checksum failed
+    }
+
+    return true;
+}
+
+function validateSysexDataAced(data) {
+    console.log("data when checking");
+    console.log(data);
+    if (data.length != 41) {
+        console.log("wrong length");
+        return false;  // wrong length
+    }
+    if (data[0] != 0xF0) {
+        console.log("doesn't start with sysex byte");
+        return false; // doesn't start with sysex byte
+    }
+    if (data[1] != 0x43) {
+        console.log("not a yamaha sysex");
+        return false; // not a yamaha sysex
+    }
+    if (data[40] != 0xf7) {
+        console.log("doesn't end with EOX");
+        return false; // doesn't end with EOX
+    }
+    if (data[3] != 0x7e) {
+        console.log("format isn't voice");
+        return false; // format isn't voice
+    }
+    if (data[4] != 0x00 || data[5] != 0x21) {
+        console.log("length indicator is not correct");
+        return false; // length indicator is not correct
+    }
+    
+    // checksum check
+    let sum = 0;
+    for (let i = 6; i < 39; i++) {
+        sum += data[i];
+    }
+    sum &= 0xff;
+    sum = (~sum) + 1;
+    sum &= 0x7f;
+    if (sum != data[39]) {
         console.log("checksum failed");
         return false; // checksum failed
     }
@@ -411,38 +513,52 @@ function checkSysexFileLoad(event) {
     }
 }
 
-function loadSysex(sysexData) {
+function loadSysex(sysexData, isAced) {
    // let data = new Uint8ClampedArray(readerEvent.target.result);
     let data = new Uint8ClampedArray(sysexData);
-    let paramArray = data.slice(6, 162); // TODO generalise for other dumps - currently DX7 specific.
+    let paramArray = data.slice(isAced ? 16 : 6, isAced ? 39 : 100); // TODO generalise for other dumps - currently 4-op specific.
+    
     // numeric perameters
     let paramControls = new Array(...document.getElementsByClassName("sysexParameter"));
-    paramControls.forEach(function (element) { element.value = paramArray[element.dataset.sysexparameterno]; });
+    paramControls.forEach(function (element) { 
+        if((isAced && element.dataset.txaced != undefined) || (!isAced && element.dataset.txaced == undefined)){
+            element.value = paramArray[element.dataset.sysexparameterno]; 
+        }
+    });
     
     // text paramenters
     let textControls = new Array(...document.getElementsByClassName("sysexParameterText"));
     textControls.forEach(function(element){
-        let startOffset = parseInt(element.dataset.sysexparameterno);
-        let textLength = parseInt(element.dataset.sysextextlength);
-        let chararray = [];
-        for(let i = 0; i < textLength; i++){
-            chararray.push(String.fromCharCode(paramArray[i + startOffset]))
+        if((isAced && element.dataset.txaced != undefined) || (!isAced && element.dataset.txaced == undefined)){
+            let startOffset = parseInt(element.dataset.sysexparameterno);
+            let textLength = parseInt(element.dataset.sysextextlength);
+            let chararray = [];
+            for(let i = 0; i < textLength; i++){
+                chararray.push(String.fromCharCode(paramArray[i + startOffset]))
+            }
+            
+            element.value = chararray.join("");
         }
-        
-        element.value = chararray.join("");
     });
 
     let bitSwitchControls = new Array(...document.getElementsByClassName("sysexParameterBitswitch"));
     bitSwitchControls.forEach(function(element){
-        let mask = parseInt(element.dataset.sysexparameterbitmask);
-        let switched = (paramArray[element.dataset.sysexparameterno] & mask) != 0;
-        if(element.type == "checkbox" || element.type == "radio"){
-            element.checked = switched;
-        }else{
-            element.value = mask; // TODO: mask? or the switched bool?
+        if((isAced && element.dataset.txaced != undefined) || (!isAced && element.dataset.txaced == undefined)){
+            let mask = parseInt(element.dataset.sysexparameterbitmask);
+            let switched = (paramArray[element.dataset.sysexparameterno] & mask) != 0;
+            if(element.type == "checkbox" || element.type == "radio"){
+                element.checked = switched;
+            }else{
+                element.value = mask; // TODO: mask? or the switched bool?
+            }
         }
     });
-    sysexDumpData = paramArray;
+    if(!isAced){
+        sysexDumpData = paramArray;
+    }else{
+        sysexDumpDataAced = paramArray;
+    }
+    
     sendSysexDump();
     window.dispatchEvent(patchLoadedEvent);
 }
@@ -458,11 +574,13 @@ function tryLoadSysex(event) {
 }
 
 function createSharablePatchLink(){
-    let patchAsB64 = base64js.fromByteArray(createSysexDumpBuffer());
+    let basicVoicePatchAsB64 = base64js.fromByteArray(createSysexDumpBuffer());
+    let acedVoicePatchAsB64 = base64js.fromByteArray(createAcedSysexDumpBuffer());
+    
     // abusing dom to parse the current url
     var parser = document.createElement('a');
     parser.href = window.location;
-    let result =  parser.origin + parser.pathname + "?p=" + encodeURIComponent(patchAsB64);
+    let result =  parser.origin + parser.pathname + "?p=" + encodeURIComponent(basicVoicePatchAsB64) + "&a=" + encodeURIComponent(acedVoicePatchAsB64);
     return result;
 }
 
@@ -480,7 +598,20 @@ function loadSharablePatchLink(url){
     if(!validateSysexData(patchRaw)){
         return false;
     }
-    loadSysex(patchRaw)
+    loadSysex(patchRaw, false);
+
+    if(searchParams.has("a")){
+        // TODO: need to reason about this here...
+
+        let acedPatchAsB64 = searchParams.get("a");
+        console.log(acedPatchAsB64);
+        let acedPatchRaw = base64js.toByteArray(acedPatchAsB64);
+        //console.log(acedPatchRaw)
+        if(validateSysexDataAced(acedPatchRaw)){
+            loadSysex(acedPatchRaw, true);
+        }
+    }
+
     return true;
 }
 
