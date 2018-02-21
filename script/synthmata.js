@@ -5,13 +5,17 @@ var midi = null;  // global MIDIAccess object
 var midiOutPorts = null;
 var selectedMidiPort = null;
 var selectedMidiChannel = null;
+var isYamahaMode = false;
 
 var sysexDumpData = null;  // we have to use this for Volca FM which only reponds to bulk data
 
 var goodFile = null;
 
-var sysexThrottleTimer = null;
-var sysexThrottleTimerMs = 300;
+var sysexDumpThrottleTimer = null;
+var sysexParamThrottleTimer = null;
+
+var sysexDumpThrottleTimerMs = 300;
+var sysexParamThrottleTimerMs = 30;
 
 var patchLoadedEvent = new Event("synthmataPatchLoaded");
 
@@ -60,7 +64,7 @@ function buildSetupPanel(midiAccess) {
     let former = document.createElement("form");
     former.id = "midiSetupForm"
     
-    let portSelectLabel = document.createElement("lable");
+    let portSelectLabel = document.createElement("label");
     portSelectLabel.textContent = "Select MIDI Device";
 
     let portSelecter = document.createElement("select");
@@ -84,7 +88,7 @@ function buildSetupPanel(midiAccess) {
     selectedMidiPort = midiOutPorts[0]; // TODO: check there's not a more idiomatic way of doing this
 
     // Channel selection
-    let channelSelectLabel = document.createElement("lable");
+    let channelSelectLabel = document.createElement("label");
     channelSelectLabel.textContent = "Select MIDI Channel";
 
     let channelSelector = document.createElement("select");
@@ -104,6 +108,35 @@ function buildSetupPanel(midiAccess) {
         channelSelector.appendChild(optioner);
     }
     selectedMidiChannel = 0;
+
+    // Korg/Yamaha Switch
+    let switchModes = function(e){ isYamahaMode = document.getElementById("modeYamaha").checked; sendSysexDump(); }
+
+    let modeKorgRadioLabel = document.createElement("label");
+    modeKorgRadioLabel.setAttribute("for", "modeKorg");
+    modeKorgRadioLabel.textContent = "Korg Mode"
+    let modeKorgRadioInput = document.createElement("input");
+    modeKorgRadioInput.id = "modeKorg"
+    modeKorgRadioInput.setAttribute("type", "radio");
+    modeKorgRadioInput.setAttribute("name", "mode");
+    modeKorgRadioInput.setAttribute("value", "korg");
+    modeKorgRadioInput.checked = true;
+    modeKorgRadioInput.addEventListener("change", switchModes);
+    former.appendChild(modeKorgRadioLabel);
+    former.appendChild(modeKorgRadioInput);
+    
+    let modeYamahaRadioLabel = document.createElement("label");
+    modeYamahaRadioLabel.setAttribute("for", "modeYamaha");
+    modeYamahaRadioLabel.textContent = "Yamaha Mode"
+    let modeYamahaRadioInput = document.createElement("input");
+    modeYamahaRadioInput.id = "modeYamaha"
+    modeYamahaRadioInput.setAttribute("type", "radio");
+    modeYamahaRadioInput.setAttribute("name", "mode");
+    modeYamahaRadioInput.setAttribute("value", "yamaha");
+    modeYamahaRadioInput.addEventListener("change", switchModes);
+    former.appendChild(modeYamahaRadioLabel);
+    former.appendChild(modeYamahaRadioInput);
+    
     document.getElementById("midiSetup").appendChild(former);
 }
 
@@ -127,7 +160,7 @@ function buildSaveLoadSharePanel() {
     saveButton.id = "sysexSaveButton";
     saveButton.textContent = "Save Sysex";
     saveButton.onclick = saveSysex;
-    container.appendChild(saveButton); // TODO: hook up event
+    container.appendChild(saveButton); 
 
     let initPatchButton = document.createElement("button");
     initPatchButton.id = "initPatchButton";
@@ -156,13 +189,13 @@ function buildSaveLoadSharePanel() {
 
 function setupParameterControls() {
     for (let sysexControl of document.getElementsByClassName("sysexParameter")) {
-        sysexControl.oninput = handleValueChangeVoiceDump;
+        sysexControl.oninput = handleValueChange;
     }
     for (let sysexControl of document.getElementsByClassName("sysexParameterText")) {
-        sysexControl.oninput = handleValueChangeVoiceDump;
+        sysexControl.oninput = handleValueChange;
     }
     for(let sysexControl of document.getElementsByClassName("sysexParameterBitswitch")) {
-        sysexControl.onchange = handleValueChangeVoiceDump; // usually checkboxes and they don't have oninputs
+        sysexControl.onchange = handleValueChange; // usually checkboxes and they don't have oninputs
     }
 }
 
@@ -210,26 +243,86 @@ function fullRefreshSysexData() {
     console.log(sysexDumpData);
 }
 
-// So, this probably works for the DX-7 (should try on TX81z), but the volca-fm only reads bulk data...)
-function handleValueChange(event) {
+function handleValueChange(event){
+    if(isYamahaMode){
+        handleParamValueChange(event);
+    }else{
+        handleValueChangeVoiceDump(event);
+    }
+}
+
+// On the Yamaha synths we can send invididual parameters, but we will still maintain
+// our patch array for convenience...
+function sendParameterChange(paramNumber, value){
+    let paramChangeMessage = [
+        0xf0,                         // status byte (sysex)
+        0x43,                           // id number (Yamaha)
+        0x10 | selectedMidiChannel,   // sub status 0b0001_nnnn; n is channel
+        0x00 | (paramNumber >> 7),    // 0b0ggg_ggpp ; g is paramater group no. (0 = voice); p is (part of) paramater number
+        paramNumber & 0x7f,           // 0b0ppp_pppp ; rest of parameter number
+        value & 0x7f,                 // 0b0ddd_dddd ; value data
+        0xf7                          // 0b1111_0111 ; EOX
+    ];
+
+    //console.log(paramChangeMessage);
+    selectedMidiPort.send(paramChangeMessage);
+}
+
+function handleParamValueChange(event) {
     if (selectedMidiChannel != null && selectedMidiPort != null) {
+        let ele = event.target;
+        let sysexBuffer = sysexDumpData;
         if (event.target.classList.contains("sysexParameter")) {
-            let ele = event.target;
             let parameterNo = parseInt(ele.dataset.sysexparameterno);
             let value = parseInt(ele.value);
+            sysexBuffer[parameterNo] = value & 0x7f;
+            
+            // throttle these changes so we don't overflow the buffer on the
+            // synth. if we were being very paranoid, we'd put in a safegaurd
+            // to always send the last value of any session of value changes
+            // on a control before moving to another, but that seems a lot like
+            // solving an issue before we know it can exist. Something to 
+            // consider if we get lost parameter changes though.
+            if (sysexParamThrottleTimer != null) {
+                clearTimeout(sysexParamThrottleTimer);
+            }
 
-            // build the sysex message
-            paramChangeMessage = [
-                0xf0,                         // status byte (sysex)
-                0x43,                           // id number (Yamaha)
-                0x10 | selectedMidiChannel,   // sub status 0b0001_nnnn; n is channel
-                0x00 | (parameterNo >> 7),    // 0b0ggg_ggpp ; g is paramater group no. (0 = voice); p is (part of) paramater number
-                parameterNo & 0x7f,           // 0b0ppp_pppp ; rest of parameter number
-                value & 0x7f,                 // 0b0ddd_dddd ; value data
-                0xf7                          // 0b1111_0111 ; EOX
-            ]
-            //console.log(paramChangeMessage);
-            selectedMidiPort.send(paramChangeMessage);
+            sysexParamThrottleTimer = setTimeout(function () {
+                sendParameterChange(parameterNo, value);
+            }, sysexParamThrottleTimerMs);
+        }else if (event.target.classList.contains("sysexParameterText")){
+            let parameterNo = parseInt(ele.dataset.sysexparameterno);
+            let stringLength = parseInt(ele.dataset.sysextextlength);
+            let value = ele.value.toString();
+            
+            for(let i = 0; i < stringLength; i++){
+                if(i < value.length){
+                    let ordinal = value.charCodeAt(i);
+                    if(ordinal < 0x20 || ordinal >= 0x7f){
+                        ordinal = 0x3f; // ?
+                    }
+                    sysexBuffer[i + parameterNo] = ordinal;
+                    sendParameterChange(i + parameterNo, ordinal)
+                }else{
+                    sysexBuffer[i + parameterNo] = 0x20;
+                    sendParameterChange(i + parameterNo, 0x20)
+                }
+            }
+        }else if(event.target.classList.contains("sysexParameterBitswitch")){
+            let parameterNo = parseInt(ele.dataset.sysexparameterno);
+            let mask = parseInt(ele.dataset.sysexparameterbitmask) & 0x7f;
+            let value = ele.value;
+            if(ele.type == "checkbox" || ele.type == "radio"){
+                value = ele.checked
+            }
+            if(value){
+                //console.log(ele.value)
+                sysexBuffer[parameterNo] |= mask;
+            }else{
+                //console.log(ele.value)
+                sysexBuffer[parameterNo] &= ~mask;
+            }
+            sendParameterChange(parameterNo, sysexBuffer[parameterNo]);
         }
     }
 }
@@ -238,11 +331,14 @@ function createSysexDumpBuffer() {
     // checksum is a byte which is the twos complement of the sum of the
     // dump data, masked back against 0x7f
     // if i want to micro-optimise this, I can. I don't really want to though.
+    
+    // This accounts for the non-standard behaviour of the Volca requiring the op on/off switches in the dump
+    let dumpLength = isYamahaMode ? (sysexDumpData.length - 1 ) : sysexDumpData.length;
+    
     let sum = 0;
-    for (let i = 0; i < sysexDumpData.length; i++) {
+    for (let i = 0; i < dumpLength; i++) {
         sum += sysexDumpData[i];
     }
-    //sum += 0x7f // TODO: remove once operator on-off isn't hardcoded
     sum &= 0xff;
     sum = (~sum) + 1;
     sum &= 0x7f;
@@ -254,8 +350,7 @@ function createSysexDumpBuffer() {
         0x00,                         // format number (0 = 1 voice)
         0x01,                         // 0b0bbbbbbb data byte count msb
         0x1b,                         // 0b0bbbbbbb data byte count lsb
-        ...sysexDumpData,
-        //0x7f,                         // TODO: remove once operator on-off isn't hardcoded
+        ...(sysexDumpData.slice(0, dumpLength)),
         sum,                          // checksum
         0xf7                          // 0b1111_0111 ; EOX
     ];
@@ -312,14 +407,15 @@ function handleValueChangeVoiceDump(event) {
 
 function sendSysexDump() {
     let buffer = createSysexDumpBuffer();
+    console.log(buffer);
 
-    if (sysexThrottleTimer != null) {
-        clearTimeout(sysexThrottleTimer);
+    if (sysexDumpThrottleTimer != null) {
+        clearTimeout(sysexDumpThrottleTimer);
     }
-    sysexThrottleTimer = setTimeout(function () {
+    sysexDumpThrottleTimer = setTimeout(function () {
         selectedMidiPort.send(buffer);
-    }, sysexThrottleTimerMs);
-
+    }, sysexDumpThrottleTimerMs);
+    
 }
 
 function saveSysex() {
