@@ -166,14 +166,12 @@ function buildSaveLoadSharePanel() {
     initPatchButton.id = "initPatchButton";
     initPatchButton.textContent = "Init Patch";
     initPatchButton.onclick = function(){
-        //loadSysex(base64js.toByteArray(__init_patch__));
         loadInitPatch();
     }
     container.appendChild(initPatchButton);
 
     let sharableLinkTextbox = document.createElement("textarea");
     sharableLinkTextbox.id = "sharableLinkTextbox";
-    //sharableLinkTextbox.setAttribute("type", "text");
     sharableLinkTextbox.setAttribute("readonly", true);
     
     let createSharableLinkButton = document.createElement("button");
@@ -439,7 +437,7 @@ function saveSysex() {
 }
 
 function validateSysexData(data) {
-    if (data.length != 164) {
+    if (data.length < 163 || data.length > 164) {  // accept DX7 or Volca format
         console.log("wrong length");
         return false;  // wrong length
     }
@@ -451,7 +449,10 @@ function validateSysexData(data) {
         console.log("not a yamaha sysex");
         return false; // not a yamaha sysex
     }
-    if (data[163] != 0xf7) {
+
+    let endOfData = data.length == 164 ? 162 : 161;
+
+    if (data[endOfData + 1] != 0xf7) {
         console.log("doesn't end with EOX");
         return false; // doesn't end with EOX
     }
@@ -470,13 +471,13 @@ function validateSysexData(data) {
     
     // checksum check
     let sum = 0;
-    for (let i = 6; i < 162; i++) {
+    for (let i = 6; i < endOfData; i++) {
         sum += data[i];
     }
     sum &= 0xff;
     sum = (~sum) + 1;
     sum &= 0x7f;
-    if (sum != data[162]) {
+    if (sum != data[endOfData]) {
         console.log("checksum failed");
         return false; // checksum failed
     }
@@ -508,9 +509,19 @@ function checkSysexFileLoad(event) {
 }
 
 function loadSysex(sysexData) {
-   // let data = new Uint8ClampedArray(readerEvent.target.result);
+    
+    if(sysexData.byteLength == 163){  // account for DX7 dumps with no OP On-Off data
+        // NB, this CAN'T be the proper way to do this, but I'll be damned if I can get
+        // ArrayBuffer and friends to behave the way I wanted. Weird times, strange bugs.
+       
+        let tmp = [];
+        new Uint8ClampedArray(sysexData).forEach(x => tmp.push(x));
+        tmp.splice(161, 0, 0x3f); // hedge by just turning everything on
+        sysexData = tmp;
+    }
     let data = new Uint8ClampedArray(sysexData);
-    let paramArray = data.slice(6, 162); // TODO generalise for other dumps - currently DX7 specific.
+    let paramArray = data.slice(6, 162);
+
     // numeric perameters
     let paramControls = new Array(...document.getElementsByClassName("sysexParameter"));
     paramControls.forEach(function (element) { element.value = paramArray[element.dataset.sysexparameterno]; });
@@ -554,7 +565,10 @@ function tryLoadSysex(event) {
 }
 
 function createSharablePatchLink(){
+    let tmpMode = isYamahaMode;
+    isYamahaMode = false;
     let patchAsB64 = base64js.fromByteArray(createSysexDumpBuffer());
+    isYamahaMode = tmpMode;
     // abusing dom to parse the current url
     var parser = document.createElement('a');
     parser.href = window.location;
