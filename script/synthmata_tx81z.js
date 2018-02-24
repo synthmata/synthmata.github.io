@@ -16,6 +16,8 @@ var sysexThrottleTimerMs = 30;
 
 var patchLoadedEvent = new Event("synthmataPatchLoaded");
 
+var acedMode = true;
+
 // TODO: better plan for this to have user of module put it in a hidden textbox?
 var __init_patch__ = "8EMEAwBdHx8ADw8AAAAAAGMAAx8fAA8PAAAAAABjCAMfHwAPDwAAAAAAYwgDHx8ADw8AAAAAAGMEAwcAAAAAAAACAAAYAAIAAAAAAAAKAAAAAABTeW50aG1hdGEgAAAAAAAAXvc=";
 var __init_patch_aced__ = "8EMEfgAhTE0gIDg5NzZBRQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ/c=";
@@ -107,6 +109,26 @@ function buildSetupPanel(midiAccess) {
         channelSelector.appendChild(optioner);
     }
     selectedMidiChannel = 0;
+
+    let acedSwitchLabel = document.createElement("label");
+    acedSwitchLabel.textContent = "TX81Z Mode (turn on if your synth supports multiple waveforms, eg. TX81Z, DX11):";
+    acedSwitchLabel.setAttribute("for", "acedSwitchCheckbox")
+
+    let acedSwitch = document.createElement("input");
+    acedSwitch.id = "acedSwitchCheckbox";
+    acedSwitch.setAttribute("type", "checkbox");
+    acedSwitch.checked = true;
+    acedMode = true;
+    acedSwitch.addEventListener("change", ev => { 
+        let acedOn = acedSwitch.checked;
+        [].forEach.call(document.getElementsByClassName("tx_aced"), (y => y.style.display = acedOn ? "block" : "none"));
+        acedMode = acedOn;
+    } );
+
+    former.appendChild(document.createElement("br"));
+    former.appendChild(acedSwitchLabel);
+    former.appendChild(acedSwitch);
+
     document.getElementById("midiSetup").appendChild(former);
 }
 
@@ -360,15 +382,12 @@ function handleValueChange(event) {
                 value = ele.checked
             }
             if(value){
-                //console.log(ele.value)
                 sysexBuffer[parameterNo] |= mask;
             }else{
-                //console.log(ele.value)
                 sysexBuffer[parameterNo] &= ~mask;
             }
             sendParameterChange(parameterNo, isAced, sysexBuffer[parameterNo]);
         }
-        //sendSysexDump()
     }
 }
 
