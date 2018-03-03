@@ -168,12 +168,16 @@ function makeMidiPanel(){
             portInSelecter.setAttribute("disabled", null);
             portOutSelecter.setAttribute("disabled", null);
             testConnectionButton.setAttribute("disabled", null);
+            document.getElementById("patchmanager_backupbutton").setAttribute("disabled", null);
+            document.getElementById("patchmanager_sendpatchesbutton").setAttribute("disabled", null);
             testConnection().then(
                 result => {
                     testConnectionSpan.textContent = result ? "Connection Confirmed" : "Connection Failed - please select different MIDI devices";
                     portInSelecter.removeAttribute("disabled");
                     portOutSelecter.removeAttribute("disabled");
                     testConnectionButton.removeAttribute("disabled");
+                    document.getElementById("patchmanager_backupbutton").removeAttribute("disabled");
+                    document.getElementById("patchmanager_sendpatchesbutton").removeAttribute("disabled");
                 }
             );
         }
@@ -422,6 +426,10 @@ function makeBackupPanel(){
     backupButton.id = "patchmanager_backupbutton";
     backupButton.textContent = "Backup My Patches";
     backupButton.addEventListener("click", x => {
+        if(countSelectedPatches() < 1){
+            alert("Please select at least one patch.");
+            return;
+        }
         backupButton.setAttribute("disabled", null)
         let bank = "ABCDEFGH"[document.getElementById("patchmanager_writelocationbankselecter").value];
         let firstPatchNo = document.getElementById("patchmanager_writelocationpatchnumber").value;
@@ -515,6 +523,10 @@ function makeGoPanel(){
     downloadButton.id = "patchmanager_downloadpatchesbutton";
     downloadButton.textContent = "Download Patch Pack";
     downloadButton.addEventListener("click", x => {
+        if(countSelectedPatches() < 1){
+            alert("Please select at least one patch.");
+            return;
+        }
         let patchPack = makePatchPack();
         let warning = `Please note: sending this patch pack to your DeepMind will overwrite the ` +
                       `patches currently in bank ${"ABCDEFGH"[patchPack.bank]}, programs ${patchPack.firstPatch + 1} ` +
@@ -538,6 +550,10 @@ function makeGoPanel(){
     sendButton.id = "patchmanager_sendpatchesbutton";
     sendButton.textContent = "Send Patch Pack";
     sendButton.addEventListener("click", x => {
+        if(countSelectedPatches() < 1){
+            alert("Please select at least one patch.");
+            return;
+        }
         let patchPack = makePatchPack();
         let warning = `Please note: sending this patch pack to your DeepMind will overwrite the ` +
                       `patches currently in bank ${"ABCDEFGH"[patchPack.bank]}, programs ${patchPack.firstPatch + 1} ` +
@@ -579,8 +595,41 @@ function disableStuffThatNeedsMidi(){
     dimmedTextIds.forEach(x => document.getElementById(x).classList.add("dimmed"));
 }
 
+function makeInstructionPanel(){
+    let instructPanelContainer = document.createElement("div");
+    instructPanelContainer.id = "patchmanager_instructionscontainer";
+    instructPanelContainer.classList.add("patchmanager_panel");
+
+    let stepHeader = document.createElement("h2");
+    stepHeader.textContent = "Step 0:";
+    instructPanelContainer.appendChild(stepHeader);
+    let stepInfo = document.createElement("h3");
+    stepInfo.textContent = "Important Information";
+    instructPanelContainer.appendChild(stepInfo);
+
+    let instructionsL = document.createElement("ul");
+
+    [
+        "NB This system works best in a browser which supports WebMIDI (Chrome or Opera)",
+        "If you connect your DeepMind to you computer via USB or MIDI, this site can send the patches straight to your synth",
+        "If using a MIDI connection, to use all of the features you need to connect both the MIDI in and out connections (the USB connection does this automatically)",
+        "Set your synth to 'DEVICE-ID' 1 in the Global menu",
+        "If you cannot connect your synth (either because of your browser or MIDI interface) you can still download a Sysex file containing the patches which you will need to send to your synth separately using a Sysex Librarian or a DAW that supports Sysex."
+    ].forEach(x => {
+        let y = document.createElement("li"); 
+        y.textContent = x; 
+        instructionsL.appendChild(y);
+    });
+
+
+    instructPanelContainer.appendChild(instructionsL);
+
+    return instructPanelContainer;
+}
+
 function makeInterfaceImpl(container, patches){
     __patches__ = patches;
+    container.appendChild(makeInstructionPanel());
     container.appendChild(makePatchList(patches));
     container.appendChild(makeWriteLocationConatainer());
     container.appendChild(makeMidiPanel());

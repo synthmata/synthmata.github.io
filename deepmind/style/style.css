@@ -62,7 +62,7 @@ body {
 }
 
 .patchmanager_panel h2{
-    font-size: 1.5;
+    font-size: 1.6em;
     margin-top: 0;
     margin-bottom: 0.5em;
     text-align: center;
@@ -73,6 +73,10 @@ body {
     margin-top: 0;
     margin-bottom: 0.5em;
     text-align: center;
+}
+
+.patchmanager_panel li{ 
+    margin-bottom: 0.33em;
 }
 
 .patchmanager_panel button, .patchmanager_panel input, .patchmanager_panel select,  .patchmanager_panel label{
