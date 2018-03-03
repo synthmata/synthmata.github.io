@@ -1,0 +1,145 @@
+body {
+    font-family: 'Montserrat', sans-serif; 
+    background-color: #898989;
+}
+#title-head {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 13vw; 
+    font-weight: 700;
+    text-align: center;
+    color: #ffffff;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+#title-byline{
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 2vw; 
+    font-weight: 400;
+    text-align: center;
+    color: #ffffff;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+#title-byline a{
+    color: #ffffff;
+}
+
+#subtitle-head{
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 3vw; 
+    font-weight: 700;
+    text-align: center;
+    color: #ffffff;
+    padding: 1rem;
+}
+#main-content{
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 0.8em;
+}
+
+.dimmed {
+    opacity: 0.5;
+}
+
+.patchmanager_panel{
+    margin: 4px;
+    padding: 8px 1em 8px 1em;
+    background: #bbbbbb;
+    border-color: #aaaaaa;
+    border-width: 2px;
+    border-style: dashed;  
+    /*flex-grow: 1; */
+}
+
+.patchmanager_panel h2{
+    font-size: 1.5;
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    text-align: center;
+}
+
+.patchmanager_panel h3{
+    font-size: 1.3em;
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    text-align: center;
+}
+
+.patchmanager_panel button, .patchmanager_panel input, .patchmanager_panel select,  .patchmanager_panel label{
+    margin: 3px;
+}
+
+#patchmanager_patchlistcontainer button {
+    width: 10em;
+}
+
+#patchmanager_patchlist{
+    font-family: 'Roboto Mono', monospace;
+    width: 99%;
+    margin: 0 auto;
+    overflow: auto;
+    height: 20vh;
+    min-height: 11em;
+    border-color: #aaaaaa;
+    border-color: #aaaaaa;
+    border-width: 2px;
+    border-style: solid;  
+    background-color: #dddddd;
+}
+
+.patchmanager_patchlabel {
+    display: block;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.patchmanager_patchlabel:hover {
+    background-color: inherit;
+    filter: brightness(120%);
+    
+}
+
+#patchmanager_writelocationcontainer input, #patchmanager_writelocationcontainer select{
+    width: 5em;
+}
+
+#patchmanager_backupcontainer{
+    text-align: center;
+}
+
+#patchmanager_backupcontainer p{
+    text-align: justify;
+    /*margin-left: 0.5em;*/
+    /*margin-right: 0.5em;*/
+}
+
+#patchmanager_backupcontainer button{
+    width: 90%;
+    margin: auto;
+    display: block;
+}
+
+#patchmanager_gocontainer{
+    text-align: center;
+}
+
+#patchmanager_gocontainer button{
+    width: 90%;
+    margin: auto;
+    display: block;
+}
+

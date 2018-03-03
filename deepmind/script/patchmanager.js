@@ -62,6 +62,7 @@ function autoDetectDeepmind(){
 }
 */
 
+
 function isIdentityResponse(data){
     let d = data;
     return (d.length == 17 &&
@@ -106,8 +107,17 @@ async function testConnection(){
 function makeMidiPanel(){
     let midiPanelContainer = document.createElement("div");
     midiPanelContainer.id = "patchmanager_midisetupcontainer";
+    midiPanelContainer.classList.add("patchmanager_panel");
+
+    let stepHeader = document.createElement("h2");
+    stepHeader.textContent = "Step 3:";
+    midiPanelContainer.appendChild(stepHeader);
+    let stepInfo = document.createElement("h3");
+    stepInfo.textContent = "Select the MIDI device for your DeepMind synthesizer.";
+    midiPanelContainer.appendChild(stepInfo);
     
     let portInSelectLabel = document.createElement("label");
+    portInSelectLabel.id = "patchmanager_portinselectorlabel";
     portInSelectLabel.textContent = "Select Input MIDI Device: ";
     portInSelectLabel.setAttribute("for", "patchmanager_portinselector");
 
@@ -124,8 +134,10 @@ function makeMidiPanel(){
 
     midiPanelContainer.appendChild(portInSelectLabel);
     midiPanelContainer.appendChild(portInSelecter);
+    midiPanelContainer.appendChild(document.createElement("br")); // TODO: would this be better dealt with in the stylesheet?
 
     let portOutSelectLabel = document.createElement("label");
+    portOutSelectLabel.id = "patchmanager_portoutselectorlabel"
     portOutSelectLabel.textContent = "Select Output MIDI Device: ";
     portOutSelectLabel.setAttribute("for", "patchmanager_portoutselector");
 
@@ -142,6 +154,7 @@ function makeMidiPanel(){
 
     midiPanelContainer.appendChild(portOutSelectLabel);
     midiPanelContainer.appendChild(portOutSelecter);
+    midiPanelContainer.appendChild(document.createElement("br")); // TODO: would this be better dealt with in the stylesheet?
 
     let testConnectionSpan = document.createElement("span");
     testConnectionSpan.id = "patchmanager_portTestStatusSpan";
@@ -198,6 +211,14 @@ function populatePatchlist(patchlistDiv, patches){
 function makePatchList(patches){
     let patchListContainer = document.createElement("div");
     patchListContainer.id = "patchmanager_patchlistcontainer";
+    patchListContainer.classList.add("patchmanager_panel");
+
+    let stepHeader = document.createElement("h2");
+    stepHeader.textContent = "Step 1:";
+    patchListContainer.appendChild(stepHeader);
+    let stepInfo = document.createElement("h3");
+    stepInfo.textContent = "Select your patches.";
+    patchListContainer.appendChild(stepInfo);
     
     let patchList = document.createElement("div");
     patchList.id = "patchmanager_patchlist";
@@ -234,6 +255,14 @@ function makePatchList(patches){
 function makeWriteLocationConatainer(){
     let writeLocationContainer = document.createElement("div");
     writeLocationContainer.id = "patchmanager_writelocationcontainer";
+    writeLocationContainer.classList.add("patchmanager_panel");
+
+    let stepHeader = document.createElement("h2");
+    stepHeader.textContent = "Step 2:";
+    writeLocationContainer.appendChild(stepHeader);
+    let stepInfo = document.createElement("h3");
+    stepInfo.textContent = "Choose where to store them.";
+    writeLocationContainer.appendChild(stepInfo);
     
     let bankSelecterLabel = document.createElement("label");
     bankSelecterLabel.setAttribute("for", "patchmanager_writelocationbankselecter");
@@ -368,8 +397,17 @@ function generateBackup(){
 function makeBackupPanel(){
     let backupContainer = document.createElement("div");
     backupContainer.id = "patchmanager_backupcontainer";
+    backupContainer.classList.add("patchmanager_panel");
+
+    let stepHeader = document.createElement("h2");
+    stepHeader.textContent = "Step 4:";
+    backupContainer.appendChild(stepHeader);
+    let stepInfo = document.createElement("h3");
+    stepInfo.textContent = "Back-up your patches.";
+    backupContainer.appendChild(stepInfo);
 
     let backupExplainP = document.createElement("p");
+    backupExplainP.id = "patchmanager_backupparagraph"
     backupExplainP.textContent = "Sending these patches to your DeepMind (whether from within this " +
                                  "interface or by making use of the generated sysex files) will " +
                                  "overwrite the patches in the locations you have chosen. Once " +
@@ -381,6 +419,7 @@ function makeBackupPanel(){
     backupContainer.appendChild(backupExplainP);
 
     let backupButton = document.createElement("button");
+    backupButton.id = "patchmanager_backupbutton";
     backupButton.textContent = "Backup My Patches";
     backupButton.addEventListener("click", x => {
         backupButton.setAttribute("disabled", null)
@@ -463,6 +502,14 @@ function makePatchPack(){
 function makeGoPanel(){
     let goContainer = document.createElement("div");
     goContainer.id = "patchmanager_gocontainer";
+    goContainer.classList.add("patchmanager_panel");
+
+    let stepHeader = document.createElement("h2");
+    stepHeader.textContent = "Step 5:";
+    goContainer.appendChild(stepHeader);
+    let stepInfo = document.createElement("h3");
+    stepInfo.textContent = "Send or download your patches";
+    goContainer.appendChild(stepInfo);
 
     let downloadButton = document.createElement("button");
     downloadButton.id = "patchmanager_downloadpatchesbutton";
@@ -508,6 +555,30 @@ function makeGoPanel(){
     return goContainer
 }
 
+function disableStuffThatNeedsMidi(){
+    let disabledInputIds = [
+        "patchmanager_portinselector",
+        "patchmanager_portoutselector",
+        "patchmanager_portTestStatusButton",
+        "patchmanager_backupbutton",
+        "patchmanager_sendpatchesbutton"
+    ];
+
+    let dimmedTextIds = [
+        "patchmanager_portinselector",
+        "patchmanager_portoutselector",
+        "patchmanager_portTestStatusButton",
+        "patchmanager_backupbutton",
+        "patchmanager_sendpatchesbutton",
+        "patchmanager_portinselectorlabel",
+        "patchmanager_portoutselectorlabel",
+        "patchmanager_backupparagraph"
+    ];
+    
+    disabledInputIds.forEach(x => document.getElementById(x).setAttribute("disabled", null));
+    dimmedTextIds.forEach(x => document.getElementById(x).classList.add("dimmed"));
+}
+
 function makeInterfaceImpl(container, patches){
     __patches__ = patches;
     container.appendChild(makePatchList(patches));
@@ -515,6 +586,18 @@ function makeInterfaceImpl(container, patches){
     container.appendChild(makeMidiPanel());
     container.appendChild(makeBackupPanel());
     container.appendChild(makeGoPanel());
+    
+    if(__midi__ == null){
+        disableStuffThatNeedsMidi();
+    }else if(__outputs__.length == 0){
+        alert("No MIDI output devices found\n" +
+        "You can still make use of this page to download your chosen patches, but you will need to send them to your synth yourself using a MIDI sysex librarian software.\n" +    
+        "To make use of all features, please use a MIDI capable browser on a computer connected to your synth (by MIDI or USB) and allow the page access to your MIDI devices when prompted.\n" +
+        "Please note that MIDI in the browser currently only works in Chrome and Opera.\n" +
+        "If you declined MIDI access when prompted, please refresh the page and try again."
+    );
+        disableStuffThatNeedsMidi();
+    }
 }
 
 function makeInterface(container, patches){
@@ -537,7 +620,7 @@ function onMIDISuccess(result) {
 function onMIDIFailure(msg) {
     alert("Could not get MIDI access.\n" +
     "You can still make use of this page to download your chosen patches, but you will need to send them to your synth yourself using a MIDI sysex librarian software.\n" +    
-    "To make use of all features, please use a MIDI capable browser and allow the page access to your MIDI devices.\n" +
+    "To make use of all features, please use a MIDI capable browser on a computer connected to your synth (by MIDI or USB) and allow the page access to your MIDI devices when prompted.\n" +
     "Please note that MIDI in the browser currently only works in Chrome and Opera.\n" +
     "If you declined MIDI access when prompted, please refresh the page and try again."
     );
