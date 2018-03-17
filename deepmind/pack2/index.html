@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>synthmata: behringer deepmind patch management</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" />
+    <!--<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet" />-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+    <link href="../style/style.css" rel="stylesheet" />
+    <script src="../../script/base64js.min.js"></script>
+    <script src="../script/patchmanager.js"></script>
+    <script src="patches.js"></script>
+    <script>
+        function initialise() {
+            makeInterface(document.getElementById("patchmanager"), PACK2_PATCHES);
+        }
+    </script>
+</head>
+
+<body onload="initialise();">
+    <div id="title-head">
+        <span>synthmata</span>
+    </div>
+    <div id="title-byline">
+        <span>by
+            <a href="http://oscillatorsink.com">oscillatorsink</a>
+        </span>
+    </div>
+    <div id="subtitle-head">
+        <span>DeepMind Patch Pack 02</span>
+    </div>
+
+    <div id="main-content">
+        <div id="patchmanager"></div>
+    </div>
+</body>
+
+</html>
