@@ -16,7 +16,11 @@ function countSelectedPatches(){
     if(document.getElementById("patchmanager_patchlist") == null){
         return 0;
     }
-    for(let check of document.getElementById("patchmanager_patchlist").getElementsByClassName("patchmanager_patchcheckbox")){
+    // for IE and Edge Support (wtf Microsoft?)
+    //for(let check of document.getElementById("patchmanager_patchlist").getElementsByClassName("patchmanager_patchcheckbox")){
+    let checks = document.getElementById("patchmanager_patchlist").getElementsByClassName("patchmanager_patchcheckbox");
+    for(let i = 0; i < checks.length; i++){
+        let check = checks[i];
         if(check.checked){
             tmp += 1;
         }
@@ -238,13 +242,21 @@ function makePatchList(patches){
     selectAllButton.textContent = "Select All";
     selectNoneButton.textContent = "Select None";
     selectAllButton.addEventListener("click", x => {
-        for(let check of document.getElementById("patchmanager_patchlist").getElementsByClassName("patchmanager_patchcheckbox")){
+        let checks = document.getElementById("patchmanager_patchlist").getElementsByClassName("patchmanager_patchcheckbox");
+        // for IE and Edge Support (wtf Microsoft?)
+        //for(let check of document.getElementById("patchmanager_patchlist").getElementsByClassName("patchmanager_patchcheckbox")){
+        for(let i = 0; i < checks.length; i++){
+            let check = checks[i];
             check.checked = true;
         }
         window.dispatchEvent(patchSelectionChangeEvent);
     });
     selectNoneButton.addEventListener("click", x => {
-        for(let check of document.getElementById("patchmanager_patchlist").getElementsByClassName("patchmanager_patchcheckbox")){
+        let checks = document.getElementById("patchmanager_patchlist").getElementsByClassName("patchmanager_patchcheckbox");
+        // for IE and Edge Support (wtf Microsoft?)
+        //for(let check of document.getElementById("patchmanager_patchlist").getElementsByClassName("patchmanager_patchcheckbox")){
+        for(let i = 0; i < checks.length; i++){
+            let check = checks[i];
             check.checked = false;
         }
         window.dispatchEvent(patchSelectionChangeEvent);
@@ -464,8 +476,11 @@ function makePatchPack(){
     let firstPatch = parseInt(document.getElementById("patchmanager_writelocationpatchnumber").value) - 1;
     
     let checkedPatches = [];
-
-    for(let check of document.getElementById("patchmanager_patchlist").getElementsByClassName("patchmanager_patchcheckbox")){
+    let checks = document.getElementById("patchmanager_patchlist").getElementsByClassName("patchmanager_patchcheckbox");
+    // For IE and Edge, because "web standards".
+    //for(let check of document.getElementById("patchmanager_patchlist").getElementsByClassName("patchmanager_patchcheckbox")){
+    for(let i = 0; i < checks.length; i++){
+        let check = checks[i];
         if(check.checked){
             checkedPatches.push(__patches__[check.value]);
         }
@@ -653,8 +668,13 @@ function makeInterface(container, patches){
     // container should be a div
     // patches should be an object where the keys are the patch names and the
     //  values are the packed param data from a sysex dump as base64
-   
-    navigator.requestMIDIAccess({ sysex: true }).then(onMIDISuccess, onMIDIFailure).then(x => makeInterfaceImpl(container, patches))
+    
+    if(navigator.requestMIDIAccess == undefined){
+        onMIDIFailure("Browser doesn't support WebMidi");
+        makeInterfaceImpl(container, patches);
+    }else{
+        navigator.requestMIDIAccess({ sysex: true }).then(onMIDISuccess, onMIDIFailure).then(x => makeInterfaceImpl(container, patches))
+    }
 
 }
 
