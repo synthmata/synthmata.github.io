@@ -1,0 +1,64 @@
+.lcdradiogroup{
+    background-color: #292320;
+}
+
+.lcdradiogroup input[type=radio] {
+    margin: 0;
+    padding: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+
+.lcdsine {
+    background-image: url(../img/lcd/vdrum-sine.png);
+}
+
+.lcdsaw {
+    background-image: url(../img/lcd/vdrum-saw.png);
+}
+
+.lcdnbp {
+    background-image: url(../img/lcd/vdrum-bp.png);
+}
+
+.lcdnlp {
+    background-image: url(../img/lcd/vdrum-lp.png);
+}
+
+.lcdnhp {
+    background-image: url(../img/lcd/vdrum-hp.png);
+}
+
+.lcdradiogroup input:active + .lcdlabel{
+    opacity: .9;
+}
+.lcdradiogroup input:checked + .lcdlabel{
+    -webkit-filter: none;
+       -moz-filter: none;
+            filter: none;
+}
+
+.lcdlabel{
+    cursor:pointer;
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+    color: transparent;
+    overflow: hidden;
+    height:40px;
+    -webkit-transition: all 100ms ease-in;
+       -moz-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+    -webkit-filter: brightness(1.8) grayscale(1) opacity(.7);
+       -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
+            filter: brightness(1.8) grayscale(1) opacity(.7);
+}
+
+.lcdlabel:hover{
+    -webkit-filter: brightness(1.2) grayscale(.5) opacity(.9);
+       -moz-filter: brightness(1.2) grayscale(.5) opacity(.9);
+            filter: brightness(1.2) grayscale(.5) opacity(.9);
+}
+
