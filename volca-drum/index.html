@@ -10,6 +10,16 @@
     <script>
         var cynth;
         let init = ()=>{cynth = new Ccynthmata({initPatch: vdrumInitPatch}); cynth.init();}
+        let showHideInstructions = ()=>{
+            let instructions = document.getElementById("instructions");
+            if(instructions.classList.contains("hiddenInstructions")){
+                instructions.classList.remove("hiddenInstructions");
+                instructions.classList.add("shownInstructions");
+            }else{
+                instructions.classList.remove("shownInstructions");
+                instructions.classList.add("hiddenInstructions");
+            }
+        }
     </script>
 </head>
 <body onload="init()">
@@ -26,7 +36,28 @@
             <br>BETA VERSION</span>
     </div>
     <div id="main-content">
+        <div class="controlpanel">
+            <h2>Instructions</h2>
+            <div class="showHide"><a href="#" onclick="showHideInstructions()">show / hide</a></div>
+            <div id="instructions" class="hiddenInstructions">
+                <p>This version of the editor only supports "split channel" mode (ie 1 MIDI channel per part - which is the factory default).</p>
+                <p>Connect your Volca Drum to your chosen MIDI interface.</p>
+                <p>Select that MIDI interface in the Midi Device Setup (the channel doesn't matter).</p>
+                <p>The patch will be sent to your Volca automatically when the interface is chosen.</p>
+                <p>Make your patch!</p>
+                <p>My preferred way to "save" your patch is by clicking "Create Sharable Patch Link" and saving the link somewhere (and don't forget to share it!). 
+                    You can also save a stream of MIDI CC data which can be played back using a DAW etc. by clicking "Save Patch".</p>
+                <p>Have fun!</p>
+                <p>If you have questions you can get hold of me on one of many social media platforms:</p>
+                <ul>
+                    <li><a href="https://www.youtube.com/oscillatorsink">YouTube</a></li>
+                    <li><a href="https://www.facebook.com/OscillatorSink/">Facebook</a></li>
+                    <li><a href="https://twitter.com/oscillatorsink">Twitter</a></li>
+                </ul>
+            </div>
 
+
+        </div>
         <div class="controlpanel">
             <h2>Setup</h2>
             <div class="controlflexlayout">

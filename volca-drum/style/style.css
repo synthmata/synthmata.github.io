@@ -75,6 +75,18 @@ body {
 #saveLoadShare  textarea{
     height: 10em;
 }
+
+.showHide{
+    font-size: 0.75rem;
+}
+
+.hiddenInstructions{
+    display: none;
+}
+
+.shownInstructions{
+    display: block;
+}
 /*
 #valueDisplay {
     position: fixed;
