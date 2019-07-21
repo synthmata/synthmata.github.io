@@ -179,6 +179,10 @@ body {
     background-color: #292320;
 }
 
+#sharableLinkTextbox{
+    height: 10em;
+}
+
 /*slider styling*/
 
 input[type=range] {
