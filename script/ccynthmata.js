@@ -115,8 +115,6 @@ class Ccynthmata {
     }
 
     _buildSaveLoadSharePanel() {
-        let container = document.getElementById("saveLoadShare");
-    
         // let loadInput = document.createElement("input");
         // loadInput.setAttribute("type", "file");
         // loadInput.id = "sysexFileChooser"
@@ -142,12 +140,16 @@ class Ccynthmata {
             this._saveLoadPanelElement.appendChild(initPatchButton);
         }
 
+        let sendCurrentButton = document.createElement("button");
+        sendCurrentButton.id = "sentCurrentPatchButton";
+        sendCurrentButton.textContent = "Send Patch";
+        sendCurrentButton.onclick = (ev) => {this.sendCurrentPatch()};
+
         let saveButton = document.createElement("button");
         saveButton.id = "sysexSaveButton";
         saveButton.textContent = "Save Patch";
         saveButton.onclick = (ev) => {this.savePatch()};
-        this._saveLoadPanelElement.appendChild(saveButton); 
-    
+        
         let sharableLinkTextbox = document.createElement("textarea");
         sharableLinkTextbox.id = "sharableLinkTextbox";
         sharableLinkTextbox.setAttribute("readonly", true);
@@ -159,6 +161,8 @@ class Ccynthmata {
             sharableLinkTextbox.value = this.makeSharablePatchLink();
         }
     
+        this._saveLoadPanelElement.appendChild(sendCurrentButton); 
+        this._saveLoadPanelElement.appendChild(saveButton); 
         this._saveLoadPanelElement.appendChild(createSharableLinkButton);
         this._saveLoadPanelElement.appendChild(sharableLinkTextbox);
     }
