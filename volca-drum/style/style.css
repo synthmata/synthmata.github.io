@@ -76,6 +76,27 @@ body {
     height: 10em;
 }
 
+#ccParameterDisplay {
+    position: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    top: 2em;
+    width: 3em;
+    left: 0;
+    right: 0;
+    color: #ff9652;
+    background-color: #292320;
+    border-color: #c5a27b;
+    border-width: 2px;
+    border-style: dashed;  
+    opacity: 0.7;
+    float: right;
+    display: none;
+    font-size: 4.5vw;
+    text-align: center;
+    z-index: 9999;
+}
+
 .showHide{
     font-size: 0.75rem;
 }

@@ -9,7 +9,7 @@
     <script src="./res/init_patch.js" type="text/javascript"></script>
     <script>
         var cynth;
-        let init = ()=>{cynth = new Ccynthmata({initPatch: vdrumInitPatch}); cynth.init();}
+        let init = ()=>{cynth = new Ccynthmata({initPatch: vdrumInitPatch, autoHideParameterDisplay: true}); cynth.init();}
         let showHideInstructions = ()=>{
             let instructions = document.getElementById("instructions");
             if(instructions.classList.contains("hiddenInstructions")){
@@ -1901,5 +1901,6 @@
             </div>
         </div>
     </div>
+    <div id="ccParameterDisplay">100</div>
 </body>
 </html>
