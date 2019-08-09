@@ -8,8 +8,23 @@
     <script src="../script/ccynthmata.js" type="text/javascript"></script>
     <script src="./res/init_patch.js" type="text/javascript"></script>
     <script>
+        // parameter display transforms:
+        let vDrumDoubler = (value) => value === 127 ? 255 : value * 2;
+        let vDrumHundred = (value) => value === 127 ? 100 : Math.round(Math.round(((value - 64) / 64 * 200)) / 2); // yeah, I don't get it either
+        
         var cynth;
-        let init = ()=>{cynth = new Ccynthmata({initPatch: vdrumInitPatch, autoHideParameterDisplay: true}); cynth.init();}
+        let init = ()=>{
+            cynth = new Ccynthmata(
+                {
+                    initPatch: vdrumInitPatch, 
+                    autoHideParameterDisplay: true,
+                    parameterDisplayTransforms: {
+                        doubler: vDrumDoubler,
+                        hundred: vDrumHundred
+                    }
+                }); 
+            cynth.init();
+        }
         let showHideInstructions = ()=>{
             let instructions = document.getElementById("instructions");
             if(instructions.classList.contains("hiddenInstructions")){
@@ -165,6 +180,7 @@
                             <input
                                 class="midiccparam" id="p1level1"
                                 data-midiChannel="1" data-cclsb="17"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" >
                         </div>
                         <div class="controller">
@@ -172,6 +188,7 @@
                             <input
                                 class="midiccparam" id="p1pitch1"
                                 data-midiChannel="1" data-cclsb="26"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -179,6 +196,7 @@
                             <input
                                 class="midiccparam" id="p1egattack1"
                                 data-midiChannel="1" data-cclsb="20"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -186,6 +204,7 @@
                             <input
                                 class="midiccparam" id="p1egrelease1"
                                 data-midiChannel="1" data-cclsb="23"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -193,6 +212,7 @@
                             <input
                                 class="midiccparam" id="p1modamt1"
                                 data-midiChannel="1" data-cclsb="29"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -200,6 +220,7 @@
                             <input
                                 class="midiccparam" id="p1modrate1"
                                 data-midiChannel="1" data-cclsb="46"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
 
@@ -287,6 +308,7 @@
                             <input
                                 class="midiccparam" id="p1level2"
                                 data-midiChannel="1" data-cclsb="18"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" >
                         </div>
                         <div class="controller">
@@ -294,6 +316,7 @@
                             <input
                                 class="midiccparam" id="p1pitch2"
                                 data-midiChannel="1" data-cclsb="27"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -301,6 +324,7 @@
                             <input
                                 class="midiccparam" id="p1egattack2"
                                 data-midiChannel="1" data-cclsb="21"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -308,6 +332,7 @@
                             <input
                                 class="midiccparam" id="p1egrelease2"
                                 data-midiChannel="1" data-cclsb="24"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -315,6 +340,7 @@
                             <input
                                 class="midiccparam" id="p1modamt2"
                                 data-midiChannel="1" data-cclsb="30"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -322,6 +348,7 @@
                             <input
                                 class="midiccparam" id="p1modrate2"
                                 data-midiChannel="1" data-cclsb="47"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
 
@@ -335,6 +362,7 @@
                             <input
                                 class="midiccparam" id="p1send"
                                 data-midiChannel="1" data-cclsb="103"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -342,6 +370,7 @@
                             <input
                                 class="midiccparam" id="p1bitred"
                                 data-midiChannel="1" data-cclsb="49"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -349,6 +378,7 @@
                             <input
                                 class="midiccparam" id="p1fold"
                                 data-midiChannel="1" data-cclsb="50"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -356,6 +386,7 @@
                             <input
                                 class="midiccparam" id="p1drive"
                                 data-midiChannel="1" data-cclsb="51"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -363,6 +394,7 @@
                             <input
                                 class="midiccparam" id="p1pan"
                                 data-midiChannel="1" data-cclsb="10"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -370,6 +402,7 @@
                             <input
                                 class="midiccparam" id="p1gain"
                                 data-midiChannel="1" data-cclsb="52"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                     </div>
@@ -461,6 +494,7 @@
                             <input
                                 class="midiccparam" id="p2level1"
                                 data-midiChannel="2" data-cclsb="17"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" >
                         </div>
                         <div class="controller">
@@ -468,6 +502,7 @@
                             <input
                                 class="midiccparam" id="p2pitch1"
                                 data-midiChannel="2" data-cclsb="26"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -475,6 +510,7 @@
                             <input
                                 class="midiccparam" id="p2egattack1"
                                 data-midiChannel="2" data-cclsb="20"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -482,6 +518,7 @@
                             <input
                                 class="midiccparam" id="p2egrelease1"
                                 data-midiChannel="2" data-cclsb="23"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -489,6 +526,7 @@
                             <input
                                 class="midiccparam" id="p2modamt1"
                                 data-midiChannel="2" data-cclsb="29"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -496,6 +534,7 @@
                             <input
                                 class="midiccparam" id="p2modrate1"
                                 data-midiChannel="2" data-cclsb="46"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
 
@@ -583,6 +622,7 @@
                             <input
                                 class="midiccparam" id="p2level2"
                                 data-midiChannel="2" data-cclsb="18"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" >
                         </div>
                         <div class="controller">
@@ -590,6 +630,7 @@
                             <input
                                 class="midiccparam" id="p2pitch2"
                                 data-midiChannel="2" data-cclsb="27"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -597,6 +638,7 @@
                             <input
                                 class="midiccparam" id="p2egattack2"
                                 data-midiChannel="2" data-cclsb="21"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -604,6 +646,7 @@
                             <input
                                 class="midiccparam" id="p2egrelease2"
                                 data-midiChannel="2" data-cclsb="24"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -611,6 +654,7 @@
                             <input
                                 class="midiccparam" id="p2modamt2"
                                 data-midiChannel="2" data-cclsb="30"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -618,6 +662,7 @@
                             <input
                                 class="midiccparam" id="p2modrate2"
                                 data-midiChannel="2" data-cclsb="47"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
 
@@ -631,6 +676,7 @@
                             <input
                                 class="midiccparam" id="p2send"
                                 data-midiChannel="2" data-cclsb="103"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -638,6 +684,7 @@
                             <input
                                 class="midiccparam" id="p2bitred"
                                 data-midiChannel="2" data-cclsb="49"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -645,6 +692,7 @@
                             <input
                                 class="midiccparam" id="p2fold"
                                 data-midiChannel="2" data-cclsb="50"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -652,6 +700,7 @@
                             <input
                                 class="midiccparam" id="p2drive"
                                 data-midiChannel="2" data-cclsb="51"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -659,6 +708,7 @@
                             <input
                                 class="midiccparam" id="p2pan"
                                 data-midiChannel="2" data-cclsb="10"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -666,6 +716,7 @@
                             <input
                                 class="midiccparam" id="p2gain"
                                 data-midiChannel="2" data-cclsb="52"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                     </div>
@@ -757,6 +808,7 @@
                             <input
                                 class="midiccparam" id="p3level1"
                                 data-midiChannel="3" data-cclsb="17"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" >
                         </div>
                         <div class="controller">
@@ -764,6 +816,7 @@
                             <input
                                 class="midiccparam" id="p3pitch1"
                                 data-midiChannel="3" data-cclsb="26"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -771,6 +824,7 @@
                             <input
                                 class="midiccparam" id="p3egattack1"
                                 data-midiChannel="3" data-cclsb="20"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -778,6 +832,7 @@
                             <input
                                 class="midiccparam" id="p3egrelease1"
                                 data-midiChannel="3" data-cclsb="23"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -785,6 +840,7 @@
                             <input
                                 class="midiccparam" id="p3modamt1"
                                 data-midiChannel="3" data-cclsb="29"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -792,6 +848,7 @@
                             <input
                                 class="midiccparam" id="p3modrate1"
                                 data-midiChannel="3" data-cclsb="46"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
 
@@ -879,6 +936,7 @@
                             <input
                                 class="midiccparam" id="p3level2"
                                 data-midiChannel="3" data-cclsb="18"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" >
                         </div>
                         <div class="controller">
@@ -886,6 +944,7 @@
                             <input
                                 class="midiccparam" id="p3pitch2"
                                 data-midiChannel="3" data-cclsb="27"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -893,6 +952,7 @@
                             <input
                                 class="midiccparam" id="p3egattack2"
                                 data-midiChannel="3" data-cclsb="21"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -900,6 +960,7 @@
                             <input
                                 class="midiccparam" id="p3egrelease2"
                                 data-midiChannel="3" data-cclsb="24"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -907,6 +968,7 @@
                             <input
                                 class="midiccparam" id="p3modamt2"
                                 data-midiChannel="3" data-cclsb="30"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -914,6 +976,7 @@
                             <input
                                 class="midiccparam" id="p3modrate2"
                                 data-midiChannel="3" data-cclsb="47"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
 
@@ -927,6 +990,7 @@
                             <input
                                 class="midiccparam" id="p3send"
                                 data-midiChannel="3" data-cclsb="103"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -934,6 +998,7 @@
                             <input
                                 class="midiccparam" id="p3bitred"
                                 data-midiChannel="3" data-cclsb="49"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -941,6 +1006,7 @@
                             <input
                                 class="midiccparam" id="p3fold"
                                 data-midiChannel="3" data-cclsb="50"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -948,6 +1014,7 @@
                             <input
                                 class="midiccparam" id="p3drive"
                                 data-midiChannel="3" data-cclsb="51"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -955,6 +1022,7 @@
                             <input
                                 class="midiccparam" id="p3pan"
                                 data-midiChannel="3" data-cclsb="10"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -962,6 +1030,7 @@
                             <input
                                 class="midiccparam" id="p3gain"
                                 data-midiChannel="3" data-cclsb="52"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                     </div>
@@ -1053,6 +1122,7 @@
                             <input
                                 class="midiccparam" id="p4level1"
                                 data-midiChannel="4" data-cclsb="17"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" >
                         </div>
                         <div class="controller">
@@ -1060,6 +1130,7 @@
                             <input
                                 class="midiccparam" id="p4pitch1"
                                 data-midiChannel="4" data-cclsb="26"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1067,6 +1138,7 @@
                             <input
                                 class="midiccparam" id="p4egattack1"
                                 data-midiChannel="4" data-cclsb="20"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1074,6 +1146,7 @@
                             <input
                                 class="midiccparam" id="p4egrelease1"
                                 data-midiChannel="4" data-cclsb="23"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1081,6 +1154,7 @@
                             <input
                                 class="midiccparam" id="p4modamt1"
                                 data-midiChannel="4" data-cclsb="29"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1088,6 +1162,7 @@
                             <input
                                 class="midiccparam" id="p4modrate1"
                                 data-midiChannel="4" data-cclsb="46"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
 
@@ -1175,6 +1250,7 @@
                             <input
                                 class="midiccparam" id="p4level2"
                                 data-midiChannel="4" data-cclsb="18"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" >
                         </div>
                         <div class="controller">
@@ -1182,6 +1258,7 @@
                             <input
                                 class="midiccparam" id="p4pitch2"
                                 data-midiChannel="4" data-cclsb="27"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1189,6 +1266,7 @@
                             <input
                                 class="midiccparam" id="p4egattack2"
                                 data-midiChannel="4" data-cclsb="21"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1196,6 +1274,7 @@
                             <input
                                 class="midiccparam" id="p4egrelease2"
                                 data-midiChannel="4" data-cclsb="24"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1203,6 +1282,7 @@
                             <input
                                 class="midiccparam" id="p4modamt2"
                                 data-midiChannel="4" data-cclsb="30"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1210,6 +1290,7 @@
                             <input
                                 class="midiccparam" id="p4modrate2"
                                 data-midiChannel="4" data-cclsb="47"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
 
@@ -1223,6 +1304,7 @@
                             <input
                                 class="midiccparam" id="p4send"
                                 data-midiChannel="4" data-cclsb="103"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1230,6 +1312,7 @@
                             <input
                                 class="midiccparam" id="p4bitred"
                                 data-midiChannel="4" data-cclsb="49"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1237,6 +1320,7 @@
                             <input
                                 class="midiccparam" id="p4fold"
                                 data-midiChannel="4" data-cclsb="50"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1244,6 +1328,7 @@
                             <input
                                 class="midiccparam" id="p4drive"
                                 data-midiChannel="4" data-cclsb="51"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1251,6 +1336,7 @@
                             <input
                                 class="midiccparam" id="p4pan"
                                 data-midiChannel="4" data-cclsb="10"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1258,6 +1344,7 @@
                             <input
                                 class="midiccparam" id="p4gain"
                                 data-midiChannel="4" data-cclsb="52"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                     </div>
@@ -1349,6 +1436,7 @@
                             <input
                                 class="midiccparam" id="p5level1"
                                 data-midiChannel="5" data-cclsb="17"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" >
                         </div>
                         <div class="controller">
@@ -1356,6 +1444,7 @@
                             <input
                                 class="midiccparam" id="p5pitch1"
                                 data-midiChannel="5" data-cclsb="26"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1363,6 +1452,7 @@
                             <input
                                 class="midiccparam" id="p5egattack1"
                                 data-midiChannel="5" data-cclsb="20"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1370,6 +1460,7 @@
                             <input
                                 class="midiccparam" id="p5egrelease1"
                                 data-midiChannel="5" data-cclsb="23"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1377,6 +1468,7 @@
                             <input
                                 class="midiccparam" id="p5modamt1"
                                 data-midiChannel="5" data-cclsb="29"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1384,6 +1476,7 @@
                             <input
                                 class="midiccparam" id="p5modrate1"
                                 data-midiChannel="5" data-cclsb="46"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
 
@@ -1471,6 +1564,7 @@
                             <input
                                 class="midiccparam" id="p5level2"
                                 data-midiChannel="5" data-cclsb="18"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" >
                         </div>
                         <div class="controller">
@@ -1478,6 +1572,7 @@
                             <input
                                 class="midiccparam" id="p5pitch2"
                                 data-midiChannel="5" data-cclsb="27"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1485,6 +1580,7 @@
                             <input
                                 class="midiccparam" id="p5egattack2"
                                 data-midiChannel="5" data-cclsb="21"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1492,6 +1588,7 @@
                             <input
                                 class="midiccparam" id="p5egrelease2"
                                 data-midiChannel="5" data-cclsb="24"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1499,6 +1596,7 @@
                             <input
                                 class="midiccparam" id="p5modamt2"
                                 data-midiChannel="5" data-cclsb="30"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1506,6 +1604,7 @@
                             <input
                                 class="midiccparam" id="p5modrate2"
                                 data-midiChannel="5" data-cclsb="47"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
 
@@ -1519,6 +1618,7 @@
                             <input
                                 class="midiccparam" id="p5send"
                                 data-midiChannel="5" data-cclsb="103"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1526,6 +1626,7 @@
                             <input
                                 class="midiccparam" id="p5bitred"
                                 data-midiChannel="5" data-cclsb="49"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1533,6 +1634,7 @@
                             <input
                                 class="midiccparam" id="p5fold"
                                 data-midiChannel="5" data-cclsb="50"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1540,6 +1642,7 @@
                             <input
                                 class="midiccparam" id="p5drive"
                                 data-midiChannel="5" data-cclsb="51"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1547,6 +1650,7 @@
                             <input
                                 class="midiccparam" id="p5pan"
                                 data-midiChannel="5" data-cclsb="10"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1554,6 +1658,7 @@
                             <input
                                 class="midiccparam" id="p5gain"
                                 data-midiChannel="5" data-cclsb="52"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                     </div>
@@ -1645,6 +1750,7 @@
                             <input
                                 class="midiccparam" id="p6level1"
                                 data-midiChannel="6" data-cclsb="17"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" >
                         </div>
                         <div class="controller">
@@ -1652,6 +1758,7 @@
                             <input
                                 class="midiccparam" id="p6pitch1"
                                 data-midiChannel="6" data-cclsb="26"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1659,6 +1766,7 @@
                             <input
                                 class="midiccparam" id="p6egattack1"
                                 data-midiChannel="6" data-cclsb="20"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1666,6 +1774,7 @@
                             <input
                                 class="midiccparam" id="p6egrelease1"
                                 data-midiChannel="6" data-cclsb="23"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1673,6 +1782,7 @@
                             <input
                                 class="midiccparam" id="p6modamt1"
                                 data-midiChannel="6" data-cclsb="29"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1680,6 +1790,7 @@
                             <input
                                 class="midiccparam" id="p6modrate1"
                                 data-midiChannel="6" data-cclsb="46"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
 
@@ -1767,6 +1878,7 @@
                             <input
                                 class="midiccparam" id="p6level2"
                                 data-midiChannel="6" data-cclsb="18"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" >
                         </div>
                         <div class="controller">
@@ -1774,6 +1886,7 @@
                             <input
                                 class="midiccparam" id="p6pitch2"
                                 data-midiChannel="6" data-cclsb="27"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1781,6 +1894,7 @@
                             <input
                                 class="midiccparam" id="p6egattack2"
                                 data-midiChannel="6" data-cclsb="21"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1788,6 +1902,7 @@
                             <input
                                 class="midiccparam" id="p6egrelease2"
                                 data-midiChannel="6" data-cclsb="24"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1795,6 +1910,7 @@
                             <input
                                 class="midiccparam" id="p6modamt2"
                                 data-midiChannel="6" data-cclsb="30"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1802,6 +1918,7 @@
                             <input
                                 class="midiccparam" id="p6modrate2"
                                 data-midiChannel="6" data-cclsb="47"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
 
@@ -1815,6 +1932,7 @@
                             <input
                                 class="midiccparam" id="p6send"
                                 data-midiChannel="6" data-cclsb="103"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1822,6 +1940,7 @@
                             <input
                                 class="midiccparam" id="p6bitred"
                                 data-midiChannel="6" data-cclsb="49"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1829,6 +1948,7 @@
                             <input
                                 class="midiccparam" id="p6fold"
                                 data-midiChannel="6" data-cclsb="50"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1836,6 +1956,7 @@
                             <input
                                 class="midiccparam" id="p6drive"
                                 data-midiChannel="6" data-cclsb="51"
+                                data-displayvaluefunc="doubler"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1843,6 +1964,7 @@
                             <input
                                 class="midiccparam" id="p6pan"
                                 data-midiChannel="6" data-cclsb="10"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                         <div class="controller">
@@ -1850,6 +1972,7 @@
                             <input
                                 class="midiccparam" id="p6gain"
                                 data-midiChannel="6" data-cclsb="52"
+                                data-displayvaluefunc="hundred"
                                 max="127" min="0" type="range" />
                         </div>
                     </div>
@@ -1881,6 +2004,7 @@
                         <input
                             class="midiccparam" id="wgdecay"
                             data-midiChannel="1" data-cclsb="117"
+                            data-displayvaluefunc="doubler"
                             max="127" min="0" type="range" />
                     </div>
                     <div class="controller">
@@ -1888,6 +2012,7 @@
                         <input
                             class="midiccparam" id="wgbody"
                             data-midiChannel="1" data-cclsb="118"
+                            data-displayvaluefunc="doubler"
                             max="127" min="0" type="range" />
                     </div>
                     <div class="controller">
@@ -1895,6 +2020,7 @@
                         <input
                             class="midiccparam" id="wgtune"
                             data-midiChannel="1" data-cclsb="119"
+                            data-displayvaluefunc="doubler"
                             max="127" min="0" type="range" />
                     </div>
                 </div>
