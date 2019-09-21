@@ -11,7 +11,8 @@
         // parameter display transforms:
         let vDrumDoubler = (value) => value === 127 ? 255 : value * 2;
         let vDrumHundred = (value) => value === 127 ? 100 : Math.round(Math.round(((value - 64) / 64 * 200)) / 2); // yeah, I don't get it either
-        
+        let vDrumOnOffer = (value) => value < 64 ? "Off" : "On";
+
         var cynth;
         let init = ()=>{
             cynth = new Ccynthmata(
@@ -20,7 +21,8 @@
                     autoHideParameterDisplay: true,
                     parameterDisplayTransforms: {
                         doubler: vDrumDoubler,
-                        hundred: vDrumHundred
+                        hundred: vDrumHundred,
+                        onoffer: vDrumOnOffer
                     }
                 }); 
             cynth.init();
@@ -411,6 +413,7 @@
                             <input
                                 class="midicctotal" id="p1pitchquant"
                                 data-midiChannel="1" data-cclsb="53"
+                                data-displayvaluefunc="onoffer"
                                 value="127"
                                 max="127" min="0" type="checkbox" />
                         </div>
@@ -732,6 +735,7 @@
                             <input
                                 class="midicctotal" id="p2pitchquant"
                                 data-midiChannel="2" data-cclsb="53"
+                                data-displayvaluefunc="onoffer"
                                 value="127"
                                 max="127" min="0" type="checkbox" />
                         </div>
@@ -1054,6 +1058,7 @@
                             <input
                                 class="midicctotal" id="p3pitchquant"
                                 data-midiChannel="3" data-cclsb="53"
+                                data-displayvaluefunc="onoffer"
                                 value="127"
                                 max="127" min="0" type="checkbox" />
                         </div>
@@ -1376,6 +1381,7 @@
                             <input
                                 class="midicctotal" id="p4pitchquant"
                                 data-midiChannel="4" data-cclsb="53"
+                                data-displayvaluefunc="onoffer"
                                 value="127"
                                 max="127" min="0" type="checkbox" />
                         </div>
@@ -1698,6 +1704,7 @@
                             <input
                                 class="midicctotal" id="p5pitchquant"
                                 data-midiChannel="5" data-cclsb="53"
+                                data-displayvaluefunc="onoffer"
                                 value="127"
                                 max="127" min="0" type="checkbox" />
                         </div>
@@ -2020,6 +2027,7 @@
                             <input
                                 class="midicctotal" id="p6pitchquant"
                                 data-midiChannel="6" data-cclsb="53"
+                                data-displayvaluefunc="onoffer"
                                 value="127"
                                 max="127" min="0" type="checkbox" />
                         </div>
