@@ -6,6 +6,8 @@ var midiOutPorts = null;
 var selectedMidiPort = null;
 var selectedMidiChannel = null;
 var isYamahaMode = false;
+var midiInPorts = null;
+var selectedMidiInPort = null;
 
 var sysexDumpData = null;  // we have to use this for Volca FM which only reponds to bulk data
 
@@ -35,6 +37,7 @@ function onMIDISuccess(result) {
         onMIDIFailure("No midi ports found")
     }
     console.log(midiOutPorts);
+    storeInputs(midi)
     buildSetupPanel();
     buildSaveLoadSharePanel();
     setupParameterControls();
@@ -42,6 +45,7 @@ function onMIDISuccess(result) {
     if(!loadSharablePatchLink(window.location)){
         loadInitPatch();
     }
+    connectPorts();
 }
 
 function onMIDIFailure(msg) {
@@ -60,22 +64,23 @@ function testTone() {
 }
 
 function buildSetupPanel(midiAccess) {
-    // Port selection.
+    // Out Port selection.
     let former = document.createElement("form");
     former.id = "midiSetupForm"
-    
+
     let portSelectLabel = document.createElement("label");
-    portSelectLabel.textContent = "Select MIDI Device";
+    portSelectLabel.textContent = "Select MIDI Out Device";
 
     let portSelecter = document.createElement("select");
     portSelecter.id = "portSelector";
-    portSelecter.onchange = function (event) { 
-        selectedMidiPort = midiOutPorts[event.target.value]; 
-        console.log(selectedMidiPort); 
+    portSelecter.onchange = function (event) {
+        selectedMidiPort = midiOutPorts[event.target.value];
+        console.log(selectedMidiPort);
         sendSysexDump();
         //testTone();   // this is interacting with the sysex change - need to address this longterm, because I think it's useful, but disabled for now
+        connectPorts();
     };
-    
+
     portSelectLabel.appendChild(portSelecter);
     former.appendChild(portSelectLabel);
     midiOutPorts.forEach(
@@ -87,15 +92,38 @@ function buildSetupPanel(midiAccess) {
         }, this);
     selectedMidiPort = midiOutPorts[0]; // TODO: check there's not a more idiomatic way of doing this
 
+    //In Port Selector
+    let inPortSelectLabel = document.createElement("label");
+    inPortSelectLabel.textContent = "Select MIDI In Device";
+
+    let inPortSelecter = document.createElement("select");
+    inPortSelecter.id = "inPortSelector";
+    inPortSelecter.onchange = function (event) {
+        selectedMidiInPort = midiInPorts[event.target.value];
+        console.log(selectedMidiInPort);
+        connectPorts();
+    };
+
+    inPortSelectLabel.appendChild(inPortSelecter);
+    former.appendChild(inPortSelectLabel);
+    midiInPorts.forEach(
+        function (port, idx) {
+            let optioner = document.createElement("option");
+            optioner.setAttribute("label", port.name);
+            optioner.setAttribute("value", idx);
+            inPortSelecter.appendChild(optioner);
+        }, this);
+    selectedMidiInPort = midiInPorts[0]; // TODO: check there's not a more idiomatic way of doing this
+
     // Channel selection
     let channelSelectLabel = document.createElement("label");
     channelSelectLabel.textContent = "Select MIDI Channel";
 
     let channelSelector = document.createElement("select");
     channelSelector.id = "channelSelector";
-    channelSelector.onchange = function (event) { 
-        selectedMidiChannel = parseInt(event.target.value); 
-        console.log(selectedMidiChannel); 
+    channelSelector.onchange = function (event) {
+        selectedMidiChannel = parseInt(event.target.value);
+        console.log(selectedMidiChannel);
         sendSysexDump();
         //testTone();  // this is interacting with the sysex change - need to address this longterm, because I think it's useful, but disabled for now
     };
@@ -124,7 +152,7 @@ function buildSetupPanel(midiAccess) {
     modeKorgRadioInput.addEventListener("change", switchModes);
     former.appendChild(modeKorgRadioLabel);
     former.appendChild(modeKorgRadioInput);
-    
+
     let modeYamahaRadioLabel = document.createElement("label");
     modeYamahaRadioLabel.setAttribute("for", "modeYamaha");
     modeYamahaRadioLabel.textContent = "Yamaha Mode"
@@ -136,7 +164,7 @@ function buildSetupPanel(midiAccess) {
     modeYamahaRadioInput.addEventListener("change", switchModes);
     former.appendChild(modeYamahaRadioLabel);
     former.appendChild(modeYamahaRadioInput);
-    
+
     document.getElementById("midiSetup").appendChild(former);
 }
 
@@ -160,7 +188,7 @@ function buildSaveLoadSharePanel() {
     saveButton.id = "sysexSaveButton";
     saveButton.textContent = "Save Sysex";
     saveButton.onclick = saveSysex;
-    container.appendChild(saveButton); 
+    container.appendChild(saveButton);
 
     let initPatchButton = document.createElement("button");
     initPatchButton.id = "initPatchButton";
@@ -173,7 +201,7 @@ function buildSaveLoadSharePanel() {
     let sharableLinkTextbox = document.createElement("textarea");
     sharableLinkTextbox.id = "sharableLinkTextbox";
     sharableLinkTextbox.setAttribute("readonly", true);
-    
+
     let createSharableLinkButton = document.createElement("button");
     createSharableLinkButton.id = "createSharableLinkButton";
     createSharableLinkButton.textContent = "Create Sharable Patch Link";
@@ -206,7 +234,7 @@ function fullRefreshSysexData() {
 
         sysexDumpData[parameterNo] = value & 0x7f;
     }
-    
+
     let bitSwitchControls = new Array(...document.getElementsByClassName("sysexParameterBitswitch"));
     bitSwitchControls.forEach(function(element){
         let mask = parseInt(element.dataset.sysexparameterbitmask);
@@ -274,12 +302,12 @@ function handleParamValueChange(event) {
             let parameterNo = parseInt(ele.dataset.sysexparameterno);
             let value = parseInt(ele.value);
             sysexBuffer[parameterNo] = value & 0x7f;
-            
+
             // throttle these changes so we don't overflow the buffer on the
             // synth. if we were being very paranoid, we'd put in a safegaurd
             // to always send the last value of any session of value changes
             // on a control before moving to another, but that seems a lot like
-            // solving an issue before we know it can exist. Something to 
+            // solving an issue before we know it can exist. Something to
             // consider if we get lost parameter changes though.
             if (sysexParamThrottleTimer != null) {
                 clearTimeout(sysexParamThrottleTimer);
@@ -292,7 +320,7 @@ function handleParamValueChange(event) {
             let parameterNo = parseInt(ele.dataset.sysexparameterno);
             let stringLength = parseInt(ele.dataset.sysextextlength);
             let value = ele.value.toString();
-            
+
             for(let i = 0; i < stringLength; i++){
                 if(i < value.length){
                     let ordinal = value.charCodeAt(i);
@@ -329,10 +357,10 @@ function createSysexDumpBuffer() {
     // checksum is a byte which is the twos complement of the sum of the
     // dump data, masked back against 0x7f
     // if i want to micro-optimise this, I can. I don't really want to though.
-    
+
     // This accounts for the non-standard behaviour of the Volca requiring the op on/off switches in the dump
     let dumpLength = isYamahaMode ? (sysexDumpData.length - 1 ) : sysexDumpData.length;
-    
+
     let sum = 0;
     for (let i = 0; i < dumpLength; i++) {
         sum += sysexDumpData[i];
@@ -372,7 +400,7 @@ function handleValueChangeVoiceDump(event) {
             let parameterNo = parseInt(ele.dataset.sysexparameterno);
             let stringLength = parseInt(ele.dataset.sysextextlength);
             let value = ele.value.toString();
-            
+
             for(let i = 0; i < stringLength; i++){
                 if(i < value.length){
                     let ordinal = value.charCodeAt(i);
@@ -413,7 +441,7 @@ function sendSysexDump() {
     sysexDumpThrottleTimer = setTimeout(function () {
         selectedMidiPort.send(buffer);
     }, sysexDumpThrottleTimerMs);
-    
+
 }
 
 function saveSysex() {
@@ -468,7 +496,7 @@ function validateSysexData(data) {
         console.log("length indicator is not correct");
         return false; // length indicator is not correct
     }
-    
+
     // checksum check
     let sum = 0;
     for (let i = 6; i < endOfData; i++) {
@@ -509,11 +537,11 @@ function checkSysexFileLoad(event) {
 }
 
 function loadSysex(sysexData) {
-    
+
     if(sysexData.byteLength == 163){  // account for DX7 dumps with no OP On-Off data
         // NB, this CAN'T be the proper way to do this, but I'll be damned if I can get
         // ArrayBuffer and friends to behave the way I wanted. Weird times, strange bugs.
-       
+
         let tmp = [];
         new Uint8ClampedArray(sysexData).forEach(x => tmp.push(x));
         tmp.splice(161, 0, 0x3f); // hedge by just turning everything on
@@ -525,7 +553,7 @@ function loadSysex(sysexData) {
     // numeric perameters
     let paramControls = new Array(...document.getElementsByClassName("sysexParameter"));
     paramControls.forEach(function (element) { element.value = paramArray[element.dataset.sysexparameterno]; });
-    
+
     // text paramenters
     let textControls = new Array(...document.getElementsByClassName("sysexParameterText"));
     textControls.forEach(function(element){
@@ -535,7 +563,7 @@ function loadSysex(sysexData) {
         for(let i = 0; i < textLength; i++){
             chararray.push(String.fromCharCode(paramArray[i + startOffset]))
         }
-        
+
         element.value = chararray.join("");
     });
 
@@ -598,4 +626,22 @@ function storeOutputs(midiAccess) {
     midiOutPorts = new Array(...midiAccess.outputs.values());
 }
 
-navigator.requestMIDIAccess({ sysex: true }).then(onMIDISuccess, onMIDIFailure)
+function storeInputs(midiAccess) {
+    midiInPorts = new Array(...midiAccess.inputs.values());
+}
+
+function connectPorts() {
+    console.log("connect the in and out here");
+    for (var input of midiInPorts) {
+        input.onmidimessage = null;
+    }
+    selectedMidiInPort.onmidimessage = thruMIDIMessage;
+}
+
+function thruMIDIMessage(midiMessage) {
+    if (selectedMidiPort) {
+        selectedMidiPort.send(midiMessage.data);
+    }
+}
+
+navigator.requestMIDIAccess({ sysex: true }).then(onMIDISuccess, onMIDIFailure);
