@@ -1,0 +1,323 @@
+/*
+    grey: #232226
+    gold: ##d8b789
+    red: #c4132b
+    black: #050506
+    white: #d2d5d5
+    lcdblack: #020101
+*/
+
+body {
+    font-family: 'Montserrat', sans-serif; 
+    background-color: #232226;
+}
+#title-head {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 13vw; 
+    font-weight: 700;
+    text-align: center;
+    color: #d8b789;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+#title-byline{
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 2vw; 
+    font-weight: 400;
+    text-align: center;
+    color: #d8b789;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+#title-byline a{
+    color: #d8b789;
+}
+
+#subtitle-head{
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 3vw; 
+    font-weight: 700;
+    text-align: center;
+    color: #d8b789;
+    padding: 1rem;
+}
+#main-content{
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 0.8em;
+}
+
+.controlpanel {
+    color: #d8b789;
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 1em;
+    margin-top: 1em;
+    padding: 1em;
+    border-color: #d8b789;
+    border-width: 1px;
+    border-style: solid;   
+    background: #131214;
+}
+
+#portSelector {
+    display: block;
+}
+
+#channelSelector{
+    display: block;
+}
+
+#saveLoadShare input, button, textarea{
+    display: block;
+}
+
+#saveLoadShare  textarea{
+    height: 10em;
+}
+
+#ccParameterDisplay {
+    position: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    top: 2em;
+    width: 3em;
+    left: 0;
+    right: 0;
+    color: #c4132b;
+    background-color: #020101;
+    border-color: #050506;
+    border-width: 2px;
+    border-style: dashed;  
+    opacity: 0.7;
+    float: right;
+    display: none;
+    font-size: 4.5vw;
+    text-align: center;
+    z-index: 9999;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.showHide{
+    font-size: 0.75rem;
+}
+
+.hiddenInstructions{
+    display: none;
+}
+
+.shownInstructions{
+    display: block;
+}
+/*
+#valueDisplay {
+    position: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    top: 2em;
+    width: 3em;
+    left: 0;
+    right: 0;
+    color: #d8b789;
+    background-color: #444444;
+    border-color: #aaaaaa;
+    border-width: 2px;
+    border-style: dashed;  
+    opacity: 0.7;
+    float: right;
+    display: none;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 3.5vw;
+    text-align: center;
+    
+}
+*/
+.controlpanel h2{
+    margin-top: 0;
+}
+
+.controlflexlayout {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.controlitemgroup{
+    color: #d2d5d5;
+    margin: 4px;
+    padding: 6px;
+    background: #17171a;
+    border-color: #d8b789;
+    border-width: 1px;
+    border-style: groove;  
+    flex-grow: 1; 
+}
+
+.controlitemgroup label{
+    font-weight: 400;
+    font-size: 1em;
+    margin-bottom: 0.5em;
+    display: block;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+   
+.radiogroup label{
+    display: inline-block;
+
+}
+
+.controlitemgroup input{
+    display: inline-block;
+    margin-bottom: 0.5em;
+}
+
+.controlitemgroup input[type=text], textarea{
+    width: 95%;
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif; 
+    font-weight: 400;
+    background-color: #050506;
+    color:#d2d5d5;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #050506;
+}
+
+.controlitemgroup select{
+    width: 95%;
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif; 
+    font-weight: 700;
+    background-color: #050506;
+    color: #d2d5d5;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #050506;
+}
+
+.controlitemgroup button{
+    width:95%;
+    background-color: #050506;
+    color: #d2d5d5;
+    font-family: 'Montserrat', sans-serif; 
+    font-weight: 400;
+    margin-bottom: 0.5em;
+    border-width: 1px;
+    /* border-style: solid; */
+    border-color: #050506;
+}
+
+.controlitemgroup h3{
+    font-size: 1.3em;
+    margin-top: 0;
+    margin-bottom: 0.25em;
+}
+
+input[type=checkbox]{
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #d8b789;
+	padding: 9px;
+	border-radius: 0px;
+	display: inline-block;
+	position: relative;
+}
+
+input[type=checkbox]:checked {
+	background-color: #422920;
+	color: #99a1a7;
+}
+
+input[type=checkbox]:active, .input[type=checkbox]:checked:active {
+	box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
+}
+
+input[type=checkbox]:checked:after {
+	content: '\2714';
+	font-size: 14px;
+	position: absolute;
+	top: 0px;
+	left: 3px;
+	color: #ff9652;
+}
+
+.lcdlabel img{
+    height: 2rem;
+    background-color: #d8b789;
+}
+
+#sharableLinkTextbox{
+    height: 10em;
+}
+
+/*slider styling*/
+
+input[type=range] {
+    -webkit-appearance: none;
+    width: 95%;
+    display: inline-block;
+  }
+  input[type=range]:focus {
+    outline: none;
+  }
+  input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 7px;
+    cursor: pointer;
+    box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+    background: #020101;
+    border-radius: 0px;
+    border: 0px solid #010101;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    box-shadow: 1.1px 1.1px 6.5px #000000, 0px 0px 1.1px #0d0d0d;
+    border: 1.3px solid #000000;
+    height: 19px;
+    width: 12px;
+    border-radius: 5px;
+    background: #d8b789;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -6px;
+  }
+  input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #020101;
+  }
+  input[type=range]::-moz-range-track {
+    width: 100%;
+    height: 7px;
+    cursor: pointer;
+    box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+    background: #020101;
+    border-radius: 0px;
+    border: 0px solid #010101;
+  }
+  input[type=range]::-moz-range-thumb {
+    box-shadow: 1.1px 1.1px 6.5px #000000, 0px 0px 1.1px #0d0d0d;
+    border: 1.3px solid #000000;
+    height: 19px;
+    width: 12px;
+    border-radius: 5px;
+    background: #d8b789;
+    cursor: pointer;
+  }

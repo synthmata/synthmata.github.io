@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>synthmata: NuTekt NTS-1</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" />
+    <link href="style/style.css" rel="stylesheet" />
+    <script src="../script/ccynthmata.js" type="text/javascript"></script>
+    <!-- <script src="./res/init_patch.js" type="text/javascript"></script> -->
+    <script>
+        // parameter display transforms:
+        // let vDrumDoubler = (value) => value === 127 ? 255 : value * 2;
+        // let vDrumHundred = (value) => value === 127 ? 100 : Math.round(Math.round(((value - 64) / 64 * 200)) / 2); // yeah, I don't get it either
+        // let vDrumOnOffer = (value) => value < 64 ? "Off" : "On";
+
+        var cynth;
+        let init = ()=>{
+            cynth = new Ccynthmata(
+                {
+                    // initPatch: vdrumInitPatch, 
+                    autoHideParameterDisplay: true,
+                    // parameterDisplayTransforms: {
+                    //     doubler: vDrumDoubler,
+                    //     hundred: vDrumHundred,
+                    //     onoffer: vDrumOnOffer
+                    // }
+                }); 
+            cynth.init();
+        }
+        let showHideInstructions = ()=>{
+            let instructions = document.getElementById("instructions");
+            if(instructions.classList.contains("hiddenInstructions")){
+                instructions.classList.remove("hiddenInstructions");
+                instructions.classList.add("shownInstructions");
+            }else{
+                instructions.classList.remove("shownInstructions");
+                instructions.classList.add("hiddenInstructions");
+            }
+        }
+    </script>
+</head>
+<body onload="init()">
+    <div id="title-head">
+            <span>synthmata</span>
+    </div>
+    <div id="title-byline">
+        <span>by
+            <a href="http://oscillatorsink.com">oscillatorsink</a>
+        </span>
+    </div>
+    <div id="subtitle-head">
+        <span>free online patch editor for the NuTekt NTS-1
+            <br>BETA VERSION</span>
+    </div>
+    <div id="main-content">
+        <div class="controlpanel">
+            <h2>Instructions</h2>
+            <div class="showHide"><a href="#" onclick="showHideInstructions()">show / hide</a></div>
+            <div id="instructions" class="hiddenInstructions">
+                <p>ToDo:</p>
+                <p>Have fun!</p>
+                <p>If you have questions you can get hold of me on one of many social media platforms:</p>
+                <ul>
+                    <li><a href="https://www.youtube.com/oscillatorsink">YouTube</a></li>
+                    <li><a href="https://www.facebook.com/OscillatorSink/">Facebook</a></li>
+                    <li><a href="https://twitter.com/oscillatorsink">Twitter</a></li>
+                </ul>
+                <p>Oh, and if you want to create your own midi controller you can find the library I build to create this patch editor here:
+                    <a href="https://github.com/synthmata/ccynthmata">ccynthmata</a></p>
+            </div>
+
+
+        </div>
+        <div class="controlpanel">
+            <h2>Setup</h2>
+            <div class="controlflexlayout">
+                <div class="controlitemgroup" id="midiSetup">
+                    <h3>Midi Device Setup</h3>
+                </div>
+                <div class="controlitemgroup" id="saveLoadPanel">
+                    <h3>Save/Load/Export/Share</h3>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="controlpanel">
+            <div class="controlitemgroup">
+                <h3>Patch Name</h3>
+                <label for="ccynthmataPatchName" style="display: none">Patch Name</label>
+                <input type="text" id="ccynthmataPatchName" maxlength="64"/>
+            </div>
+        </div>
+        <div class="controlpanel">
+            <h2>Voice</h2>
+            <div class="controlflexlayout">
+
+                <div class="controlitemgroup">
+                    <h3>Oscillator</h3>
+                    <div>
+                        <div class="controller">
+                            <label for="osctype">Type</label>
+                            <input
+                                class="midiccparam" id="osctype"
+                                data-cclsb="53" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="oscshape">Shape</label>
+                            <input
+                                class="midiccparam" id="oscshape"
+                                data-cclsb="54" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="oscalt">Alt</label>
+                            <input
+                                class="midiccparam" id="oscalt"
+                                data-cclsb="55" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="osclforate">LFO Mod Rate</label>
+                            <input
+                                class="midiccparam" id="osclforate"
+                                data-cclsb="24" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="osclfodepth">LFO Mod Depth</label>
+                            <input
+                                class="midiccparam" id="osclfodepth"
+                                data-cclsb="26" 
+                                min="0" max="127" type="range" >
+                        </div>
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Filter</h3>
+                    <div>
+                        <div class="controller">
+                            <label for="filtertype">Type</label>
+                            <input
+                                class="midiccparam" id="filtertype"
+                                data-cclsb="42" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="filtercutoff">Cutoff</label>
+                            <input
+                                class="midiccparam" id="filtercutoff"
+                                data-cclsb="43" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="filterres">Resonance</label>
+                            <input
+                                class="midiccparam" id="filterres"
+                                data-cclsb="44" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="filtersweeprate">Sweep Rate</label>
+                            <input
+                                class="midiccparam" id="filtersweeprate"
+                                data-cclsb="46" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="filtersweepdepth">Sweep Depth</label>
+                            <input
+                                class="midiccparam" id="filtersweepdepth"
+                                data-cclsb="45" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Amp</h3>
+                    <div>
+                        <div class="controller">
+                            <label for="egtype">EG Type</label>
+                            <input
+                                class="midiccparam" id="egtype"
+                                data-cclsb="14" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="egattack">EG Attack</label>
+                            <input
+                                class="midiccparam" id="egattack"
+                                data-cclsb="16" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="egdecay">EG Decay</label>
+                            <input
+                                class="midiccparam" id="egdecay"
+                                data-cclsb="19" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="tremolodepth">Tremolo Depth</label>
+                            <input
+                                class="midiccparam" id="tremolodepth"
+                                data-cclsb="20" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="tremolorate">Tremolo Depth</label>
+                            <input
+                                class="midiccparam" id="tremolorate"
+                                data-cclsb="21" 
+                                min="0" max="127" type="range" >
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="controlpanel">
+            <h2>Effects</h2>
+            <div class="controlflexlayout">
+
+                <div class="controlitemgroup">
+                    <h3>Mod</h3>
+                    <div>
+                        <div class="controller">
+                            <label for="modtype">Type</label>
+                            <input
+                                class="midiccparam" id="modtype"
+                                data-cclsb="88" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="modtime">Time</label>
+                            <input
+                                class="midiccparam" id="modtime"
+                                data-cclsb="28" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="modtime">Depth</label>
+                            <input
+                                class="midiccparam" id="modtime"
+                                data-cclsb="29" 
+                                min="0" max="127" type="range" >
+                        </div>
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Delay</h3>
+                    <div>
+                        <div class="controller">
+                            <label for="delaytype">Type</label>
+                            <input
+                                class="midiccparam" id="delaytype"
+                                data-cclsb="89" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="delaytime">Time</label>
+                            <input
+                                class="midiccparam" id="delaytime"
+                                data-cclsb="30" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="delaytime">Depth</label>
+                            <input
+                                class="midiccparam" id="delaytime"
+                                data-cclsb="31" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="delaytime">Mix</label>
+                            <input
+                                class="midiccparam" id="delaytime"
+                                data-cclsb="33" 
+                                min="0" max="127" type="range" >
+                        </div>
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Reverb</h3>
+                    <div>
+                        <div class="controller">
+                            <label for="reverbtype">Type</label>
+                            <input
+                                class="midiccparam" id="reverbtype"
+                                data-cclsb="90" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="reverbtime">Time</label>
+                            <input
+                                class="midiccparam" id="reverbtime"
+                                data-cclsb="34" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="reverbtime">Depth</label>
+                            <input
+                                class="midiccparam" id="reverbtime"
+                                data-cclsb="35" 
+                                min="0" max="127" type="range" >
+                        </div>
+                        <div class="controller">
+                            <label for="reverbtime">Mix</label>
+                            <input
+                                class="midiccparam" id="reverbtime"
+                                data-cclsb="36" 
+                                min="0" max="127" type="range" >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="ccParameterDisplay">100</div>
+</body>
+</html>
