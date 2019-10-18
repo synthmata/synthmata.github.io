@@ -56,6 +56,8 @@ function onMIDIFailure(msg) {
 function onMidiMessage(evt) {
     var data    = evt.data;
     if(data[0]!=0xF0)  return;  // only handle SYSEX messages
+    var channel=data[2] & 0xf;
+    if(channel != selectedMidiChannel) return;
     if(!validateSysexData(data)) return;
     loadSysex(data);
     console.log("SYSEX received!");
@@ -468,8 +470,8 @@ function validateSysexData(data) {
         console.log("doesn't end with EOX");
         return false; // doesn't end with EOX
     }
-    if (data[2] & 0x70 != 0) {
-        console.log("sub status is not correct");
+    if ((data[2] & 0x70) != 0) {
+        console.log("sub status is not correct:");
         return false; // sub status is not correct
     }
     if (data[3] != 0) {
