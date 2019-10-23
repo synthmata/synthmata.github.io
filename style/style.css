@@ -105,3 +105,11 @@ body {
     
     display: inline-block;
 }
+
+#main-content.horizontal{
+    width: auto !important;
+    display: auto !important;
+}
+#main-content.horizontal .controlpanel{
+    overflow:initial !important;
+}
