@@ -8,7 +8,7 @@
 
 body {
     font-family: 'Montserrat', sans-serif;
-    background: radial-gradient(at 50% 30%, #555, #222 95%);
+    background: radial-gradient(at 50% 30%, #555 45%, #222 95%);
     background-attachment: fixed;
     margin:2.25rem 0 0;
 }
