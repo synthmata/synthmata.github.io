@@ -45,7 +45,7 @@ function onMIDISuccess(result) {
 }
 
 function onMIDIFailure(msg) {
-    alert("Could not get MIDI access.\nPlease note that MIDI in the browser currently only works in Chrome and Opera.\nIf you declined MIDI access when prompted, please refresh the page.")
+    // alert("Could not get MIDI access.\nPlease note that MIDI in the browser currently only works in Chrome and Opera.\nIf you declined MIDI access when prompted, please refresh the page.")
     console.log("Failed to get MIDI access - " + msg);
 }
 
@@ -63,19 +63,19 @@ function buildSetupPanel(midiAccess) {
     // Port selection.
     let former = document.createElement("form");
     former.id = "midiSetupForm"
-    
+
     let portSelectLabel = document.createElement("label");
     portSelectLabel.textContent = "Select MIDI Device";
 
     let portSelecter = document.createElement("select");
     portSelecter.id = "portSelector";
-    portSelecter.onchange = function (event) { 
-        selectedMidiPort = midiOutPorts[event.target.value]; 
-        console.log(selectedMidiPort); 
+    portSelecter.onchange = function (event) {
+        selectedMidiPort = midiOutPorts[event.target.value];
+        console.log(selectedMidiPort);
         sendSysexDump();
         //testTone();   // this is interacting with the sysex change - need to address this longterm, because I think it's useful, but disabled for now
     };
-    
+
     portSelectLabel.appendChild(portSelecter);
     former.appendChild(portSelectLabel);
     midiOutPorts.forEach(
@@ -93,9 +93,9 @@ function buildSetupPanel(midiAccess) {
 
     let channelSelector = document.createElement("select");
     channelSelector.id = "channelSelector";
-    channelSelector.onchange = function (event) { 
-        selectedMidiChannel = parseInt(event.target.value); 
-        console.log(selectedMidiChannel); 
+    channelSelector.onchange = function (event) {
+        selectedMidiChannel = parseInt(event.target.value);
+        console.log(selectedMidiChannel);
         sendSysexDump();
         //testTone();  // this is interacting with the sysex change - need to address this longterm, because I think it's useful, but disabled for now
     };
@@ -124,7 +124,7 @@ function buildSetupPanel(midiAccess) {
     modeKorgRadioInput.addEventListener("change", switchModes);
     former.appendChild(modeKorgRadioLabel);
     former.appendChild(modeKorgRadioInput);
-    
+
     let modeYamahaRadioLabel = document.createElement("label");
     modeYamahaRadioLabel.setAttribute("for", "modeYamaha");
     modeYamahaRadioLabel.textContent = "Yamaha Mode"
@@ -136,53 +136,24 @@ function buildSetupPanel(midiAccess) {
     modeYamahaRadioInput.addEventListener("change", switchModes);
     former.appendChild(modeYamahaRadioLabel);
     former.appendChild(modeYamahaRadioInput);
-    
+
     document.getElementById("midiSetup").appendChild(former);
 }
 
 function buildSaveLoadSharePanel() {
-    let container = document.getElementById("saveLoadShare");
+    document.getElementById("sysexFileChooser").addEventListener('change', checkSysexFileLoad)
+    document.getElementById("sysexSaveButton").addEventListener('click', saveSysex)
+    document.getElementById("initPatchButton").addEventListener('click', loadInitPatch)
+    document.getElementById("createSharableLinkButton").addEventListener('click', function(){
+        let sharableLink = document.getElementById("sharableLink")
 
-    let loadInput = document.createElement("input");
-    loadInput.setAttribute("type", "file");
-    loadInput.id = "sysexFileChooser"
-    loadInput.onchange = checkSysexFileLoad;
-    container.appendChild(loadInput);
-
-    let loadButton = document.createElement("button");
-    loadButton.id = "sysexLoadButton";
-    loadButton.textContent = "Load Sysex";
-    loadButton.setAttribute("disabled", true);
-    loadButton.onclick = tryLoadSysex;
-    container.appendChild(loadButton);
-
-    let saveButton = document.createElement("button");
-    saveButton.id = "sysexSaveButton";
-    saveButton.textContent = "Save Sysex";
-    saveButton.onclick = saveSysex;
-    container.appendChild(saveButton); 
-
-    let initPatchButton = document.createElement("button");
-    initPatchButton.id = "initPatchButton";
-    initPatchButton.textContent = "Init Patch";
-    initPatchButton.onclick = function(){
-        loadInitPatch();
-    }
-    container.appendChild(initPatchButton);
-
-    let sharableLinkTextbox = document.createElement("textarea");
-    sharableLinkTextbox.id = "sharableLinkTextbox";
-    sharableLinkTextbox.setAttribute("readonly", true);
-    
-    let createSharableLinkButton = document.createElement("button");
-    createSharableLinkButton.id = "createSharableLinkButton";
-    createSharableLinkButton.textContent = "Create Sharable Patch Link";
-    createSharableLinkButton.onclick = function(){
-        sharableLinkTextbox.value = createSharablePatchLink();
-    }
-
-    container.appendChild(createSharableLinkButton);
-    container.appendChild(sharableLinkTextbox);
+        if(sharableLink.style.display === 'block'){
+            sharableLink.style.display = 'none'
+        }else{
+            sharableLink.textContent = createSharablePatchLink();
+            sharableLink.style.display = 'block'
+        }
+    })
 }
 
 function setupParameterControls() {
@@ -206,7 +177,7 @@ function fullRefreshSysexData() {
 
         sysexDumpData[parameterNo] = value & 0x7f;
     }
-    
+
     let bitSwitchControls = new Array(...document.getElementsByClassName("sysexParameterBitswitch"));
     bitSwitchControls.forEach(function(element){
         let mask = parseInt(element.dataset.sysexparameterbitmask);
@@ -238,7 +209,7 @@ function fullRefreshSysexData() {
             }
         }
     });
-    console.log(sysexDumpData);
+    // console.log(sysexDumpData);
 }
 
 function handleValueChange(event){
@@ -274,12 +245,12 @@ function handleParamValueChange(event) {
             let parameterNo = parseInt(ele.dataset.sysexparameterno);
             let value = parseInt(ele.value);
             sysexBuffer[parameterNo] = value & 0x7f;
-            
+
             // throttle these changes so we don't overflow the buffer on the
             // synth. if we were being very paranoid, we'd put in a safegaurd
             // to always send the last value of any session of value changes
             // on a control before moving to another, but that seems a lot like
-            // solving an issue before we know it can exist. Something to 
+            // solving an issue before we know it can exist. Something to
             // consider if we get lost parameter changes though.
             if (sysexParamThrottleTimer != null) {
                 clearTimeout(sysexParamThrottleTimer);
@@ -292,7 +263,7 @@ function handleParamValueChange(event) {
             let parameterNo = parseInt(ele.dataset.sysexparameterno);
             let stringLength = parseInt(ele.dataset.sysextextlength);
             let value = ele.value.toString();
-            
+
             for(let i = 0; i < stringLength; i++){
                 if(i < value.length){
                     let ordinal = value.charCodeAt(i);
@@ -329,10 +300,10 @@ function createSysexDumpBuffer() {
     // checksum is a byte which is the twos complement of the sum of the
     // dump data, masked back against 0x7f
     // if i want to micro-optimise this, I can. I don't really want to though.
-    
+
     // This accounts for the non-standard behaviour of the Volca requiring the op on/off switches in the dump
     let dumpLength = isYamahaMode ? (sysexDumpData.length - 1 ) : sysexDumpData.length;
-    
+
     let sum = 0;
     for (let i = 0; i < dumpLength; i++) {
         sum += sysexDumpData[i];
@@ -353,7 +324,7 @@ function createSysexDumpBuffer() {
         0xf7                          // 0b1111_0111 ; EOX
     ];
 
-    //console.log(buffer);
+    console.log(buffer);
     return buffer;
 }
 
@@ -372,7 +343,7 @@ function handleValueChangeVoiceDump(event) {
             let parameterNo = parseInt(ele.dataset.sysexparameterno);
             let stringLength = parseInt(ele.dataset.sysextextlength);
             let value = ele.value.toString();
-            
+
             for(let i = 0; i < stringLength; i++){
                 if(i < value.length){
                     let ordinal = value.charCodeAt(i);
@@ -405,7 +376,7 @@ function handleValueChangeVoiceDump(event) {
 
 function sendSysexDump() {
     let buffer = createSysexDumpBuffer();
-    console.log(buffer);
+    // console.log(buffer);
 
     if (sysexDumpThrottleTimer != null) {
         clearTimeout(sysexDumpThrottleTimer);
@@ -413,7 +384,7 @@ function sendSysexDump() {
     sysexDumpThrottleTimer = setTimeout(function () {
         selectedMidiPort.send(buffer);
     }, sysexDumpThrottleTimerMs);
-    
+
 }
 
 function saveSysex() {
@@ -468,7 +439,7 @@ function validateSysexData(data) {
         console.log("length indicator is not correct");
         return false; // length indicator is not correct
     }
-    
+
     // checksum check
     let sum = 0;
     for (let i = 6; i < endOfData; i++) {
@@ -495,12 +466,14 @@ function checkSysexFileLoad(event) {
             let data = new Uint8ClampedArray(e.target.result);
             console.log(data);
             if (validateSysexData(data)) {
-                alert("File appears to contain valid sysex data");
-                document.getElementById("sysexLoadButton").removeAttribute("disabled");
-                goodFile = theFile;
+                if(confirm("File appears to contain valid sysex data, would you like to load it?")){
+                    // document.getElementById("sysexLoadButton").removeAttribute("disabled");
+                    goodFile = theFile;
+                    tryLoadSysex()
+                }
             } else {
                 alert("File is not valid sysex data");
-                document.getElementById("sysexLoadButton").setAttribute("disabled", true);
+                // document.getElementById("sysexLoadButton").setAttribute("disabled", true);
                 goodFile = null;
             }
         }
@@ -509,11 +482,13 @@ function checkSysexFileLoad(event) {
 }
 
 function loadSysex(sysexData) {
-    
+
+    console.log('here', sysexData)
+
     if(sysexData.byteLength == 163){  // account for DX7 dumps with no OP On-Off data
         // NB, this CAN'T be the proper way to do this, but I'll be damned if I can get
         // ArrayBuffer and friends to behave the way I wanted. Weird times, strange bugs.
-       
+
         let tmp = [];
         new Uint8ClampedArray(sysexData).forEach(x => tmp.push(x));
         tmp.splice(161, 0, 0x3f); // hedge by just turning everything on
@@ -522,10 +497,11 @@ function loadSysex(sysexData) {
     let data = new Uint8ClampedArray(sysexData);
     let paramArray = data.slice(6, 162);
 
+
     // numeric perameters
     let paramControls = new Array(...document.getElementsByClassName("sysexParameter"));
     paramControls.forEach(function (element) { element.value = paramArray[element.dataset.sysexparameterno]; });
-    
+
     // text paramenters
     let textControls = new Array(...document.getElementsByClassName("sysexParameterText"));
     textControls.forEach(function(element){
@@ -535,7 +511,7 @@ function loadSysex(sysexData) {
         for(let i = 0; i < textLength; i++){
             chararray.push(String.fromCharCode(paramArray[i + startOffset]))
         }
-        
+
         element.value = chararray.join("");
     });
 
@@ -560,7 +536,11 @@ function tryLoadSysex(event) {
         return;
     }
     let reader = new FileReader();
-    reader.onload = function(e){ loadSysex(e.target.result);};
+    reader.onload = function(e){
+        var ba = new Uint8Array(e.target.result)
+        console.log(ba)
+        loadSysex(ba);
+    };
     reader.readAsArrayBuffer(goodFile);
 }
 
