@@ -127,8 +127,27 @@
             <h2>Setup</h2>
             <div class="controlflexlayout">
                 <div class="controlitemgroup" id="midiSetup">
-                    <h3>Midi Device</h3>
-                    <p>NB For Volca-FM please leave channel set to '1' as the Volca only listens for patch information on this channel</p>
+                    <h3>Midi </h3>
+                    <div class="controller controlflexlayout align-items-baseline justify-content-between pb-1">
+                        <label for="">Device </label>
+                        <select id="portSelector"></select>
+                    </div>
+                    <div class="controller controlflexlayout align-items-baseline justify-content-between pb-1">
+                        <label for="">Channel </label>
+                        <select id="channelSelector"></select>
+                    </div>
+                    <small>NB. For Volca-FM please leave channel set to '1' as the Volca only listens for patch information on this channel</small>
+                </div>
+                <div class="controlitemgroup" id="modeSetup">
+                    <h3>Mode</h3>
+                    <div class="controller controlflexlayout align-items-baseline justify-content-between">
+                        <label for="modeKorg">Korg</label>
+                        <input id="modeKorg" checked="true" type="radio" name="mode" value="korg">
+                    </div>
+                    <div class="controller controlflexlayout align-items-baseline justify-content-between">
+                        <label for="modeYamaha">Yamaha</label>
+                        <input id="modeYamaha" type="radio" name="mode" value="yamaha">
+                    </div>
                 </div>
                 <div class="controlitemgroup">
                     <h3>FILE</h3>
@@ -146,8 +165,13 @@
                 </div>
                 <div class="controlitemgroup" id="uiSetup">
                     <h3>Credits</h3>
-                    <p>CSS Slider - <a href="https://codepen.io/thebabydino/pen/azVKey">@thebabydino</a></p>
-                    <p>Motivation - Mr-G
+                    <small>
+                        Original Idea &amp; Code - <a href="http://oscillatorsink.com/">oscillatorsink</a>
+                        <br/>
+                        DX7 UI - pb, Motivation - Mr-G
+                        <br/>
+                        CSS Slider - <a href="https://codepen.io/thebabydino/pen/azVKey">@thebabydino</a>
+                    </small>
                 </div>
             </div>
         </div>
