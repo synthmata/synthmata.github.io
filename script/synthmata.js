@@ -61,14 +61,7 @@ function testTone() {
 
 function buildSetupPanel(midiAccess) {
     // Port selection.
-    let former = document.createElement("form");
-    former.id = "midiSetupForm"
-
-    let portSelectLabel = document.createElement("label");
-    portSelectLabel.textContent = "Select MIDI Device";
-
-    let portSelecter = document.createElement("select");
-    portSelecter.id = "portSelector";
+    let portSelecter = document.getElementById("portSelector");
     portSelecter.onchange = function (event) {
         selectedMidiPort = midiOutPorts[event.target.value];
         console.log(selectedMidiPort);
@@ -76,8 +69,6 @@ function buildSetupPanel(midiAccess) {
         //testTone();   // this is interacting with the sysex change - need to address this longterm, because I think it's useful, but disabled for now
     };
 
-    portSelectLabel.appendChild(portSelecter);
-    former.appendChild(portSelectLabel);
     midiOutPorts.forEach(
         function (port, idx) {
             let optioner = document.createElement("option");
@@ -88,19 +79,15 @@ function buildSetupPanel(midiAccess) {
     selectedMidiPort = midiOutPorts[0]; // TODO: check there's not a more idiomatic way of doing this
 
     // Channel selection
-    let channelSelectLabel = document.createElement("label");
-    channelSelectLabel.textContent = "Select MIDI Channel";
-
-    let channelSelector = document.createElement("select");
-    channelSelector.id = "channelSelector";
+    let channelSelector = document.getElementById("channelSelector");
+    // channelSelector.id = "channelSelector";
     channelSelector.onchange = function (event) {
         selectedMidiChannel = parseInt(event.target.value);
         console.log(selectedMidiChannel);
         sendSysexDump();
         //testTone();  // this is interacting with the sysex change - need to address this longterm, because I think it's useful, but disabled for now
     };
-    channelSelectLabel.appendChild(channelSelector);
-    former.appendChild(channelSelectLabel);
+
     for (let i = 0; i < 16; i++) {
         let optioner = document.createElement("option");
         optioner.setAttribute("label", i + 1);
@@ -112,32 +99,12 @@ function buildSetupPanel(midiAccess) {
     // Korg/Yamaha Switch
     let switchModes = function(e){ isYamahaMode = document.getElementById("modeYamaha").checked; sendSysexDump(); }
 
-    let modeKorgRadioLabel = document.createElement("label");
-    modeKorgRadioLabel.setAttribute("for", "modeKorg");
-    modeKorgRadioLabel.textContent = "Korg Mode"
-    let modeKorgRadioInput = document.createElement("input");
-    modeKorgRadioInput.id = "modeKorg"
-    modeKorgRadioInput.setAttribute("type", "radio");
-    modeKorgRadioInput.setAttribute("name", "mode");
-    modeKorgRadioInput.setAttribute("value", "korg");
-    modeKorgRadioInput.checked = true;
+    let modeKorgRadioInput = document.getElementById("modeKorg");
     modeKorgRadioInput.addEventListener("change", switchModes);
-    former.appendChild(modeKorgRadioLabel);
-    former.appendChild(modeKorgRadioInput);
 
-    let modeYamahaRadioLabel = document.createElement("label");
-    modeYamahaRadioLabel.setAttribute("for", "modeYamaha");
-    modeYamahaRadioLabel.textContent = "Yamaha Mode"
-    let modeYamahaRadioInput = document.createElement("input");
-    modeYamahaRadioInput.id = "modeYamaha"
-    modeYamahaRadioInput.setAttribute("type", "radio");
-    modeYamahaRadioInput.setAttribute("name", "mode");
-    modeYamahaRadioInput.setAttribute("value", "yamaha");
+    let modeYamahaRadioInput = document.getElementById("modeYamaha");
     modeYamahaRadioInput.addEventListener("change", switchModes);
-    former.appendChild(modeYamahaRadioLabel);
-    former.appendChild(modeYamahaRadioInput);
 
-    document.getElementById("midiSetup").appendChild(former);
 }
 
 function buildSaveLoadSharePanel() {
