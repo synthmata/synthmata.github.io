@@ -111,15 +111,29 @@ function buildSaveLoadSharePanel() {
     document.getElementById("sysexFileChooser").addEventListener('change', checkSysexFileLoad)
     document.getElementById("sysexSaveButton").addEventListener('click', saveSysex)
     document.getElementById("initPatchButton").addEventListener('click', loadInitPatch)
-    document.getElementById("createSharableLinkButton").addEventListener('click', function(){
-        let sharableLink = document.getElementById("sharableLink")
+    document.getElementById("createSharableLinkButton").addEventListener('click', function(event){
 
-        if(sharableLink.style.display === 'block'){
-            sharableLink.style.display = 'none'
+        let sharableLink = document.getElementById("sharableLink")
+        let johnChowning = document.getElementById("johnChowning")
+        let oldState     = sharableLink.style.display || 'none'
+
+        sharableLink.textContent = createSharablePatchLink();
+
+        // if(johnChowning.style.display === 'block'){
+        johnChowning.style.display = 'none'
+        sharableLink.style.display = 'none'
+        // }
+
+        if(event.shiftKey){
+            johnChowning.style.display = 'block'
         }else{
-            sharableLink.textContent = createSharablePatchLink();
-            sharableLink.style.display = 'block'
+            if(oldState === 'none'){
+                sharableLink.style.display = 'block'
+            }
         }
+
+
+
     })
 }
 
