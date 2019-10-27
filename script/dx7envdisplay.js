@@ -56,10 +56,9 @@ function makeEnvelope(r1Ele, r2Ele, r3Ele, r4Ele, l1Ele, l2Ele, l3Ele, l4Ele, ca
 
         ctx.translate(0.5,0.5) // prevents blury lines
 
-        // FILL BACKGROUND - GRADIENT?
+
+        // CLEAR CANVAS
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-        ctx.fillStyle = "#444";
-        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
         // DRAW HORIZONTAL GRID LINES
         ctx.lineWidth   = 1
