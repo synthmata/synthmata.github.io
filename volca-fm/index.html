@@ -11,7 +11,6 @@
     <script src="../script/dx7envdisplay.js" type="text/javascript"></script>
     <script src="../script/volcaFmRandomizer.js" type="text/javascript"></script>
     <script>
-
         var valueDisplayFunctions = {
             "addOne": x => x + 1,
             "opScaling": x => ["-ln", "-ex", "+ex", "+ln"][x],
@@ -57,17 +56,23 @@
                 ["sysex21", "sysex22", "sysex23", "sysex24", "sysex25", "sysex26", "sysex27", "sysex28", "op5EnvCanvas"],
                 ["sysex0", "sysex1", "sysex2", "sysex3", "sysex4", "sysex5", "sysex6", "sysex7", "op6EnvCanvas"]
             ];
-            
+
             for(let params of envelopeSysexes){
+                // var params = envelopeSysexes[0]
                 let updateFunc = makeEnvelope(...params.map(x => document.getElementById(x)));
+
+                // var params = envelopeSysexes[0]
+                // let updateFunc2 = makeEnvelopePB(...params.map(x => document.getElementById(x)));
+
+                // window.addEventListener("synthmataPatchLoaded", x => updateFunc());
                 window.addEventListener("synthmataPatchLoaded", x => updateFunc());
             }
         }
-        
+
         function setupRandomizer(){
             let randomize = randomizer(document);
             document.getElementById("random_newpatch").addEventListener(
-                "click", 
+                "click",
                 x => {
                     loadInitPatch();
                     randomize(
@@ -82,7 +87,7 @@
                         document.getElementById("random_wubble").value,
                         document.getElementById("random_velocity").value,
                     );
-                fullRefreshSysexData(); // have to do this because no onchange events will be thrown 
+                fullRefreshSysexData(); // have to do this because no onchange events will be thrown
                 sendSysexDump();
                 window.dispatchEvent(patchLoadedEvent);
             });
@@ -93,748 +98,61 @@
             setupEnvelopes();
             setupRandomizer();
         }
+
+
+
     </script>
 </head>
 
 <body onload="initialise()">
-    <div id="title-head">
-        <span>synthmata</span>
+    <div id="head-wrapper">
+        <div id="title-head">
+            <span>synth<span>mata</span></span>
+        </div>
+        <div id="subtitle-head">
+            <span>Free online patch editor for Volca FM + DX7</span>
+            &emsp;
+            <label class="label label-gold"><b>BETA VERSION</b></label>
+        </div>
+        <div id="title-byline">
+            <span>by
+                <a href="http://oscillatorsink.com">oscillatorsink</a>
+            </span>
+        </div>
     </div>
-    <div id="title-byline">
-        <span>by
-            <a href="http://oscillatorsink.com">oscillatorsink</a>
-        </span>
-    </div>
-    <div id="subtitle-head">
-        <span>free online patch editor for Volca FM + DX7<br>BETA VERSION</span>
-    </div>
-    
+
     <div id="main-content">
+
         <div class="controlpanel">
             <h2>Setup</h2>
             <div class="controlflexlayout">
                 <div class="controlitemgroup" id="midiSetup">
-                    <h3>Midi Device Setup</h3>
+                    <h3>Midi Device</h3>
                     <p>NB For Volca-FM please leave channel set to '1' as the Volca only listens for patch information on this channel</p>
                 </div>
-                <div class="controlitemgroup" id="saveLoadShare">
-                    <h3>Save/Load/Share</h3>
-                </div>
-
-            </div>
-        </div>
-        <div class="controlpanel">
-            <h2>Operator On/Off</h2>
-            <div class="controlflexlayout">
                 <div class="controlitemgroup">
-                    <h3>Operator 1</h3>
-                    <label for="sysex155_1" style="display:none">Operator 1</label>
-                    <input id="sysex155_1" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="1" type="checkbox">
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator 2</h3>
-                    <label for="sysex155_2" style="display:none">Operator 2</label>
-                    <input id="sysex155_2" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="2" type="checkbox">
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator 3</h3>
-                    <label for="sysex155_4" style="display:none">Operator 3</label>
-                    <input id="sysex155_4" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="4" type="checkbox">
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator 4</h3>
-                    <label for="sysex155_8" style="display:none">Operator 4</label>
-                    <input id="sysex155_8" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="8" type="checkbox">
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator 5</h3>
-                    <label for="sysex155_16" style="display:none">Operator 5</label>
-                    <input id="sysex155_16" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="16" type="checkbox">
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator 6</h3>
-                    <label for="sysex155_32" style="display:none">Operator 6</label>
-                    <input id="sysex155_32" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="32" type="checkbox">
-                </div>
-            </div>
-        </div>
-
-        <div class="controlpanel">
-            <h2>Operator 1</h2>
-            <div class="controlflexlayout">
-                <div class="controlitemgroup">
-                    <h3>Envelope Rates</h3>
-                    <div class="controller">
-                        <label for="sysex105">EG R1 </label>
-                        <input class="sysexParameter" data-sysexparameterno="105" id="sysex105" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex106">EG R2 </label>
-                        <input class="sysexParameter" data-sysexparameterno="106" id="sysex106" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex107">EG R3 </label>
-                        <input class="sysexParameter" data-sysexparameterno="107" id="sysex107" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex108">EG R4 </label>
-                        <input class="sysexParameter" data-sysexparameterno="108" id="sysex108" max="99" min="0" type="range" />
+                    <h3>FILE</h3>
+                    <div class="controller" id="saveLoadShare">
+                        <div class="button-group pb-2">
+                            <input type="file" id="sysexFileChooser">
+                            <label class="btn btn-tan" for="sysexFileChooser">Load</label>
+                            <!-- <button class="btn btn-tan" id="sysexLoadButton">Load</button> -->
+                            <button class="btn btn-red" id="sysexSaveButton">Save</button>
+                            <button class="btn btn-purple" id="initPatchButton">Init</button>
+                            <button class="btn btn-green" id="createSharableLinkButton">Share</button>
+                        </div>
+                        <div id="sharableLink"></div>
                     </div>
                 </div>
-                <div class="controlitemgroup">
-                    <h3>Envelope Levels</h3>
-                    <div class="controller">
-                        <label for="sysex109">EG L1 </label>
-                        <input class="sysexParameter" data-sysexparameterno="109" id="sysex109" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex110">EG L2 </label>
-                        <input class="sysexParameter" data-sysexparameterno="110" id="sysex110" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex111">EG L3 </label>
-                        <input class="sysexParameter" data-sysexparameterno="111" id="sysex111" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex112">EG L4 </label>
-                        <input class="sysexParameter" data-sysexparameterno="112" id="sysex112" max="99" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Scaling</h3>
-                    <div class="controller">
-                        <label for="sysex113">Level Scale Break Point </label>
-                        <input class="sysexParameter" data-sysexparameterno="113" id="sysex113" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex114">Level Scale Left Depth </label>
-                        <input class="sysexParameter" data-sysexparameterno="114" id="sysex114" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex115">Level Scale Right Depth </label>
-                        <input class="sysexParameter" data-sysexparameterno="115" data-displayvaluefunc="addOne" id="sysex115" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex116">Level Scale Left Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="116" data-displayvaluefunc="opScaling" id="sysex116" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex117">Level Scale Right Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="117" data-displayvaluefunc="opScaling" id="sysex117" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex118">Operator Rate Scale </label>
-                        <input class="sysexParameter" data-sysexparameterno="118" id="sysex118" max="7" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Tuning</h3>
-                    <div class="controller">
-                        <label for="sysex125">Detune </label>
-                        <input class="sysexParameter" data-sysexparameterno="125" id="sysex125" max="14" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex123">Frequency Coarse </label>
-                        <input class="sysexParameter" data-sysexparameterno="123" id="sysex123" max="31" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex124">Frequency Fine </label>
-                        <input class="sysexParameter" data-sysexparameterno="124" id="sysex124" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex122">Operator Mode </label>
-                        <select class="sysexParameter" data-sysexparameterno="122" id="sysex122">
-                            <option label="Ratio" value="0"></option>
-                            <option label="Fixed" value="1"></option>
-                        </select>
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Levels and Sensitivity</h3>
-                    <div class="controller">
-                        <label for="sysex119">Amp Mod Sense </label>
-                        <input class="sysexParameter" data-sysexparameterno="119" id="sysex119" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex120">Key Velocity Sense </label>
-                        <input class="sysexParameter" data-sysexparameterno="120" id="sysex120" max="7" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex121">Operator Output Level </label>
-                        <input class="sysexParameter" data-sysexparameterno="121" id="sysex121" max="99" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <div class="envelopeCanvasContainer">
-                        <canvas id="op1EnvCanvas" />
-                    </div>
+                <div class="controlitemgroup" id="uiSetup">
+                    <h3>Credits</h3>
+                    <p>CSS Slider - <a href="https://codepen.io/thebabydino/pen/azVKey">@thebabydino</a></p>
+                    <p>Motivation - Mr-G
                 </div>
             </div>
         </div>
         <div class="controlpanel">
-            <h2>Operator 2</h2>
-            <div class="controlflexlayout">
-                <div class="controlitemgroup">
-                    <h3>Envelope Rates</h3>
-                    <div class="controller">
-                        <label for="sysex84">EG R1 </label>
-                        <input class="sysexParameter" data-sysexparameterno="84" id="sysex84" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex85">EG R2 </label>
-                        <input class="sysexParameter" data-sysexparameterno="85" id="sysex85" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex86">EG R3 </label>
-                        <input class="sysexParameter" data-sysexparameterno="86" id="sysex86" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex87">EG R4 </label>
-                        <input class="sysexParameter" data-sysexparameterno="87" id="sysex87" max="99" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Envelope Levels</h3>
-                    <div class="controller">
-                        <label for="sysex88">EG L1 </label>
-                        <input class="sysexParameter" data-sysexparameterno="88" id="sysex88" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex89">EG L2 </label>
-                        <input class="sysexParameter" data-sysexparameterno="89" id="sysex89" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex90">EG L3 </label>
-                        <input class="sysexParameter" data-sysexparameterno="90" id="sysex90" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex91">EG L4 </label>
-                        <input class="sysexParameter" data-sysexparameterno="91" id="sysex91" max="99" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Scaling</h3>
-                    <div class="controller">
-                        <label for="sysex92">Level Scale Break Point </label>
-                        <input class="sysexParameter" data-sysexparameterno="92" id="sysex92" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex93">Level Scale Left Depth </label>
-                        <input class="sysexParameter" data-sysexparameterno="93" id="sysex93" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex94">Level Scale Right Depth </label>
-                        <input class="sysexParameter" data-sysexparameterno="94" id="sysex94" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex95">Level Scale Left Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="95" data-displayvaluefunc="opScaling" id="sysex95" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex96">Level Scale Right Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="96" data-displayvaluefunc="opScaling" id="sysex96" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex97">Operator Rate Scale </label>
-                        <input class="sysexParameter" data-sysexparameterno="97" id="sysex97" max="7" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Tuning</h3>
-                    <div class="controller">
-                        <label for="sysex104">Detune </label>
-                        <input class="sysexParameter" data-sysexparameterno="104" id="sysex104" max="14" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex102">Frequency Coarse </label>
-                        <input class="sysexParameter" data-sysexparameterno="102" id="sysex102" max="31" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex103">Frequency Fine </label>
-                        <input class="sysexParameter" data-sysexparameterno="103" id="sysex103" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex101">Operator Mode </label>
-                        <select class="sysexParameter" data-sysexparameterno="101" id="sysex101">
-                            <option label="Ratio" value="0"></option>
-                            <option label="Fixed" value="1"></option>
-                        </select>
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Levels and Sensitivity</h3>
-                    <div class="controller">
-                        <label for="sysex98">Amp Mod Sense </label>
-                        <input class="sysexParameter" data-sysexparameterno="98" id="sysex98" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex99">Key Velocity Sense </label>
-                        <input class="sysexParameter" data-sysexparameterno="99" id="sysex99" max="7" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex100">Operator Output Level </label>
-                        <input class="sysexParameter" data-sysexparameterno="100" id="sysex100" max="99" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <div class="envelopeCanvasContainer">
-                        <canvas id="op2EnvCanvas" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="controlpanel">
-            <h2>Operator 3</h2>
-            <div class="controlflexlayout">
-                <div class="controlitemgroup">
-                    <h3>Envelope Rates</h3>
-                    <div class="controller">
-                        <label for="sysex63">EG R1 </label>
-                        <input class="sysexParameter" data-sysexparameterno="63" id="sysex63" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex64">EG R2 </label>
-                        <input class="sysexParameter" data-sysexparameterno="64" id="sysex64" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex65">EG R3 </label>
-                        <input class="sysexParameter" data-sysexparameterno="65" id="sysex65" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex66">EG R4 </label>
-                        <input class="sysexParameter" data-sysexparameterno="66" id="sysex66" max="99" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Envelope Levels</h3>
-                    <div class="controller">
-                        <label for="sysex67">EG L1 </label>
-                        <input class="sysexParameter" data-sysexparameterno="67" id="sysex67" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex68">EG L2 </label>
-                        <input class="sysexParameter" data-sysexparameterno="68" id="sysex68" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex69">EG L3 </label>
-                        <input class="sysexParameter" data-sysexparameterno="69" id="sysex69" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex70">EG L4 </label>
-                        <input class="sysexParameter" data-sysexparameterno="70" id="sysex70" max="99" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Scaling</h3>
-                    <div class="controller">
-                        <label for="sysex71">Level Scale Break Point </label>
-                        <input class="sysexParameter" data-sysexparameterno="71" id="sysex71" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex72">Level Scale Left Depth </label>
-                        <input class="sysexParameter" data-sysexparameterno="72" id="sysex72" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex73">Level Scale Right Depth </label>
-                        <input class="sysexParameter" data-sysexparameterno="73" id="sysex73" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex74">Level Scale Left Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="74" data-displayvaluefunc="opScaling" id="sysex74" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex75">Level Scale Right Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="75" data-displayvaluefunc="opScaling" id="sysex75" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex76">Operator Rate Scale </label>
-                        <input class="sysexParameter" data-sysexparameterno="76" id="sysex76" max="7" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Tuning</h3>
-                    <div class="controller">
-                        <label for="sysex83">Detune </label>
-                        <input class="sysexParameter" data-sysexparameterno="83" id="sysex83" max="14" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex81">Frequency Coarse </label>
-                        <input class="sysexParameter" data-sysexparameterno="81" id="sysex81" max="31" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex82">Frequency Fine </label>
-                        <input class="sysexParameter" data-sysexparameterno="82" id="sysex82" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex80">Operator Mode </label>
-                        <select class="sysexParameter" data-sysexparameterno="80" id="sysex80">
-                            <option label="Ratio" value="0"></option>
-                            <option label="Fixed" value="1"></option>
-                        </select>
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Levels and Sensitivity</h3>
-                    <div class="controller">
-                        <label for="sysex77">Amp Mod Sense </label>
-                        <input class="sysexParameter" data-sysexparameterno="77" id="sysex77" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex78">Key Velocity Sense </label>
-                        <input class="sysexParameter" data-sysexparameterno="78" id="sysex78" max="7" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex79">Operator Output Level </label>
-                        <input class="sysexParameter" data-sysexparameterno="79" id="sysex79" max="99" min="0" type="range" />
-                    </div>
-
-                </div>
-                <div class="controlitemgroup">
-                    <div class="envelopeCanvasContainer">
-                        <canvas id="op3EnvCanvas" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="controlpanel">
-            <h2>Operator 4</h2>
-            <div class="controlflexlayout">
-                <div class="controlitemgroup">
-                    <h3>Envelope Rates</h3>
-                    <div class="controller">
-                        <label for="sysex42">EG R1 </label>
-                        <input class="sysexParameter" data-sysexparameterno="42" id="sysex42" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex43">EG R2 </label>
-                        <input class="sysexParameter" data-sysexparameterno="43" id="sysex43" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex44">EG R3 </label>
-                        <input class="sysexParameter" data-sysexparameterno="44" id="sysex44" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex45">EG R4 </label>
-                        <input class="sysexParameter" data-sysexparameterno="45" id="sysex45" max="99" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Envelope Levels</h3>
-                    <div class="controller">
-                        <label for="sysex46">EG L1 </label>
-                        <input class="sysexParameter" data-sysexparameterno="46" id="sysex46" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex47">EG L2 </label>
-                        <input class="sysexParameter" data-sysexparameterno="47" id="sysex47" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex48">EG L3 </label>
-                        <input class="sysexParameter" data-sysexparameterno="48" id="sysex48" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex49">EG L4 </label>
-                        <input class="sysexParameter" data-sysexparameterno="49" id="sysex49" max="99" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Scaling</h3>
-                    <div class="controller">
-                        <label for="sysex50">Level Scale Break Point </label>
-                        <input class="sysexParameter" data-sysexparameterno="50" id="sysex50" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex51">Level Scale Left Depth </label>
-                        <input class="sysexParameter" data-sysexparameterno="51" id="sysex51" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex52">Level Scale Right Depth </label>
-                        <input class="sysexParameter" data-sysexparameterno="52" id="sysex52" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex53">Level Scale Left Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="53" data-displayvaluefunc="opScaling" id="sysex53" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex54">Level Scale Right Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="54" data-displayvaluefunc="opScaling" id="sysex54" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex55">Operator Rate Scale </label>
-                        <input class="sysexParameter" data-sysexparameterno="55" id="sysex55" max="7" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Tuning</h3>
-                    <div class="controller">
-                        <label for="sysex62">Detune </label>
-                        <input class="sysexParameter" data-sysexparameterno="62" id="sysex62" max="14" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex60">Frequency Coarse </label>
-                        <input class="sysexParameter" data-sysexparameterno="60" id="sysex60" max="31" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex61">Frequency Fine </label>
-                        <input class="sysexParameter" data-sysexparameterno="61" id="sysex61" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex59">Operator Mode </label>
-                        <select class="sysexParameter" data-sysexparameterno="59" id="sysex59">
-                            <option label="Ratio" value="0"></option>
-                            <option label="Fixed" value="1"></option>
-                        </select>
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Levels and Sensitivity</h3>
-                    <div class="controller">
-                        <label for="sysex56">Amp Mod Sense </label>
-                        <input class="sysexParameter" data-sysexparameterno="56" id="sysex56" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex57">Key Velocity Sense </label>
-                        <input class="sysexParameter" data-sysexparameterno="57" id="sysex57" max="7" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex58">Operator Output Level </label>
-                        <input class="sysexParameter" data-sysexparameterno="58" id="sysex58" max="99" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <div class="envelopeCanvasContainer">
-                        <canvas id="op4EnvCanvas" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="controlpanel">
-            <h2>Operator 5</h2>
-            <div class="controlflexlayout">
-                <div class="controlitemgroup">
-                    <h3>Envelope Rates</h3>
-                    <div class="controller">
-                        <label for="sysex21">EG R1 </label>
-                        <input class="sysexParameter" data-sysexparameterno="21" id="sysex21" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex22">EG R2 </label>
-                        <input class="sysexParameter" data-sysexparameterno="22" id="sysex22" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex23">EG R3 </label>
-                        <input class="sysexParameter" data-sysexparameterno="23" id="sysex23" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex24">EG R4 </label>
-                        <input class="sysexParameter" data-sysexparameterno="24" id="sysex24" max="99" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Envelope Levels</h3>
-                    <div class="controller">
-                        <label for="sysex25">EG L1 </label>
-                        <input class="sysexParameter" data-sysexparameterno="25" id="sysex25" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex26">EG L2 </label>
-                        <input class="sysexParameter" data-sysexparameterno="26" id="sysex26" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex27">EG L3 </label>
-                        <input class="sysexParameter" data-sysexparameterno="27" id="sysex27" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex28">EG L4 </label>
-                        <input class="sysexParameter" data-sysexparameterno="28" id="sysex28" max="99" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Scaling</h3>
-                    <div class="controller">
-                        <label for="sysex29">Level Scale Break Point </label>
-                        <input class="sysexParameter" data-sysexparameterno="29" id="sysex29" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex30">Level Scale Left Depth </label>
-                        <input class="sysexParameter" data-sysexparameterno="30" id="sysex30" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex31">Level Scale Right Depth </label>
-                        <input class="sysexParameter" data-sysexparameterno="31" id="sysex31" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex32">Level Scale Left Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="32" data-displayvaluefunc="opScaling" id="sysex32" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex33">Level Scale Right Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="33" data-displayvaluefunc="opScaling" id="sysex33" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex34">Operator Rate Scale </label>
-                        <input class="sysexParameter" data-sysexparameterno="34" id="sysex34" max="7" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Tuning</h3>
-                    <div class="controller">
-                        <label for="sysex41">Detune </label>
-                        <input class="sysexParameter" data-sysexparameterno="41" id="sysex41" max="14" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex39">Frequency Coarse </label>
-                        <input class="sysexParameter" data-sysexparameterno="39" id="sysex39" max="31" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex40">Frequency Fine </label>
-                        <input class="sysexParameter" data-sysexparameterno="40" id="sysex40" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex38">Operator Mode </label>
-                        <select class="sysexParameter" data-sysexparameterno="38" id="sysex38">
-                            <option label="Ratio" value="0"></option>
-                            <option label="Fixed" value="1"></option>
-                        </select>
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Levels and Sensitivity</h3>
-                    <div class="controller">
-                        <label for="sysex35">Amp Mod Sense </label>
-                        <input class="sysexParameter" data-sysexparameterno="35" id="sysex35" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex36">Key Velocity Sense </label>
-                        <input class="sysexParameter" data-sysexparameterno="36" id="sysex36" max="7" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex37">Operator Output Level </label>
-                        <input class="sysexParameter" data-sysexparameterno="37" id="sysex37" max="99" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <div class="envelopeCanvasContainer">
-                        <canvas id="op5EnvCanvas" />
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="controlpanel">
-            <h2>Operator 6</h2>
-            <div class="controlflexlayout">
-                <div class="controlitemgroup">
-                    <h3>Envelope Rates</h3>
-                    <div class="controller">
-                        <label for="sysex0">EG R1 </label>
-                        <input class="sysexParameter" data-sysexparameterno="0" id="sysex0" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex1">EG R2 </label>
-                        <input class="sysexParameter" data-sysexparameterno="1" id="sysex1" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex2">EG R3 </label>
-                        <input class="sysexParameter" data-sysexparameterno="2" id="sysex2" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex3">EG R4 </label>
-                        <input class="sysexParameter" data-sysexparameterno="3" id="sysex3" max="99" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Envelope Levels</h3>
-                    <div class="controller">
-                        <label for="sysex4">EG L1 </label>
-                        <input class="sysexParameter" data-sysexparameterno="4" id="sysex4" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex5">EG L2 </label>
-                        <input class="sysexParameter" data-sysexparameterno="5" id="sysex5" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex6">EG L3 </label>
-                        <input class="sysexParameter" data-sysexparameterno="6" id="sysex6" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex7">EG L4 </label>
-                        <input class="sysexParameter" data-sysexparameterno="7" id="sysex7" max="99" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Scaling</h3>
-                    <div class="controller">
-                        <label for="sysex8">Level Scale Break Point </label>
-                        <input class="sysexParameter" data-sysexparameterno="8" id="sysex8" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex9">Level Scale Left Depth </label>
-                        <input class="sysexParameter" data-sysexparameterno="9" id="sysex9" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex10">Level Scale Right Depth </label>
-                        <input class="sysexParameter" data-sysexparameterno="10" id="sysex10" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex11">Level Scale Left Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="11" data-displayvaluefunc="opScaling" id="sysex11" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex12">Level Scale Right Curve </label>
-                        <input class="sysexParameter" data-sysexparameterno="12" data-displayvaluefunc="opScaling" id="sysex12" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex13">Operator Rate Scale </label>
-                        <input class="sysexParameter" data-sysexparameterno="13" id="sysex13" max="7" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Tuning</h3>
-                    <div class="controller">
-                        <label for="sysex20">Detune </label>
-                        <input class="sysexParameter" data-sysexparameterno="20" id="sysex20" max="14" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex18">Frequency Coarse </label>
-                        <input class="sysexParameter" data-sysexparameterno="18" id="sysex18" max="31" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex19">Frequency Fine </label>
-                        <input class="sysexParameter" data-sysexparameterno="19" id="sysex19" max="99" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex17">Operator Mode </label>
-                        <select class="sysexParameter" data-sysexparameterno="17" id="sysex17">
-                            <option label="Ratio" value="0"></option>
-                            <option label="Fixed" value="1"></option>
-                        </select>
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <h3>Operator Levels and Sensitivity</h3>
-                    <div class="controller">
-                        <label for="sysex14">Amp Mod Sense </label>
-                        <input class="sysexParameter" data-sysexparameterno="14" id="sysex14" max="3" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex15">Key Velocity Sense </label>
-                        <input class="sysexParameter" data-sysexparameterno="15" id="sysex15" max="7" min="0" type="range" />
-                    </div>
-                    <div class="controller">
-                        <label for="sysex16">Operator Output Level </label>
-                        <input class="sysexParameter" data-sysexparameterno="16" id="sysex16" max="99" min="0" type="range" />
-                    </div>
-                </div>
-                <div class="controlitemgroup">
-                    <div class="envelopeCanvasContainer">
-                        <canvas id="op6EnvCanvas" />
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="controlpanel">
-            <h2>Global Voice Controls</h2>
+            <h2>Global Voice</h2>
             <div class="controlflexlayout">
                 <div class="controlitemgroup">
                     <h3>Operator Settings</h3>
@@ -846,12 +164,11 @@
                         <label for="sysex135">Feedback </label>
                         <input class="sysexParameter" data-sysexparameterno="135" id="sysex135" max="7" min="0" type="range" />
                     </div>
-                    <div class="controller">
-                        <label for="sysex136">Operator Key Sync </label>
-                        <select class="sysexParameter" data-sysexparameterno="136" id="sysex136" type="range">
-                            <option label="Off" value="0"></option>
-                            <option label="On" value="1"></option>
-                        </select>
+                    <div class="controller controlflexlayout align-items-baseline justify-content-between pt-1 pb-3">
+                        <label for="sysex136">Key Sync </label>
+                        <div class="toggle-button">
+                            <input id="sysex136" class="sysexParameterBitswitch" data-sysexparameterno="136" data-sysexparameterbitmask="1" type="checkbox">
+                        </div>
                     </div>
                     <div class="controller">
                         <label for="sysex144">Transpose </label>
@@ -919,11 +236,12 @@
                         <input class="sysexParameter" data-sysexparameterno="138" id="sysex138" max="99" min="0" type="range" />
                     </div>
                     <div class="controller">
-                        <label for="sysex141">LFO Key Sync </label>
-                        <select class="sysexParameter" data-sysexparameterno="141" id="sysex141" type="range">
-                            <option label="Off" value="0"></option>
-                            <option label="On" value="1"></option>
-                        </select>
+                        <div class="controlflexlayout align-items-baseline justify-content-between pt-1 pb-3">
+                            <label for="sysex141">LFO Key Sync </label>
+                            <div class="toggle-button">
+                                <input id="sysex141" class="sysexParameterBitswitch" data-sysexparameterno="141" type="checkbox">
+                            </div>
+                        </div>
                     </div>
                     <div class="controller">
                         <label for="sysex143">Pitch Mod Sensitivity </label>
@@ -992,13 +310,734 @@
                     </div>
                 </div>
                 <div class="controlitemgroup">
-                    <h3>Go!</h3>
                     <div class="controller">
-                        <button id="random_newpatch" >New Patch</button>
+                        <button class="btn btn-purple" id="random_newpatch">APPLY</button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="controlpanel">
+            <div class="controlflexlayout align-items-baseline justify-content-between">
+                <h2>Operator 1</h2>
+                <div class="toggle-button">
+                    <label for="sysex155_1" style="display:none">Operator 1</label>
+                    <input id="sysex155_1" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="1" type="checkbox">
+                </div>
+            </div>
+            <div class="controlflexlayout">
+                <div class="controlitemgroup">
+                    <h3>Envelope Rates</h3>
+                    <div class="controller">
+                        <label for="sysex105">EG R1 </label>
+                        <input class="sysexParameter" data-sysexparameterno="105" id="sysex105" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex106">EG R2 </label>
+                        <input class="sysexParameter" data-sysexparameterno="106" id="sysex106" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex107">EG R3 </label>
+                        <input class="sysexParameter" data-sysexparameterno="107" id="sysex107" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex108">EG R4 </label>
+                        <input class="sysexParameter" data-sysexparameterno="108" id="sysex108" max="99" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Envelope Levels</h3>
+                    <div class="controller">
+                        <label for="sysex109">EG L1 </label>
+                        <input class="sysexParameter" data-sysexparameterno="109" id="sysex109" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex110">EG L2 </label>
+                        <input class="sysexParameter" data-sysexparameterno="110" id="sysex110" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex111">EG L3 </label>
+                        <input class="sysexParameter" data-sysexparameterno="111" id="sysex111" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex112">EG L4 </label>
+                        <input class="sysexParameter" data-sysexparameterno="112" id="sysex112" max="99" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <div class="envelopeCanvasContainer">
+                        <canvas id="op1EnvCanvas" height="80"/>
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Scaling</h3>
+                    <div class="controller">
+                        <label for="sysex113">Level Scale Break Point </label>
+                        <input class="sysexParameter" data-sysexparameterno="113" id="sysex113" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex114">Level Scale Left Depth </label>
+                        <input class="sysexParameter" data-sysexparameterno="114" id="sysex114" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex115">Level Scale Right Depth </label>
+                        <input class="sysexParameter" data-sysexparameterno="115" data-displayvaluefunc="addOne" id="sysex115" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex116">Level Scale Left Curve </label>
+                        <input class="sysexParameter" data-sysexparameterno="116" data-displayvaluefunc="opScaling" id="sysex116" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex117">Level Scale Right Curve </label>
+                        <input class="sysexParameter" data-sysexparameterno="117" data-displayvaluefunc="opScaling" id="sysex117" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex118">Operator Rate Scale </label>
+                        <input class="sysexParameter" data-sysexparameterno="118" id="sysex118" max="7" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Tuning</h3>
+                    <div class="controller">
+                        <label for="sysex125">Detune </label>
+                        <input class="sysexParameter" data-sysexparameterno="125" id="sysex125" max="14" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex123">Frequency Coarse </label>
+                        <input class="sysexParameter" data-sysexparameterno="123" id="sysex123" max="31" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex124">Frequency Fine </label>
+                        <input class="sysexParameter" data-sysexparameterno="124" id="sysex124" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <div class="controlflexlayout align-items-baseline justify-content-between pt-1 pb-3">
+                            <label for="sysex122">Operator Mode </label>
+                            <select class="sysexParameter" data-sysexparameterno="122" id="sysex122">
+                                <option label="Ratio" value="0"></option>
+                                <option label="Fixed" value="1"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Levels and Sensitivity</h3>
+                    <div class="controller">
+                        <label for="sysex119">Amp Mod Sense </label>
+                        <input class="sysexParameter" data-sysexparameterno="119" id="sysex119" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex120">Key Velocity Sense </label>
+                        <input class="sysexParameter" data-sysexparameterno="120" id="sysex120" max="7" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex121">Operator Output Level </label>
+                        <input class="sysexParameter" data-sysexparameterno="121" id="sysex121" max="99" min="0" type="range" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="controlpanel">
+            <div class="controlflexlayout align-items-baseline justify-content-between">
+                <h2>Operator 2</h2>
+                <div class="toggle-button">
+                    <label for="sysex155_2" style="display:none">Operator 2</label>
+                    <input id="sysex155_2" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="4" type="checkbox">
+                </div>
+            </div>
+            <div class="controlflexlayout">
+                <div class="controlitemgroup">
+                    <h3>Envelope Rates</h3>
+                    <div class="controller">
+                        <label for="sysex84">EG R1 </label>
+                        <input class="sysexParameter" data-sysexparameterno="84" id="sysex84" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex85">EG R2 </label>
+                        <input class="sysexParameter" data-sysexparameterno="85" id="sysex85" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex86">EG R3 </label>
+                        <input class="sysexParameter" data-sysexparameterno="86" id="sysex86" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex87">EG R4 </label>
+                        <input class="sysexParameter" data-sysexparameterno="87" id="sysex87" max="99" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Envelope Levels</h3>
+                    <div class="controller">
+                        <label for="sysex88">EG L1 </label>
+                        <input class="sysexParameter" data-sysexparameterno="88" id="sysex88" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex89">EG L2 </label>
+                        <input class="sysexParameter" data-sysexparameterno="89" id="sysex89" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex90">EG L3 </label>
+                        <input class="sysexParameter" data-sysexparameterno="90" id="sysex90" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex91">EG L4 </label>
+                        <input class="sysexParameter" data-sysexparameterno="91" id="sysex91" max="99" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <div class="envelopeCanvasContainer">
+                        <canvas id="op2EnvCanvas" height="80"/>
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Scaling</h3>
+                    <div class="controller">
+                        <label for="sysex92">Level Scale Break Point </label>
+                        <input class="sysexParameter" data-sysexparameterno="92" id="sysex92" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex93">Level Scale Left Depth </label>
+                        <input class="sysexParameter" data-sysexparameterno="93" id="sysex93" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex94">Level Scale Right Depth </label>
+                        <input class="sysexParameter" data-sysexparameterno="94" id="sysex94" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex95">Level Scale Left Curve </label>
+                        <input class="sysexParameter" data-sysexparameterno="95" data-displayvaluefunc="opScaling" id="sysex95" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex96">Level Scale Right Curve </label>
+                        <input class="sysexParameter" data-sysexparameterno="96" data-displayvaluefunc="opScaling" id="sysex96" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex97">Operator Rate Scale </label>
+                        <input class="sysexParameter" data-sysexparameterno="97" id="sysex97" max="7" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Tuning</h3>
+                    <div class="controller">
+                        <label for="sysex104">Detune </label>
+                        <input class="sysexParameter" data-sysexparameterno="104" id="sysex104" max="14" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex102">Frequency Coarse </label>
+                        <input class="sysexParameter" data-sysexparameterno="102" id="sysex102" max="31" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex103">Frequency Fine </label>
+                        <input class="sysexParameter" data-sysexparameterno="103" id="sysex103" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <div class="controlflexlayout align-items-baseline justify-content-between pt-1 pb-3">
+                            <label for="sysex101">Operator Mode </label>
+                            <select class="sysexParameter" data-sysexparameterno="101" id="sysex101">
+                                <option label="Ratio" value="0"></option>
+                                <option label="Fixed" value="1"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Levels and Sensitivity</h3>
+                    <div class="controller">
+                        <label for="sysex98">Amp Mod Sense </label>
+                        <input class="sysexParameter" data-sysexparameterno="98" id="sysex98" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex99">Key Velocity Sense </label>
+                        <input class="sysexParameter" data-sysexparameterno="99" id="sysex99" max="7" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex100">Operator Output Level </label>
+                        <input class="sysexParameter" data-sysexparameterno="100" id="sysex100" max="99" min="0" type="range" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="controlpanel">
+            <div class="controlflexlayout align-items-baseline justify-content-between">
+                <h2>Operator 3</h2>
+                <div class="toggle-button">
+                    <label for="sysex155_4" style="display:none">Operator 3</label>
+                    <input id="sysex155_4" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="4" type="checkbox">
+                </div>
+            </div>
+            <div class="controlflexlayout">
+                <div class="controlitemgroup">
+                    <h3>Envelope Rates</h3>
+                    <div class="controller">
+                        <label for="sysex63">EG R1 </label>
+                        <input class="sysexParameter" data-sysexparameterno="63" id="sysex63" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex64">EG R2 </label>
+                        <input class="sysexParameter" data-sysexparameterno="64" id="sysex64" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex65">EG R3 </label>
+                        <input class="sysexParameter" data-sysexparameterno="65" id="sysex65" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex66">EG R4 </label>
+                        <input class="sysexParameter" data-sysexparameterno="66" id="sysex66" max="99" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Envelope Levels</h3>
+                    <div class="controller">
+                        <label for="sysex67">EG L1 </label>
+                        <input class="sysexParameter" data-sysexparameterno="67" id="sysex67" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex68">EG L2 </label>
+                        <input class="sysexParameter" data-sysexparameterno="68" id="sysex68" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex69">EG L3 </label>
+                        <input class="sysexParameter" data-sysexparameterno="69" id="sysex69" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex70">EG L4 </label>
+                        <input class="sysexParameter" data-sysexparameterno="70" id="sysex70" max="99" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <div class="envelopeCanvasContainer">
+                        <canvas id="op3EnvCanvas" height="80"/>
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Scaling</h3>
+                    <div class="controller">
+                        <label for="sysex71">Level Scale Break Point </label>
+                        <input class="sysexParameter" data-sysexparameterno="71" id="sysex71" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex72">Level Scale Left Depth </label>
+                        <input class="sysexParameter" data-sysexparameterno="72" id="sysex72" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex73">Level Scale Right Depth </label>
+                        <input class="sysexParameter" data-sysexparameterno="73" id="sysex73" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex74">Level Scale Left Curve </label>
+                        <input class="sysexParameter" data-sysexparameterno="74" data-displayvaluefunc="opScaling" id="sysex74" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex75">Level Scale Right Curve </label>
+                        <input class="sysexParameter" data-sysexparameterno="75" data-displayvaluefunc="opScaling" id="sysex75" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex76">Operator Rate Scale </label>
+                        <input class="sysexParameter" data-sysexparameterno="76" id="sysex76" max="7" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Tuning</h3>
+                    <div class="controller">
+                        <label for="sysex83">Detune </label>
+                        <input class="sysexParameter" data-sysexparameterno="83" id="sysex83" max="14" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex81">Frequency Coarse </label>
+                        <input class="sysexParameter" data-sysexparameterno="81" id="sysex81" max="31" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex82">Frequency Fine </label>
+                        <input class="sysexParameter" data-sysexparameterno="82" id="sysex82" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <div class="controlflexlayout align-items-baseline justify-content-between pt-1 pb-3">
+                            <label for="sysex80">Operator Mode </label>
+                            <select class="sysexParameter" data-sysexparameterno="80" id="sysex80">
+                                <option label="Ratio" value="0"></option>
+                                <option label="Fixed" value="1"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Levels and Sensitivity</h3>
+                    <div class="controller">
+                        <label for="sysex77">Amp Mod Sense </label>
+                        <input class="sysexParameter" data-sysexparameterno="77" id="sysex77" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex78">Key Velocity Sense </label>
+                        <input class="sysexParameter" data-sysexparameterno="78" id="sysex78" max="7" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex79">Operator Output Level </label>
+                        <input class="sysexParameter" data-sysexparameterno="79" id="sysex79" max="99" min="0" type="range" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="controlpanel">
+            <div class="controlflexlayout align-items-baseline justify-content-between">
+                <h2>Operator 4</h2>
+                <div class="toggle-button">
+                    <label for="sysex155_8" style="display:none">Operator 4</label>
+                    <input id="sysex155_8" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="8" type="checkbox">
+                </div>
+            </div>
+            <div class="controlflexlayout">
+                <div class="controlitemgroup">
+                    <h3>Envelope Rates</h3>
+                    <div class="controller">
+                        <label for="sysex42">EG R1 </label>
+                        <input class="sysexParameter" data-sysexparameterno="42" id="sysex42" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex43">EG R2 </label>
+                        <input class="sysexParameter" data-sysexparameterno="43" id="sysex43" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex44">EG R3 </label>
+                        <input class="sysexParameter" data-sysexparameterno="44" id="sysex44" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex45">EG R4 </label>
+                        <input class="sysexParameter" data-sysexparameterno="45" id="sysex45" max="99" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Envelope Levels</h3>
+                    <div class="controller">
+                        <label for="sysex46">EG L1 </label>
+                        <input class="sysexParameter" data-sysexparameterno="46" id="sysex46" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex47">EG L2 </label>
+                        <input class="sysexParameter" data-sysexparameterno="47" id="sysex47" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex48">EG L3 </label>
+                        <input class="sysexParameter" data-sysexparameterno="48" id="sysex48" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex49">EG L4 </label>
+                        <input class="sysexParameter" data-sysexparameterno="49" id="sysex49" max="99" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <div class="envelopeCanvasContainer">
+                        <canvas id="op4EnvCanvas" height="80"/>
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Scaling</h3>
+                    <div class="controller">
+                        <label for="sysex50">Level Scale Break Point </label>
+                        <input class="sysexParameter" data-sysexparameterno="50" id="sysex50" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex51">Level Scale Left Depth </label>
+                        <input class="sysexParameter" data-sysexparameterno="51" id="sysex51" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex52">Level Scale Right Depth </label>
+                        <input class="sysexParameter" data-sysexparameterno="52" id="sysex52" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex53">Level Scale Left Curve </label>
+                        <input class="sysexParameter" data-sysexparameterno="53" data-displayvaluefunc="opScaling" id="sysex53" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex54">Level Scale Right Curve </label>
+                        <input class="sysexParameter" data-sysexparameterno="54" data-displayvaluefunc="opScaling" id="sysex54" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex55">Operator Rate Scale </label>
+                        <input class="sysexParameter" data-sysexparameterno="55" id="sysex55" max="7" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Tuning</h3>
+                    <div class="controller">
+                        <label for="sysex62">Detune </label>
+                        <input class="sysexParameter" data-sysexparameterno="62" id="sysex62" max="14" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex60">Frequency Coarse </label>
+                        <input class="sysexParameter" data-sysexparameterno="60" id="sysex60" max="31" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex61">Frequency Fine </label>
+                        <input class="sysexParameter" data-sysexparameterno="61" id="sysex61" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <div class="controlflexlayout align-items-baseline justify-content-between pt-1 pb-3">
+                            <label for="sysex59">Operator Mode </label>
+                            <select class="sysexParameter" data-sysexparameterno="59" id="sysex59">
+                                <option label="Ratio" value="0"></option>
+                                <option label="Fixed" value="1"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Levels and Sensitivity</h3>
+                    <div class="controller">
+                        <label for="sysex56">Amp Mod Sense </label>
+                        <input class="sysexParameter" data-sysexparameterno="56" id="sysex56" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex57">Key Velocity Sense </label>
+                        <input class="sysexParameter" data-sysexparameterno="57" id="sysex57" max="7" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex58">Operator Output Level </label>
+                        <input class="sysexParameter" data-sysexparameterno="58" id="sysex58" max="99" min="0" type="range" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="controlpanel">
+            <div class="controlflexlayout align-items-baseline justify-content-between">
+                <h2>Operator 5</h2>
+                <div class="toggle-button">
+                    <label for="sysex155_16" style="display:none">Operator 5</label>
+                    <input id="sysex155_16" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="16" type="checkbox">
+                </div>
+            </div>
+            <div class="controlflexlayout">
+                <div class="controlitemgroup">
+                    <h3>Envelope Rates</h3>
+                    <div class="controller">
+                        <label for="sysex21">EG R1 </label>
+                        <input class="sysexParameter" data-sysexparameterno="21" id="sysex21" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex22">EG R2 </label>
+                        <input class="sysexParameter" data-sysexparameterno="22" id="sysex22" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex23">EG R3 </label>
+                        <input class="sysexParameter" data-sysexparameterno="23" id="sysex23" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex24">EG R4 </label>
+                        <input class="sysexParameter" data-sysexparameterno="24" id="sysex24" max="99" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Envelope Levels</h3>
+                    <div class="controller">
+                        <label for="sysex25">EG L1 </label>
+                        <input class="sysexParameter" data-sysexparameterno="25" id="sysex25" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex26">EG L2 </label>
+                        <input class="sysexParameter" data-sysexparameterno="26" id="sysex26" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex27">EG L3 </label>
+                        <input class="sysexParameter" data-sysexparameterno="27" id="sysex27" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex28">EG L4 </label>
+                        <input class="sysexParameter" data-sysexparameterno="28" id="sysex28" max="99" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <div class="envelopeCanvasContainer">
+                        <canvas id="op5EnvCanvas" height="80"/>
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Scaling</h3>
+                    <div class="controller">
+                        <label for="sysex29">Level Scale Break Point </label>
+                        <input class="sysexParameter" data-sysexparameterno="29" id="sysex29" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex30">Level Scale Left Depth </label>
+                        <input class="sysexParameter" data-sysexparameterno="30" id="sysex30" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex31">Level Scale Right Depth </label>
+                        <input class="sysexParameter" data-sysexparameterno="31" id="sysex31" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex32">Level Scale Left Curve </label>
+                        <input class="sysexParameter" data-sysexparameterno="32" data-displayvaluefunc="opScaling" id="sysex32" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex33">Level Scale Right Curve </label>
+                        <input class="sysexParameter" data-sysexparameterno="33" data-displayvaluefunc="opScaling" id="sysex33" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex34">Operator Rate Scale </label>
+                        <input class="sysexParameter" data-sysexparameterno="34" id="sysex34" max="7" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Tuning</h3>
+                    <div class="controller">
+                        <label for="sysex41">Detune </label>
+                        <input class="sysexParameter" data-sysexparameterno="41" id="sysex41" max="14" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex39">Frequency Coarse </label>
+                        <input class="sysexParameter" data-sysexparameterno="39" id="sysex39" max="31" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex40">Frequency Fine </label>
+                        <input class="sysexParameter" data-sysexparameterno="40" id="sysex40" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <div class="controlflexlayout align-items-baseline justify-content-between pt-1 pb-3">
+                            <label for="sysex38">Operator Mode </label>
+                            <select class="sysexParameter" data-sysexparameterno="38" id="sysex38">
+                                <option label="Ratio" value="0"></option>
+                                <option label="Fixed" value="1"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Levels and Sensitivity</h3>
+                    <div class="controller">
+                        <label for="sysex35">Amp Mod Sense </label>
+                        <input class="sysexParameter" data-sysexparameterno="35" id="sysex35" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex36">Key Velocity Sense </label>
+                        <input class="sysexParameter" data-sysexparameterno="36" id="sysex36" max="7" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex37">Operator Output Level </label>
+                        <input class="sysexParameter" data-sysexparameterno="37" id="sysex37" max="99" min="0" type="range" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="controlpanel">
+            <div class="controlflexlayout align-items-baseline justify-content-between">
+                <h2>Operator 6</h2>
+                <div class="toggle-button">
+                    <label for="sysex155_32" style="display:none">Operator 6</label>
+                    <input id="sysex155_32" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="32" type="checkbox">
+                </div>
+            </div>
+            <div class="controlflexlayout">
+                <div class="controlitemgroup">
+                    <h3>Envelope Rates</h3>
+                    <div class="controller">
+                        <label for="sysex0">EG R1 </label>
+                        <input class="sysexParameter" data-sysexparameterno="0" id="sysex0" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex1">EG R2 </label>
+                        <input class="sysexParameter" data-sysexparameterno="1" id="sysex1" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex2">EG R3 </label>
+                        <input class="sysexParameter" data-sysexparameterno="2" id="sysex2" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex3">EG R4 </label>
+                        <input class="sysexParameter" data-sysexparameterno="3" id="sysex3" max="99" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Envelope Levels</h3>
+                    <div class="controller">
+                        <label for="sysex4">EG L1 </label>
+                        <input class="sysexParameter" data-sysexparameterno="4" id="sysex4" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex5">EG L2 </label>
+                        <input class="sysexParameter" data-sysexparameterno="5" id="sysex5" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex6">EG L3 </label>
+                        <input class="sysexParameter" data-sysexparameterno="6" id="sysex6" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex7">EG L4 </label>
+                        <input class="sysexParameter" data-sysexparameterno="7" id="sysex7" max="99" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <div class="envelopeCanvasContainer">
+                        <canvas id="op6EnvCanvas" height="80"/>
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Scaling</h3>
+                    <div class="controller">
+                        <label for="sysex8">Level Scale Break Point </label>
+                        <input class="sysexParameter" data-sysexparameterno="8" id="sysex8" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex9">Level Scale Left Depth </label>
+                        <input class="sysexParameter" data-sysexparameterno="9" id="sysex9" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex10">Level Scale Right Depth </label>
+                        <input class="sysexParameter" data-sysexparameterno="10" id="sysex10" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex11">Level Scale Left Curve </label>
+                        <input class="sysexParameter" data-sysexparameterno="11" data-displayvaluefunc="opScaling" id="sysex11" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex12">Level Scale Right Curve </label>
+                        <input class="sysexParameter" data-sysexparameterno="12" data-displayvaluefunc="opScaling" id="sysex12" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex13">Operator Rate Scale </label>
+                        <input class="sysexParameter" data-sysexparameterno="13" id="sysex13" max="7" min="0" type="range" />
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Tuning</h3>
+                    <div class="controller">
+                        <label for="sysex20">Detune </label>
+                        <input class="sysexParameter" data-sysexparameterno="20" id="sysex20" max="14" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex18">Frequency Coarse </label>
+                        <input class="sysexParameter" data-sysexparameterno="18" id="sysex18" max="31" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex19">Frequency Fine </label>
+                        <input class="sysexParameter" data-sysexparameterno="19" id="sysex19" max="99" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <div class="controlflexlayout align-items-baseline justify-content-between pt-1 pb-3">
+                            <label for="sysex17">Operator Mode </label>
+                            <select class="sysexParameter" data-sysexparameterno="17" id="sysex17">
+                                <option label="Ratio" value="0"></option>
+                                <option label="Fixed" value="1"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Operator Levels and Sensitivity</h3>
+                    <div class="controller">
+                        <label for="sysex14">Amp Mod Sense </label>
+                        <input class="sysexParameter" data-sysexparameterno="14" id="sysex14" max="3" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex15">Key Velocity Sense </label>
+                        <input class="sysexParameter" data-sysexparameterno="15" id="sysex15" max="7" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex16">Operator Output Level </label>
+                        <input class="sysexParameter" data-sysexparameterno="16" id="sysex16" max="99" min="0" type="range" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
     <div id="valueDisplay">100</div><!-- This has to be rendered last so it draws over other absolutely positioned elements -->
 </body>
