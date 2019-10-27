@@ -1,0 +1,9 @@
+select{
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    background-color: tan;
+    border:none;
+    /*background-color: #444444;*/
+    /*color: rgb(41, 163, 67);*/
+}

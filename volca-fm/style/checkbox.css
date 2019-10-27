@@ -1,0 +1,28 @@
+.toggle-button input[type="checkbox"] {
+  -webkit-appearance: none;
+  position: relative;
+  margin: 0;
+  color:#222;
+}
+
+.toggle-button input[type="checkbox"]::before {
+  content: 'ON';
+  display: block;
+  width: 3rem;
+  padding:0.25rem;
+  text-align: right;
+ }
+
+.toggle-button input[type="checkbox"]:checked::before {
+  background-color: #78d4ce;
+}
+
+.toggle-button input[type="checkbox"]:not(:checked)::before {
+  content: 'OFF';
+  background-color: salmon;
+  text-align: left;
+}
+
+.toggle-button input[type="checkbox"]:disabled::before {
+  background-color: darkgrey;
+}

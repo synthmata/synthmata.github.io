@@ -1,0 +1,38 @@
+.led {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  /*border-radius: 49%;*/
+  -webkit-mask-image: -webkit-radial-gradient(center, circle cover, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 76%, rgba(0,0,0,0) 100%);
+}
+.led-saved {
+  // background-color: #A3F500;
+  background-color: #98D02A;
+}
+.led-read-only{
+  background-color: #FF4500;
+}
+.led-error {
+  background-color: #FF4500;
+  box-shadow: inset rgba(255,255,255,.85) 0 0 0 2px;
+}
+.led-changed {
+  background-color: #FFE200;
+}
+.led-saving {
+  animation: flicker .2s infinite;
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes flicker {
+  49%   {
+    background-color: #557D21;
+  }
+  80% {
+    background-color: #A3F500;
+  }
+  100%   {
+    background-color: #FFF;
+  }
+}

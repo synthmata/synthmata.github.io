@@ -1,0 +1,43 @@
+.btn{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    min-width: 3.5rem;
+    padding:0.25rem;
+    border:none;
+    text-align: left;
+    text-transform: uppercase;
+    color:#222 !important;
+}
+
+.btn-red{
+    color:#222;
+    background-color: salmon;
+}
+.btn-red:active{
+    color:#222;
+    background-color: lightsalmon;
+}
+.btn-purple{
+    color:#222;
+    background: #838ccc;
+}
+.btn-purple:active{
+    color:#222;
+    background: thistle;
+}
+.btn-green{
+    color:#222;
+    background-color: #78d4ce;
+}
+.btn-green:active{
+    color:#222;
+    background-color: #94fbf5;
+}
+.btn-tan{
+    color:#222;
+    background: tan;
+}
+.btn-tan:active{
+    color:#222;
+    background: wheat;
+}
