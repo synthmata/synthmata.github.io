@@ -3,6 +3,7 @@
 
 <head>
     <title>synthmata: Volca FM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet" />
     <link href="style/style.css" rel="stylesheet" />
@@ -93,10 +94,21 @@
             });
         }
 
+        function setupUIControls() {
+            let UIScale = document.getElementById("UIScale")
+            UIScale.addEventListener('change', function(event){
+                var z = event.target.value
+                console.log(document.body.style.zoom = z/100)
+            })
+            console.log(UIScale, UIScale.value)
+            // UIScale.value = 100;
+        }
+
         function initialise(){
             setupValueDisplay();
             setupEnvelopes();
             setupRandomizer();
+            setupUIControls();
         }
 
 
@@ -105,6 +117,7 @@
 </head>
 
 <body onload="initialise()">
+
     <div id="head-wrapper">
         <div id="title-head">
             <span>synth<span>mata</span></span>
@@ -147,6 +160,13 @@
                     <div class="controller controlflexlayout align-items-baseline justify-content-between">
                         <label for="modeYamaha">Yamaha</label>
                         <input id="modeYamaha" type="radio" name="mode" value="yamaha">
+                    </div>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>UI</h3>
+                    <div class="controller">
+                        <label for="UIScale">Scale </label>
+                        <input class="" id="UIScale" max="100" min="50" type="range" step="5" value="100"/>
                     </div>
                 </div>
                 <div class="controlitemgroup">
