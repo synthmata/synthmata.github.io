@@ -59,13 +59,7 @@
             ];
 
             for(let params of envelopeSysexes){
-                // var params = envelopeSysexes[0]
                 let updateFunc = makeEnvelope(...params.map(x => document.getElementById(x)));
-
-                // var params = envelopeSysexes[0]
-                // let updateFunc2 = makeEnvelopePB(...params.map(x => document.getElementById(x)));
-
-                // window.addEventListener("synthmataPatchLoaded", x => updateFunc());
                 window.addEventListener("synthmataPatchLoaded", x => updateFunc());
             }
         }
@@ -95,13 +89,9 @@
         }
 
         function setupUIControls() {
-            let UIScale = document.getElementById("UIScale")
-            UIScale.addEventListener('change', function(event){
-                var z = event.target.value
-                console.log(document.body.style.zoom = z/100)
+            document.getElementById("UIScale").addEventListener('change', function(event){
+                console.log(document.getElementById("main-content").style.zoom = event.target.value/100)
             })
-            console.log(UIScale, UIScale.value)
-            // UIScale.value = 100;
         }
 
         function initialise(){
