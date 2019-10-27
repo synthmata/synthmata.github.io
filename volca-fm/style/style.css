@@ -38,8 +38,10 @@ a{color: #ddd;}
     top:0;
     color: #ddd;
     border-width: 1px;
-    border-color: rgba(255,255,255,0.25);
+    border-color: rgba(0,0,0,0.75);
     border-bottom-style: solid;
+    z-index: 1004;
+    box-shadow: 0 2px  8px rgba(0, 0, 0, 0.5)
 }
 
 #head-wrapper .label{
@@ -53,14 +55,8 @@ a{color: #ddd;}
 }
 
 #title-head {
-    /*width: 80%;*/
-    /*margin-left: auto;*/
-    /*margin-right: auto;*/
-    /*font-size: 13vw;*/
     font-weight: 700;
-    /*text-align: center;*/
     padding: 0 1rem;
-    /*padding-right: 1rem;*/
 }
 
 #title-head span > span{
@@ -68,23 +64,13 @@ a{color: #ddd;}
 }
 
 #title-byline{
-    /*width: 80%;*/
-    /*margin-left: auto;*/
-    /*margin-right: auto;*/
-    /*font-size: 2vw;*/
     font-weight: 400;
-    /*text-align: center;*/
     padding: 0 1rem;
-    /*padding-right: 1rem;*/
 }
 
 
 
 #subtitle-head{
-    /*width: 80%;*/
-    /*margin-left: auto;*/
-    /*margin-right: auto;*/
-    /*font-size: 3vw;*/
     flex-grow: 1;
     font-weight: 700;
     text-align: center;
@@ -182,7 +168,7 @@ a{color: #ddd;}
 .controlitemgroup{
     margin: 0 0 1rem;
     width: 100%;
-    color: #b4bdf9;
+    color: #858cb5;
 }
 
 .controlitemgroup label{
@@ -207,6 +193,7 @@ a{color: #ddd;}
 
 
 .controlitemgroup h3{
+    color: #b4bdf9;
     margin-top: 0;
     margin-bottom: 1em;
     white-space: nowrap;

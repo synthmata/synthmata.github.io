@@ -8,7 +8,7 @@
 .toggle-button input[type="checkbox"]::before {
   content: 'ON';
   display: block;
-  width: 3rem;
+  min-width: 56px;
   padding:0.25rem;
   text-align: right;
  }

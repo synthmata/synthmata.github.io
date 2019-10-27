@@ -1,9 +1,12 @@
 select{
+    -webkit-appearance: none;
     display: inline-block;
     font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
+    text-transform: uppercase;
     background-color: tan;
     border:none;
-    /*background-color: #444444;*/
-    /*color: rgb(41, 163, 67);*/
+    border-radius: 0;
+    min-width: 56px;
+    padding:0.25rem;
+    text-align: right;
 }
