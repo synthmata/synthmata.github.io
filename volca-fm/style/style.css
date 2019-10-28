@@ -99,10 +99,11 @@ a{color: #ddd;}
 
 #main-content{
     /*width: 80%;*/
-    display: flex;
+    display: none; /* initially hidden */
     margin-left: auto;
     margin-right: auto;
     font-size: 0.8em;
+    transform-origin: 0% 0%;
 }
 
 .table{
@@ -173,6 +174,7 @@ a{color: #ddd;}
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    max-width:290px;
 }
 
 .controlitemgroup{
