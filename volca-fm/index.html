@@ -12,6 +12,10 @@
     <script src="../script/dx7envdisplay.js" type="text/javascript"></script>
     <script src="../script/volcaFmRandomizer.js" type="text/javascript"></script>
     <script>
+
+        const preferencesStorage = window.localStorage;
+
+
         var valueDisplayFunctions = {
             "addOne": x => x + 1,
             "opScaling": x => ["-ln", "-ex", "+ex", "+ln"][x],
@@ -89,9 +93,44 @@
         }
 
         function setupUIControls() {
-            document.getElementById("UIScale").addEventListener('change', function(event){
-                console.log(document.getElementById("main-content").style.zoom = event.target.value/100)
+
+            // set the ui zoom
+            let maincontent = document.getElementById("main-content")
+            let uiscaler = document.getElementById("UIScale")
+            let zoom = preferencesStorage.getItem('SM_PARAMS_UI_ZOOM') || 1
+
+            uiscaler.value = zoom * 100
+
+            maincontent.style.transform = `scale(${zoom},${zoom})`
+
+            uiscaler.addEventListener('change', function(event){
+                let zoom = event.target.value/100
+                maincontent.style.transform = `scale(${zoom},${zoom})`
+                preferencesStorage.setItem('SM_PARAMS_UI_ZOOM', zoom)
             })
+
+            let operatorPanels = document.querySelectorAll('.controlpanel.operatorparameters');
+
+            operatorPanels.forEach(n => {
+                let t = n.querySelector('.sysexParameterBitswitch')
+                t.addEventListener('change', e => {
+                    // console.log(ot.parentNode.parentNode.nextSibling.innerHTML)
+                    if(e.target.checked){
+                        console.log('ON')
+                        n.children[1].style.opacity = 1
+                        n.children[1].style.pointerEvents = 'all'
+                    }else{
+                        console.log('OFF')
+                        n.children[1].style.opacity = 0.25
+                        n.children[1].style.pointerEvents = 'none'
+                    }
+
+                })
+            })
+
+            // show main content
+            maincontent.style.display = 'flex'
+
         }
 
         function initialise(){
@@ -100,8 +139,6 @@
             setupRandomizer();
             setupUIControls();
         }
-
-
 
     </script>
 </head>
@@ -156,7 +193,7 @@
                     <h3>UI</h3>
                     <div class="controller">
                         <label for="UIScale">Scale </label>
-                        <input class="" id="UIScale" max="100" min="50" type="range" step="5" value="100"/>
+                        <input class="" id="UIScale" max="100" min="50" type="range" value="100"/>
                     </div>
                 </div>
                 <div class="controlitemgroup">
@@ -356,12 +393,12 @@
             </div>
         </div>
 
-        <div class="controlpanel">
+        <div class="controlpanel operatorparameters">
             <div class="controlflexlayout align-items-baseline justify-content-between">
                 <h2>Operator 1</h2>
                 <div class="toggle-button">
                     <label for="sysex155_1" style="display:none">Operator 1</label>
-                    <input id="sysex155_1" class="sysexParameterBitswitch" data-sysexparameterno="155" data-sysexparameterbitmask="1" type="checkbox">
+                    <input id="sysex155_1" class="sysexParameterBitswitch opToggle" data-sysexparameterno="155" data-sysexparameterbitmask="1" type="checkbox">
                 </div>
             </div>
             <div class="controlflexlayout">
@@ -476,7 +513,7 @@
                 </div>
             </div>
         </div>
-        <div class="controlpanel">
+        <div class="controlpanel operatorparameters">
             <div class="controlflexlayout align-items-baseline justify-content-between">
                 <h2>Operator 2</h2>
                 <div class="toggle-button">
@@ -596,7 +633,7 @@
                 </div>
             </div>
         </div>
-        <div class="controlpanel">
+        <div class="controlpanel operatorparameters">
             <div class="controlflexlayout align-items-baseline justify-content-between">
                 <h2>Operator 3</h2>
                 <div class="toggle-button">
@@ -716,7 +753,7 @@
                 </div>
             </div>
         </div>
-        <div class="controlpanel">
+        <div class="controlpanel operatorparameters">
             <div class="controlflexlayout align-items-baseline justify-content-between">
                 <h2>Operator 4</h2>
                 <div class="toggle-button">
@@ -836,7 +873,7 @@
                 </div>
             </div>
         </div>
-        <div class="controlpanel">
+        <div class="controlpanel operatorparameters">
             <div class="controlflexlayout align-items-baseline justify-content-between">
                 <h2>Operator 5</h2>
                 <div class="toggle-button">
@@ -956,7 +993,7 @@
                 </div>
             </div>
         </div>
-        <div class="controlpanel">
+        <div class="controlpanel operatorparameters">
             <div class="controlflexlayout align-items-baseline justify-content-between">
                 <h2>Operator 6</h2>
                 <div class="toggle-button">
