@@ -10,6 +10,7 @@
     <script src="../script/base64js.min.js"></script>
     <script src="../script/synthmata.js" type="text/javascript"></script>
     <script src="../script/dx7envdisplay.js" type="text/javascript"></script>
+    <script src="../script/dx7lfodisplay.js" type="text/javascript"></script>
     <script src="../script/volcaFmRandomizer.js" type="text/javascript"></script>
     <script>
 
@@ -23,6 +24,7 @@
         }
         var valueDisplayTimeout = null;
         var valueDisplayTimeoutIntervalMs = 1000;
+
         function doValueDisplay(event){
             let targetElementBounding = event.target.getBoundingClientRect();
             let valueDisplayer = document.getElementById("valueDisplay");
@@ -66,6 +68,9 @@
                 let updateFunc = makeEnvelope(...params.map(x => document.getElementById(x)));
                 window.addEventListener("synthmataPatchLoaded", x => updateFunc());
             }
+
+            let updateFunc = makeLFO(document.getElementById("lfoCanvas"), document.getElementById("sysex142"), document.getElementById("sysex137"))
+            window.addEventListener("synthmataPatchLoaded", x => updateFunc());
         }
 
         function setupRandomizer(){
@@ -97,34 +102,64 @@
             // set the ui zoom
             let maincontent = document.getElementById("main-content")
             let uiscaler = document.getElementById("UIScale")
+            let HUDposH = document.getElementById("HUDposH")
+            let HUDposV = document.getElementById("HUDposV")
+            let valueDisplayer = document.getElementById("valueDisplay");
+
             let zoom = preferencesStorage.getItem('SM_PARAMS_UI_ZOOM') || 1
+            let hudPosH = preferencesStorage.getItem('SM_PARAMS_UI_HUDPOSH') || 50
+            let hudPosV = preferencesStorage.getItem('SM_PARAMS_UI_HUDPOSV') || 0
 
             uiscaler.value = zoom * 100
-
             maincontent.style.transform = `scale(${zoom},${zoom})`
 
-            uiscaler.addEventListener('change', function(event){
+            uiscaler.addEventListener('input', function(event){
+                console.log(event.target.value)
                 let zoom = event.target.value/100
                 maincontent.style.transform = `scale(${zoom},${zoom})`
                 preferencesStorage.setItem('SM_PARAMS_UI_ZOOM', zoom)
             })
+
+
+            HUDposH.value = hudPosH
+            HUDposV.value = hudPosV
+
+            valueDisplayer.style.left = hudPosH + '%'
+            valueDisplayer.style.top = hudPosV + '%'
+
+            HUDposH.addEventListener('input', event => {
+                let value =  event.target.value
+                valueDisplayer.style.display = "block";
+                valueDisplayer.style.left = value + '%'
+                valueDisplayer.innerText = parseInt(value);
+                preferencesStorage.setItem('SM_PARAMS_UI_HUDPOSH', value)
+                clearTimeout(valueDisplayTimeout);
+                valueDisplayTimeout = setTimeout(function () {
+                    valueDisplayer.style.display = "none";
+                }, valueDisplayTimeoutIntervalMs);
+            })
+
+            HUDposV.addEventListener('input', event => {
+                let value = event.target.value
+                valueDisplayer.style.display = "block";
+                valueDisplayer.style.top = value + '%'
+                valueDisplayer.innerText = parseInt(value);
+                preferencesStorage.setItem('SM_PARAMS_UI_HUDPOSV', value)
+                clearTimeout(valueDisplayTimeout);
+                valueDisplayTimeout = setTimeout(function () {
+                    valueDisplayer.style.display = "none";
+                }, valueDisplayTimeoutIntervalMs);
+            })
+
 
             let operatorPanels = document.querySelectorAll('.controlpanel.operatorparameters');
 
             operatorPanels.forEach(n => {
                 let t = n.querySelector('.sysexParameterBitswitch')
                 t.addEventListener('change', e => {
-                    // console.log(ot.parentNode.parentNode.nextSibling.innerHTML)
-                    if(e.target.checked){
-                        console.log('ON')
-                        n.children[1].style.opacity = 1
-                        n.children[1].style.pointerEvents = 'all'
-                    }else{
-                        console.log('OFF')
-                        n.children[1].style.opacity = 0.25
-                        n.children[1].style.pointerEvents = 'none'
-                    }
-
+                    let checked = e.target.checked
+                    n.children[1].style.opacity = checked ? 1 : 0.25
+                    n.children[1].style.pointerEvents = checked ? 'all' : 'none'
                 })
             })
 
@@ -195,6 +230,14 @@
                         <label for="UIScale">Scale </label>
                         <input class="" id="UIScale" max="100" min="50" type="range" value="100"/>
                     </div>
+                    <div class="controller">
+                        <label for="UIScale">HUD Position Horizontal </label>
+                        <input class="" id="HUDposH" max="100" min="0" type="range" value="50"/>
+                    </div>
+                    <div class="controller">
+                        <label for="UIScale">HUD Position Vertical </label>
+                        <input class="" id="HUDposV" max="100" min="0" type="range" value="00"/>
+                    </div>
                 </div>
                 <div class="controlitemgroup">
                     <h3>FILE</h3>
@@ -215,14 +258,20 @@
                         </div>
                     </div>
                 </div>
-                <div class="controlitemgroup" id="uiSetup">
+                <div class="controlitemgroup pb-2">
                     <h3>Credits</h3>
                     <small>
-                        Original Idea &amp; Code - <a href="http://oscillatorsink.com/">oscillatorsink</a>
+                        Original Idea &amp; Code - <a href="http://oscillatorsink.com/" target="_blank">oscillatorsink</a>
                         <br/>
                         DX7 UI - pb, Motivation - Mr-G
                         <br/>
-                        CSS Slider - <a href="https://codepen.io/thebabydino/pen/azVKey">@thebabydino</a>
+                        CSS Slider - <a href="https://codepen.io/thebabydino/pen/azVKey" target="_blank">@thebabydino</a>
+                    </small>
+                </div>
+                <div class="controlitemgroup">
+                    <h3>Share the love</h3>
+                    <small>
+                        Share your patches on <a href="https://www.facebook.com/groups/korgvolcapatch/" target="_blank">facebook</a>
                     </small>
                 </div>
             </div>
@@ -291,13 +340,16 @@
                 </div>
                 <div class="controlitemgroup">
                     <h3>LFO Settings</h3>
-                    <div class="controller">
-                        <label for="sysex137">LFO Speed </label>
-                        <input class="sysexParameter" data-sysexparameterno="137" id="sysex137" max="99" min="0" type="range" />
+                    <div class="controller pb-3">
+                        <canvas id="lfoCanvas" width="180" height="61"/>
                     </div>
                     <div class="controller">
                         <label for="sysex142">LFO Wave Shape </label>
                         <input class="sysexParameter" data-sysexparameterno="142" data-displayvaluefunc="lfoShape" id="sysex142" max="5" min="0" type="range" />
+                    </div>
+                    <div class="controller">
+                        <label for="sysex137">LFO Speed </label>
+                        <input class="sysexParameter" data-sysexparameterno="137" id="sysex137" max="99" min="0" type="range" />
                     </div>
                     <div class="controller">
                         <label for="sysex139">LFO Pitch Mod Depth </label>
@@ -442,7 +494,7 @@
                 </div>
                 <div class="controlitemgroup">
                     <div class="envelopeCanvasContainer">
-                        <canvas id="op1EnvCanvas" height="80"/>
+                        <canvas class="opCanvas" id="op1EnvCanvas" width="280" height="80"/>
                     </div>
                 </div>
                 <div class="controlitemgroup">
@@ -562,7 +614,7 @@
                 </div>
                 <div class="controlitemgroup">
                     <div class="envelopeCanvasContainer">
-                        <canvas id="op2EnvCanvas" height="80"/>
+                        <canvas class="opCanvas" id="op2EnvCanvas" width="280" height="80"/>
                     </div>
                 </div>
                 <div class="controlitemgroup">
@@ -682,7 +734,7 @@
                 </div>
                 <div class="controlitemgroup">
                     <div class="envelopeCanvasContainer">
-                        <canvas id="op3EnvCanvas" height="80"/>
+                        <canvas class="opCanvas" id="op3EnvCanvas" width="280" height="80"/>
                     </div>
                 </div>
                 <div class="controlitemgroup">
@@ -802,7 +854,7 @@
                 </div>
                 <div class="controlitemgroup">
                     <div class="envelopeCanvasContainer">
-                        <canvas id="op4EnvCanvas" height="80"/>
+                        <canvas class="opCanvas" id="op4EnvCanvas" width="280" height="80"/>
                     </div>
                 </div>
                 <div class="controlitemgroup">
@@ -922,7 +974,7 @@
                 </div>
                 <div class="controlitemgroup">
                     <div class="envelopeCanvasContainer">
-                        <canvas id="op5EnvCanvas" height="80"/>
+                        <canvas class="opCanvas" id="op5EnvCanvas" width="280" height="80"/>
                     </div>
                 </div>
                 <div class="controlitemgroup">
@@ -1042,7 +1094,7 @@
                 </div>
                 <div class="controlitemgroup">
                     <div class="envelopeCanvasContainer">
-                        <canvas id="op6EnvCanvas" height="80"/>
+                        <canvas class="opCanvas" id="op6EnvCanvas" width="280" height="80"/>
                     </div>
                 </div>
                 <div class="controlitemgroup">
@@ -1115,7 +1167,9 @@
         </div>
 
     </div>
-    <div id="valueDisplay">100</div><!-- This has to be rendered last so it draws over other absolutely positioned elements -->
+    <div id="valueDisplayWrapper">
+        <div id="valueDisplay">100</div><!-- This has to be rendered last so it draws over other absolutely positioned elements -->
+    </div>
 </body>
 
 </html>
