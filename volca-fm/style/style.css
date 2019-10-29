@@ -8,7 +8,8 @@
 
 body {
     font-family: 'Montserrat', sans-serif;
-    background: radial-gradient(at 50% 30%, #555 45%, #222 95%);
+    background: #444;
+    background-image: radial-gradient(at 50% 30%, #444 45%, #222 95%);
     background-attachment: fixed;
     margin:2.25rem 0 0;
 }
@@ -140,24 +141,29 @@ a{color: #ddd;}
     display: block;
 }
 
-#valueDisplay {
+#valueDisplayWrapper {
     position: fixed;
-    margin-left: auto;
-    margin-right: auto;
-    top: 4rem;
-    width: 2em;
-    left: 0;
-    right: 0;
+    width: 100%;
+    height: 100%;
+    top:0; right:0; bottom: 0; left: 0;
+    padding:7.25rem 6rem 5rem;
+    pointer-events: none;
+}
+#valueDisplay {
+    transform: translate(-50%, -50%) ;
+    position: relative;
+    top:0;
+    left: 50%;
+    width: 10rem;
     color: #444;
     background-color: #fff;
     border-radius: 1rem;
     opacity: 0.5;
     display: none;
-    font-size: 5.5vw;
+    font-size: 5rem;
     text-align: center;
     font-weight: 600;
-    padding: 1rem;
-    pointer-events: none;
+    padding: 1rem 0;
 }
 
 .controlpanel h2{
@@ -186,7 +192,6 @@ a{color: #ddd;}
 .controlitemgroup label{
     font-weight: 400;
     font-size: 0.9em;
-    opacity: 0.9;
     text-transform: uppercase;
     color: tan;
     display: block;
@@ -217,10 +222,6 @@ a{color: #ddd;}
     border-bottom-style: solid;
 }
 
-canvas{
-    height:80px;
-    width:290px;
-}
 .align-items-baseline{
     align-items: baseline;
 }
