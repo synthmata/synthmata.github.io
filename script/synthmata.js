@@ -24,7 +24,7 @@ var __init_patch__ = "8EMAAAEbUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAUGMAAAAyAAAAAAAAAF
 
 function loadInitPatch(){
     let patchRaw = base64js.toByteArray(__init_patch__);
-    loadSysex(patchRaw)
+    loadSysex(patchRaw,true)
 }
 
 function onMIDISuccess(result) {
@@ -42,11 +42,25 @@ function onMIDISuccess(result) {
     if(!loadSharablePatchLink(window.location)){
         loadInitPatch();
     }
+
+    for (var input of midi.inputs.values()) {
+      input.onmidimessage=onMidiMessage;
+    }
 }
 
 function onMIDIFailure(msg) {
     alert("Could not get MIDI access.\nPlease note that MIDI in the browser currently only works in Chrome and Opera.\nIf you declined MIDI access when prompted, please refresh the page.")
     console.log("Failed to get MIDI access - " + msg);
+}
+
+function onMidiMessage(evt) {
+    var data    = evt.data;
+    if(data[0]!=0xF0)  return;  // only handle SYSEX messages
+    var channel=data[2] & 0xf;
+    if(channel != selectedMidiChannel) return;
+    if(!validateSysexData(data)) return;
+    loadSysex(data);
+    console.log("SYSEX received!");
 }
 
 function testTone() {
@@ -456,8 +470,8 @@ function validateSysexData(data) {
         console.log("doesn't end with EOX");
         return false; // doesn't end with EOX
     }
-    if (data[2] & 0x70 != 0) {
-        console.log("sub status is not correct");
+    if ((data[2] & 0x70) != 0) {
+        console.log("sub status is not correct:");
         return false; // sub status is not correct
     }
     if (data[3] != 0) {
@@ -508,7 +522,7 @@ function checkSysexFileLoad(event) {
     }
 }
 
-function loadSysex(sysexData) {
+function loadSysex(sysexData,sendSysex) {
     
     if(sysexData.byteLength == 163){  // account for DX7 dumps with no OP On-Off data
         // NB, this CAN'T be the proper way to do this, but I'll be damned if I can get
@@ -550,7 +564,7 @@ function loadSysex(sysexData) {
         }
     });
     sysexDumpData = paramArray;
-    sendSysexDump();
+    if(sendSysex) sendSysexDump();
     window.dispatchEvent(patchLoadedEvent);
 }
 
@@ -560,7 +574,7 @@ function tryLoadSysex(event) {
         return;
     }
     let reader = new FileReader();
-    reader.onload = function(e){ loadSysex(e.target.result);};
+    reader.onload = function(e){ loadSysex(e.target.result,true);};
     reader.readAsArrayBuffer(goodFile);
 }
 
@@ -590,7 +604,7 @@ function loadSharablePatchLink(url){
     if(!validateSysexData(patchRaw)){
         return false;
     }
-    loadSysex(patchRaw)
+    loadSysex(patchRaw,true)
     return true;
 }
 
