@@ -6,7 +6,7 @@ var midiOutPorts = null;
 var selectedMidiPort = null;
 var selectedMidiChannel = null;
 
-var sysexDumpData = null;  
+var sysexDumpData = null;
 var sysexDumpDataAced = null;
 
 var goodFile = null;
@@ -46,7 +46,7 @@ function onMIDISuccess(result) {
 }
 
 function onMIDIFailure(msg) {
-    alert("Could not get MIDI access.\nPlease note that MIDI in the browser currently only works in Chrome and Opera.\nIf you declined MIDI access when prompted, please refresh the page.")
+    // alert("Could not get MIDI access.\nPlease note that MIDI in the browser currently only works in Chrome and Opera.\nIf you declined MIDI access when prompted, please refresh the page.")
     console.log("Failed to get MIDI access - " + msg);
 }
 
@@ -64,19 +64,19 @@ function buildSetupPanel(midiAccess) {
     // Port selection.
     let former = document.createElement("form");
     former.id = "midiSetupForm"
-    
+
     let portSelectLabel = document.createElement("lable");
     portSelectLabel.textContent = "Select MIDI Device";
 
     let portSelecter = document.createElement("select");
     portSelecter.id = "portSelector";
-    portSelecter.onchange = function (event) { 
-        selectedMidiPort = midiOutPorts[event.target.value]; 
-        console.log(selectedMidiPort); 
+    portSelecter.onchange = function (event) {
+        selectedMidiPort = midiOutPorts[event.target.value];
+        console.log(selectedMidiPort);
         sendSysexDump();
         //testTone();   // this is interacting with the sysex change - need to address this longterm, because I think it's useful, but disabled for now
     };
-    
+
     portSelectLabel.appendChild(portSelecter);
     former.appendChild(portSelectLabel);
     midiOutPorts.forEach(
@@ -94,9 +94,9 @@ function buildSetupPanel(midiAccess) {
 
     let channelSelector = document.createElement("select");
     channelSelector.id = "channelSelector";
-    channelSelector.onchange = function (event) { 
-        selectedMidiChannel = parseInt(event.target.value); 
-        console.log(selectedMidiChannel); 
+    channelSelector.onchange = function (event) {
+        selectedMidiChannel = parseInt(event.target.value);
+        console.log(selectedMidiChannel);
         sendSysexDump();
         //testTone();  // this is interacting with the sysex change - need to address this longterm, because I think it's useful, but disabled for now
     };
@@ -119,7 +119,7 @@ function buildSetupPanel(midiAccess) {
     acedSwitch.setAttribute("type", "checkbox");
     acedSwitch.checked = true;
     acedMode = true;
-    acedSwitch.addEventListener("change", ev => { 
+    acedSwitch.addEventListener("change", ev => {
         let acedOn = acedSwitch.checked;
         [].forEach.call(document.getElementsByClassName("tx_aced"), (y => y.style.display = acedOn ? "block" : "none"));
         acedMode = acedOn;
@@ -170,7 +170,7 @@ function buildSaveLoadSharePanel() {
     sharableLinkTextbox.id = "sharableLinkTextbox";
     //sharableLinkTextbox.setAttribute("type", "text");
     sharableLinkTextbox.setAttribute("readonly", true);
-    
+
     let createSharableLinkButton = document.createElement("button");
     createSharableLinkButton.id = "createSharableLinkButton";
     createSharableLinkButton.textContent = "Create Sharable Patch Link";
@@ -195,7 +195,7 @@ function setupParameterControls() {
 }
 
 function fullRefreshSysexData() {
-    sysexDumpData = new Array(93); 
+    sysexDumpData = new Array(93);
     sysexDumpData.fill(0);
 
     sysexDumpDataAced = new Array(23);
@@ -207,7 +207,7 @@ function fullRefreshSysexData() {
         let sysexBuffer = ele.dataset.txaced != undefined ? sysexDumpDataAced : sysexDumpData;
         sysexBuffer[parameterNo] = value & 0x7f;
     }
-    
+
     let bitSwitchControls = new Array(...document.getElementsByClassName("sysexParameterBitswitch"));
     bitSwitchControls.forEach(function(element){
         let mask = parseInt(element.dataset.sysexparameterbitmask);
@@ -255,7 +255,7 @@ function createSysexDumpBuffer() {
     for (let i = 0; i < 0x5d; i++) {
         sum += sysexDumpData[i];
     }
-    
+
     sum &= 0xff;
     sum = (~sum) + 1;
     sum &= 0x7f;
@@ -263,7 +263,7 @@ function createSysexDumpBuffer() {
     let buffer = [
         0xF0,                         // status - start sysex
         0x43,                         // id - yamaha (67)
-        0x00 | selectedMidiChannel,   // channel 
+        0x00 | selectedMidiChannel,   // channel
         0x03,                         // format number (3 = 1 voice)
         0x00,                         // 0b0bbbbbbb data byte count msb
         0x5d,                         // 0b0bbbbbbb data byte count lsb
@@ -281,7 +281,7 @@ function createAcedSysexDumpBuffer() {
     // dump data, masked back against 0x7f
     // if i want to micro-optimise this, I can. I don't really want to though.
     acedId = [0x4c, 0x4d, 0x20, 0x20, 0x38, 0x39, 0x37, 0x36, 0x41, 0x45]
-    
+
     let sum = 0;
     for (let i = 0; i < acedId.length; i++){
         sum += acedId[i];
@@ -290,7 +290,7 @@ function createAcedSysexDumpBuffer() {
     for (let i = 0; i < sysexDumpDataAced.length - 1; i++) {
         sum += sysexDumpDataAced[i];
     }
-    
+
     sum &= 0xff;
     sum = (~sum) + 1;
     sum &= 0x7f;
@@ -298,11 +298,11 @@ function createAcedSysexDumpBuffer() {
     let buffer = [
         0xF0,                         // status - start sysex
         0x43,                         // id - yamaha (67)
-        0x00 | selectedMidiChannel,   // channel 
+        0x00 | selectedMidiChannel,   // channel
         0x7e,                         // format number (7e = aced voice)
         0x00,                         // 0b0bbbbbbb data byte count msb
         0x21,                         // 0b0bbbbbbb data byte count lsb
-        ...acedId, 
+        ...acedId,
         ...sysexDumpDataAced,
         sum,                          // checksum
         0xf7                          // 0b1111_0111 ; EOX
@@ -318,7 +318,7 @@ function createAcedSysexDumpBuffer() {
 function sendParameterChange(paramNumber, isAced, value){
     let message = [
         0xf0,                       // start sysex
-        0x43,                       // ID - Yamaha 
+        0x43,                       // ID - Yamaha
         0x10 | selectedMidiChannel, // channel
         0x10 | (isAced ? 3 : 2),    // 0b 0ggggghh ggggg = group (always 4) hh = subgroup (2 for basic, 3 for aced)
         paramNumber & 0x7f,         // param number
@@ -340,12 +340,12 @@ function handleValueChange(event) {
             let parameterNo = parseInt(ele.dataset.sysexparameterno);
             let value = parseInt(ele.value);
             sysexBuffer[parameterNo] = value & 0x7f;
-            
+
             // throttle these changes so we don't overflow the buffer on the
             // synth. if we were being very paranoid, we'd put in a safegaurd
             // to always send the last value of any session of value changes
             // on a control before moving to another, but that seems a lot like
-            // solving an issue before we know it can exist. Something to 
+            // solving an issue before we know it can exist. Something to
             // consider if we get lost parameter changes though.
             if (sysexThrottleTimer != null) {
                 clearTimeout(sysexThrottleTimer);
@@ -360,7 +360,7 @@ function handleValueChange(event) {
             let parameterNo = parseInt(ele.dataset.sysexparameterno);
             let stringLength = parseInt(ele.dataset.sysextextlength);
             let value = ele.value.toString();
-            
+
             for(let i = 0; i < stringLength; i++){
                 if(i < value.length){
                     let ordinal = value.charCodeAt(i);
@@ -448,7 +448,7 @@ function validateSysexData(data) {
         console.log("length indicator is not correct");
         return false; // length indicator is not correct
     }
-    
+
     // checksum check
     let sum = 0;
     for (let i = 6; i < 99; i++) {
@@ -492,7 +492,7 @@ function validateSysexDataAced(data) {
         console.log("length indicator is not correct");
         return false; // length indicator is not correct
     }
-    
+
     // checksum check
     let sum = 0;
     for (let i = 6; i < 39; i++) {
@@ -536,15 +536,15 @@ function loadSysex(sysexData, isAced) {
    // let data = new Uint8ClampedArray(readerEvent.target.result);
     let data = new Uint8ClampedArray(sysexData);
     let paramArray = data.slice(isAced ? 16 : 6, isAced ? 39 : 100); // TODO generalise for other dumps - currently 4-op specific.
-    
+
     // numeric perameters
     let paramControls = new Array(...document.getElementsByClassName("sysexParameter"));
-    paramControls.forEach(function (element) { 
+    paramControls.forEach(function (element) {
         if((isAced && element.dataset.txaced != undefined) || (!isAced && element.dataset.txaced == undefined)){
-            element.value = paramArray[element.dataset.sysexparameterno]; 
+            element.value = paramArray[element.dataset.sysexparameterno];
         }
     });
-    
+
     // text paramenters
     let textControls = new Array(...document.getElementsByClassName("sysexParameterText"));
     textControls.forEach(function(element){
@@ -555,7 +555,7 @@ function loadSysex(sysexData, isAced) {
             for(let i = 0; i < textLength; i++){
                 chararray.push(String.fromCharCode(paramArray[i + startOffset]))
             }
-            
+
             element.value = chararray.join("");
         }
     });
@@ -577,7 +577,7 @@ function loadSysex(sysexData, isAced) {
     }else{
         sysexDumpDataAced = paramArray;
     }
-    
+
     sendSysexDump();
     window.dispatchEvent(patchLoadedEvent);
 }
@@ -595,7 +595,7 @@ function tryLoadSysex(event) {
 function createSharablePatchLink(){
     let basicVoicePatchAsB64 = base64js.fromByteArray(createSysexDumpBuffer());
     let acedVoicePatchAsB64 = base64js.fromByteArray(createAcedSysexDumpBuffer());
-    
+
     // abusing dom to parse the current url
     var parser = document.createElement('a');
     parser.href = window.location;

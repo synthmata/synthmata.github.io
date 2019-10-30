@@ -1,0 +1,12 @@
+select{
+    -webkit-appearance: none;
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    background-color: tan;
+    border:none;
+    border-radius: 0;
+    min-width: 56px;
+    padding:0.25rem;
+    text-align: right;
+}

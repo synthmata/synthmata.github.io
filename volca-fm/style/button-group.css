@@ -1,0 +1,9 @@
+.button-group{
+  display:flex;
+  flex-wrap:nowrap;
+  margin:0 -0.25rem;
+}
+.button-group button,
+.button-group label{
+  margin:0 0.25rem;
+}
