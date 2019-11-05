@@ -45,7 +45,7 @@ function onMIDISuccess(result) {
 }
 
 function onMIDIFailure(msg) {
-    // alert("Could not get MIDI access.\nPlease note that MIDI in the browser currently only works in Chrome and Opera.\nIf you declined MIDI access when prompted, please refresh the page.")
+    alert("Could not get MIDI access.\nPlease note that MIDI in the browser currently only works in Chrome and Opera.\nIf you declined MIDI access when prompted, please refresh the page.")
     console.log("Failed to get MIDI access - " + msg);
 }
 
@@ -104,37 +104,33 @@ function buildSetupPanel(midiAccess) {
 
     let modeYamahaRadioInput = document.getElementById("modeYamaha");
     modeYamahaRadioInput.addEventListener("change", switchModes);
-
 }
 
 function buildSaveLoadSharePanel() {
     document.getElementById("sysexFileChooser").addEventListener('change', checkSysexFileLoad)
     document.getElementById("sysexSaveButton").addEventListener('click', saveSysex)
     document.getElementById("initPatchButton").addEventListener('click', loadInitPatch)
-    document.getElementById("createSharableLinkButton").addEventListener('click', function(event){
+    // document.getElementById("createSharableLinkButton").addEventListener('click', function(event){
 
-        let sharableLink = document.getElementById("sharableLink")
-        let johnChowning = document.getElementById("johnChowning")
-        let oldState     = sharableLink.style.display || 'none'
+    //     let sharableWrapper = document.getElementById("sharableWrapper")
+    //     let sharableLink = document.getElementById("sharableLink")
+    //     let johnChowning = document.getElementById("johnChowning")
+    //     let oldState     = sharableWrapper.style.display || 'none'
 
-        sharableLink.textContent = createSharablePatchLink();
+    //     sharableLink.textContent = createSharablePatchLink();
 
-        // if(johnChowning.style.display === 'block'){
-        johnChowning.style.display = 'none'
-        sharableLink.style.display = 'none'
-        // }
+    //     johnChowning.style.display = 'none'
+    //     sharableWrapper.style.display = 'none'
+    //     // }
 
-        if(event.shiftKey){
-            johnChowning.style.display = 'block'
-        }else{
-            if(oldState === 'none'){
-                sharableLink.style.display = 'block'
-            }
-        }
-
-
-
-    })
+    //     if(event.shiftKey){
+    //         johnChowning.style.display = 'block'
+    //     }else{
+    //         if(oldState === 'none'){
+    //             sharableWrapper.style.display = 'block'
+    //         }
+    //     }
+    // })
 }
 
 function setupParameterControls() {
@@ -320,6 +316,8 @@ function handleValueChangeVoiceDump(event) {
 
             sysexDumpData[parameterNo] = value & 0x7f;
             //sendSysexDump()
+
+
         }else if (event.target.classList.contains("sysexParameterText")){
             let parameterNo = parseInt(ele.dataset.sysexparameterno);
             let stringLength = parseInt(ele.dataset.sysextextlength);
@@ -351,6 +349,8 @@ function handleValueChangeVoiceDump(event) {
                 sysexDumpData[parameterNo] &= ~mask;
             }
         }
+
+        sharableLink.textContent = createSharablePatchLink();
         sendSysexDump()
     }
 }
@@ -534,6 +534,16 @@ function createSharablePatchLink(){
     var parser = document.createElement('a');
     parser.href = window.location;
     let result =  parser.origin + parser.pathname + "?p=" + encodeURIComponent(patchAsB64);
+
+    // var QRC = qrcodegen.QrCode;
+    // var qr = QRC.encodeText(result, QRC.Ecc.LOW);
+
+    // const scale = 2
+    // const border = 6
+    // const canvas = document.getElementById("qrcode")
+
+    // qr.drawCanvas(scale, border, canvas);
+
     return result;
 }
 
