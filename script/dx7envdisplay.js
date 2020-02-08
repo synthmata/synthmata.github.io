@@ -1,3 +1,7 @@
+DISPLAY_BACK = "#2e2e2e";
+DISPLAY_LIGHT = "#42f5d7";
+DISPLAY_DIM = "#289076";
+
 function makeEnvelope(r1Ele, r2Ele, r3Ele, r4Ele, l1Ele, l2Ele, l3Ele, l4Ele, canvas){
     let envInputs = {
         "r1" : r1Ele,
@@ -79,7 +83,7 @@ function makeEnvelope(r1Ele, r2Ele, r3Ele, r4Ele, l1Ele, l2Ele, l3Ele, l4Ele, ca
         //reset transform matrix ahead of any work
         ctx.setTransform(1, 0, 0, 1, 0, 0)
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-        ctx.fillStyle = "#444444";
+        ctx.fillStyle = DISPLAY_BACK;
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
         // set scale if required to fit
         
@@ -93,7 +97,7 @@ function makeEnvelope(r1Ele, r2Ele, r3Ele, r4Ele, l1Ele, l2Ele, l3Ele, l4Ele, ca
         ctx.lineWidth = 5 * scale;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
-        ctx.strokeStyle = "rgb(41, 163, 67)";
+        ctx.strokeStyle = DISPLAY_LIGHT;
 
         let x = 0;
         // EASE IN
@@ -102,7 +106,7 @@ function makeEnvelope(r1Ele, r2Ele, r3Ele, r4Ele, l1Ele, l2Ele, l3Ele, l4Ele, ca
         ctx.moveTo(x, baseLine - (l4 * envHeight) / 100);
         x += easeInWidth;
         ctx.lineTo(x, baseLine - (l4 * envHeight) / 100);
-        ctx.strokeStyle = "rgb(27, 110, 44)";
+        ctx.strokeStyle = DISPLAY_DIM;
         ctx.stroke();
         
         // MAIN ENV PT.1
@@ -114,7 +118,7 @@ function makeEnvelope(r1Ele, r2Ele, r3Ele, r4Ele, l1Ele, l2Ele, l3Ele, l4Ele, ca
         ctx.lineTo(x, baseLine - (l2 * envHeight) / 100);
         x += stepThreeX;
         ctx.lineTo(x, baseLine - (l3 * envHeight) / 100);
-        ctx.strokeStyle = "rgb(41, 163, 67)";
+        ctx.strokeStyle = DISPLAY_LIGHT;
         ctx.stroke();
         
         // SUSTAIN
@@ -122,7 +126,7 @@ function makeEnvelope(r1Ele, r2Ele, r3Ele, r4Ele, l1Ele, l2Ele, l3Ele, l4Ele, ca
         ctx.moveTo(x, baseLine - (l3 * envHeight) / 100);
         x += easeInWidth * 2;
         ctx.lineTo(x, baseLine - (l3 * envHeight) / 100);
-        ctx.strokeStyle = "rgb(27, 110, 44)";
+        ctx.strokeStyle = DISPLAY_DIM;
         ctx.stroke();
 
         // MAIN ENV PT.2
@@ -131,7 +135,7 @@ function makeEnvelope(r1Ele, r2Ele, r3Ele, r4Ele, l1Ele, l2Ele, l3Ele, l4Ele, ca
         x += stepFourX;
         ctx.lineTo(x, baseLine - (l4 * envHeight) / 100);
         
-        ctx.strokeStyle = "rgb(41, 163, 67)";
+        ctx.strokeStyle = DISPLAY_LIGHT;
         ctx.stroke();
         
         // EASE OUT
@@ -139,22 +143,22 @@ function makeEnvelope(r1Ele, r2Ele, r3Ele, r4Ele, l1Ele, l2Ele, l3Ele, l4Ele, ca
         ctx.moveTo(x, baseLine - (l4 * envHeight) / 100);
         x += easeInWidth;
         ctx.lineTo(x, baseLine - (l4 * envHeight) / 100);
-        ctx.strokeStyle = "rgb(27, 110, 44)";
+        ctx.strokeStyle = DISPLAY_DIM;
         ctx.stroke();
         
         //ctx.lineWidth = 5;
         //ctx.lineWidth = 5 * scale;
         //ctx.lineCap = "round";
         //ctx.lineJoin = "round";
-        //ctx.strokeStyle = "rgb(41, 163, 67)";
+        //ctx.strokeStyle = DISPLAY_LIGHT;
         //ctx.stroke();
 
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         // draw text information
         //let scaleText = "x" + (scale > 1 ? scale.toLocaleString(undefined, {"maximumFractionDigits": 3}) : "1");
         let scaleText = "x" + ((stepOneX + stepTwoX + stepThreeX + stepFourX)/canvasWidth).toLocaleString(undefined, {"maximumFractionDigits": 3});
-        ctx.fillStyle = "rgb(41, 163, 67)";
-        ctx.font = "16px 'Press Start 2P', cursive"
+        ctx.fillStyle = DISPLAY_LIGHT;
+        ctx.font = "16px 'Russo One', cursive"
         ctx.textBaseline = "top";
         
         ctx.fillText(scaleText, canvasWidth - ctx.measureText(scaleText).width - 10, 0)

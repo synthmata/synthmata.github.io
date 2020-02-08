@@ -30,9 +30,9 @@ function loadInitPatch(){
 function onMIDISuccess(result) {
     console.log("MIDI ready!");
     midi = result;
-    storeOutputs(midi)
+    storeOutputs(midi);
     if (midiOutPorts.length < 1) {
-        onMIDIFailure("No midi ports found")
+        onMIDIFailure("No midi ports found");
     }
     console.log(midiOutPorts);
     buildSetupPanel();
@@ -76,7 +76,7 @@ function testTone() {
 function buildSetupPanel(midiAccess) {
     // Port selection.
     let former = document.createElement("form");
-    former.id = "midiSetupForm"
+    former.id = "midiSetupForm";
     
     let portSelectLabel = document.createElement("label");
     portSelectLabel.textContent = "Select MIDI Device";
@@ -99,7 +99,7 @@ function buildSetupPanel(midiAccess) {
             optioner.setAttribute("value", idx);
             portSelecter.appendChild(optioner);
         }, this);
-    selectedMidiPort = midiOutPorts[0]; // TODO: check there's not a more idiomatic way of doing this
+    selectedMidiPort = midiOutPorts; // TODO: check there's not a more idiomatic way of doing this
 
     // Channel selection
     let channelSelectLabel = document.createElement("label");
@@ -128,9 +128,9 @@ function buildSetupPanel(midiAccess) {
 
     let modeKorgRadioLabel = document.createElement("label");
     modeKorgRadioLabel.setAttribute("for", "modeKorg");
-    modeKorgRadioLabel.textContent = "Korg Mode"
+    modeKorgRadioLabel.textContent = "Korg Mode";
     let modeKorgRadioInput = document.createElement("input");
-    modeKorgRadioInput.id = "modeKorg"
+    modeKorgRadioInput.id = "modeKorg";
     modeKorgRadioInput.setAttribute("type", "radio");
     modeKorgRadioInput.setAttribute("name", "mode");
     modeKorgRadioInput.setAttribute("value", "korg");
@@ -141,9 +141,9 @@ function buildSetupPanel(midiAccess) {
     
     let modeYamahaRadioLabel = document.createElement("label");
     modeYamahaRadioLabel.setAttribute("for", "modeYamaha");
-    modeYamahaRadioLabel.textContent = "Yamaha Mode"
+    modeYamahaRadioLabel.textContent = "Yamaha Mode";
     let modeYamahaRadioInput = document.createElement("input");
-    modeYamahaRadioInput.id = "modeYamaha"
+    modeYamahaRadioInput.id = "modeYamaha";
     modeYamahaRadioInput.setAttribute("type", "radio");
     modeYamahaRadioInput.setAttribute("name", "mode");
     modeYamahaRadioInput.setAttribute("value", "yamaha");
@@ -151,7 +151,7 @@ function buildSetupPanel(midiAccess) {
     former.appendChild(modeYamahaRadioLabel);
     former.appendChild(modeYamahaRadioInput);
     
-    document.getElementById("midiSetup").appendChild(former);
+    document.getElementById("deviceChannel").appendChild(former);
 }
 
 function buildSaveLoadSharePanel() {
@@ -586,8 +586,7 @@ function createSharablePatchLink(){
     // abusing dom to parse the current url
     var parser = document.createElement('a');
     parser.href = window.location;
-    let result =  parser.origin + parser.pathname + "?p=" + encodeURIComponent(patchAsB64);
-    return result;
+    return parser.origin + parser.pathname + "?p=" + encodeURIComponent(patchAsB64);
 }
 
 function loadSharablePatchLink(url){
@@ -604,7 +603,7 @@ function loadSharablePatchLink(url){
     if(!validateSysexData(patchRaw)){
         return false;
     }
-    loadSysex(patchRaw,true)
+    loadSysex(patchRaw,true);
     return true;
 }
 
@@ -612,4 +611,4 @@ function storeOutputs(midiAccess) {
     midiOutPorts = new Array(...midiAccess.outputs.values());
 }
 
-navigator.requestMIDIAccess({ sysex: true }).then(onMIDISuccess, onMIDIFailure)
+navigator.requestMIDIAccess({ sysex: true }).then(onMIDISuccess, onMIDIFailure);
