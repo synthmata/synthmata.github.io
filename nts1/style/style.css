@@ -166,6 +166,7 @@ body {
     border-width: 1px;
     border-style: groove;  
     flex-grow: 1; 
+    flex-basis: 0;
 }
 
 .controlitemgroup label{
@@ -180,10 +181,20 @@ body {
     -ms-user-select: none;
     user-select: none;
 }
-   
+
+.radiogroup{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
 .radiogroup label{
     display: inline-block;
+    font-style: italic;
+}
 
+.radiogroup .controller{
+    margin-right: 1em;
 }
 
 .controlitemgroup input{

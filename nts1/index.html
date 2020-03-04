@@ -12,6 +12,15 @@
         // let vDrumDoubler = (value) => value === 127 ? 255 : value * 2;
         // let vDrumHundred = (value) => value === 127 ? 100 : Math.round(Math.round(((value - 64) / 64 * 200)) / 2); // yeah, I don't get it either
         // let vDrumOnOffer = (value) => value < 64 ? "Off" : "On";
+        let envDisplayer = (value) => {
+            switch(value){
+                case 0: return "ADSR";
+                case 31: return "AHR";
+                case 62: return "AR";
+                case 93: return "AR L";
+                case 124: return "Open";
+            }
+        }
 
         var cynth;
         let init = ()=>{
@@ -19,11 +28,12 @@
                 {
                     // initPatch: vdrumInitPatch, 
                     autoHideParameterDisplay: true,
-                    // parameterDisplayTransforms: {
+                    parameterDisplayTransforms: {
+                        env: envDisplayer
                     //     doubler: vDrumDoubler,
                     //     hundred: vDrumHundred,
                     //     onoffer: vDrumOnOffer
-                    // }
+                    }
                 }); 
             cynth.init();
         }
@@ -57,7 +67,7 @@
             <h2>Instructions</h2>
             <div class="showHide"><a href="#" onclick="showHideInstructions()">show / hide</a></div>
             <div id="instructions" class="hiddenInstructions">
-                <p>ToDo:</p>
+                <p>If you are using your NTS-1 over USB, use the interface suffixed with "SOUND"</p>
                 <p>Have fun!</p>
                 <p>If you have questions you can get hold of me on one of many social media platforms:</p>
                 <ul>
@@ -179,13 +189,45 @@
                 <div class="controlitemgroup">
                     <h3>Amp</h3>
                     <div>
-                        <div class="controller">
-                            <label for="egtype">EG Type</label>
-                            <input
-                                class="midiccparam" id="egtype"
-                                data-cclsb="14" 
-                                min="0" max="127" type="range" >
+                        <label for="egtype">EG Type</label>
+                        <div id="egtype" class="radiogroup">
+                            <div class="controller" id="egtypeselector">
+                                <label for="egtypeadsr" >ADSR</label>
+                                <input
+                                    type="radio" name="egtype" value="0" checked
+                                    class="midicctotal" id="egtypeadsr"
+                                    data-cclsb="14" data-displayvaluefunc="env"/>
+                            </div>
+                            <div class="controller" id="egtypeselector">
+                                <label for="egahr" >AHR</label>
+                                <input
+                                    type="radio" name="egtype" value="31" 
+                                    class="midicctotal" id="egahr"
+                                        data-cclsb="14" data-displayvaluefunc="env"/>
+                            </div>
+                            <div class="controller" id="egtypeselector">
+                                <label for="egar" >AR</label>
+                                <input
+                                    type="radio" name="egtype" value="62" 
+                                    class="midicctotal" id="egar"
+                                        data-cclsb="14" data-displayvaluefunc="env"/>
+                            </div>
+                            <div class="controller" id="egtypeselector">
+                                <label for="egarloop" >AR Looped</label>
+                                <input
+                                    type="radio" name="egtype" value="93" 
+                                    class="midicctotal" id="egarloop"
+                                        data-cclsb="14" data-displayvaluefunc="env"/>
+                            </div>
+                            <div class="controller" id="egtypeselector">
+                                <label for="egopen" >Open</label>
+                                <input
+                                    type="radio" name="egtype" value="124" 
+                                    class="midicctotal" id="egopen"
+                                        data-cclsb="14" data-displayvaluefunc="env"/>
+                            </div>
                         </div>
+
                         <div class="controller">
                             <label for="egattack">EG Attack</label>
                             <input
