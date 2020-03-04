@@ -21,6 +21,18 @@
                 case 124: return "Open";
             }
         }
+        let filterDisplayer = (value) => {
+            switch(value){
+                case 0: return "LP2";
+                case 21: return "LP4";
+                case 42: return "BP2";
+                case 63: return "BP4";
+                case 84: return "HP2";
+                case 105: return "HP4"
+                case 126: return "OFF";;
+            }
+        }
+        
 
         var cynth;
         let init = ()=>{
@@ -29,7 +41,8 @@
                     // initPatch: vdrumInitPatch, 
                     autoHideParameterDisplay: true,
                     parameterDisplayTransforms: {
-                        env: envDisplayer
+                        env: envDisplayer,
+                        filter: filterDisplayer
                     //     doubler: vDrumDoubler,
                     //     hundred: vDrumHundred,
                     //     onoffer: vDrumOnOffer
@@ -148,12 +161,57 @@
                 <div class="controlitemgroup">
                     <h3>Filter</h3>
                     <div>
-                        <div class="controller">
-                            <label for="filtertype">Type</label>
-                            <input
-                                class="midiccparam" id="filtertype"
-                                data-cclsb="42" 
-                                min="0" max="127" type="range" >
+                        <label for="filtertype">Filter Type</label>
+                        <div id="filtertype" class="radiogroup">
+                            <div class="controller" >
+                                <label for="filtertypelp2" >LP2</label>
+                                <input
+                                    type="radio" name="filtertype" value="0" checked
+                                    class="midicctotal" id="filtertypelp2"
+                                    data-cclsb="42" data-displayvaluefunc="filter"/>
+                            </div>
+                            <div class="controller" >
+                                <label for="filtertypelp4" >LP4</label>
+                                <input
+                                    type="radio" name="filtertype" value="21" 
+                                    class="midicctotal" id="filtertypelp4"
+                                        data-cclsb="42" data-displayvaluefunc="filter"/>
+                            </div>
+                            <div class="controller" >
+                                <label for="filtertypebp2" >BP2</label>
+                                <input
+                                    type="radio" name="filtertype" value="42" 
+                                    class="midicctotal" id="filtertypebp2"
+                                        data-cclsb="42" data-displayvaluefunc="filter"/>
+                            </div>
+                            <div class="controller" >
+                                <label for="filtertypebp4" >BP4</label>
+                                <input
+                                    type="radio" name="filtertype" value="63" 
+                                    class="midicctotal" id="filtertypebp4"
+                                        data-cclsb="42" data-displayvaluefunc="filter"/>
+                            </div>
+                            <div class="controller" >
+                                <label for="filtertypehp2" >HP2</label>
+                                <input
+                                    type="radio" name="filtertype" value="84" 
+                                    class="midicctotal" id="filtertypehp2"
+                                        data-cclsb="42" data-displayvaluefunc="filter"/>
+                            </div>
+                            <div class="controller" >
+                                <label for="filtertypehp4" >HP4</label>
+                                <input
+                                    type="radio" name="filtertype" value="105" 
+                                    class="midicctotal" id="filtertypehp4"
+                                        data-cclsb="42" data-displayvaluefunc="filter"/>
+                            </div>
+                            <div class="controller" >
+                                <label for="filtertypeoff" >Off</label>
+                                <input
+                                    type="radio" name="filtertype" value="126" 
+                                    class="midicctotal" id="filtertypeoff"
+                                        data-cclsb="42" data-displayvaluefunc="filter"/>
+                            </div>
                         </div>
                         <div class="controller">
                             <label for="filtercutoff">Cutoff</label>
@@ -191,35 +249,35 @@
                     <div>
                         <label for="egtype">EG Type</label>
                         <div id="egtype" class="radiogroup">
-                            <div class="controller" id="egtypeselector">
+                            <div class="controller" >
                                 <label for="egtypeadsr" >ADSR</label>
                                 <input
                                     type="radio" name="egtype" value="0" checked
                                     class="midicctotal" id="egtypeadsr"
                                     data-cclsb="14" data-displayvaluefunc="env"/>
                             </div>
-                            <div class="controller" id="egtypeselector">
+                            <div class="controller" >
                                 <label for="egahr" >AHR</label>
                                 <input
                                     type="radio" name="egtype" value="31" 
                                     class="midicctotal" id="egahr"
                                         data-cclsb="14" data-displayvaluefunc="env"/>
                             </div>
-                            <div class="controller" id="egtypeselector">
+                            <div class="controller">
                                 <label for="egar" >AR</label>
                                 <input
                                     type="radio" name="egtype" value="62" 
                                     class="midicctotal" id="egar"
                                         data-cclsb="14" data-displayvaluefunc="env"/>
                             </div>
-                            <div class="controller" id="egtypeselector">
+                            <div class="controller" >
                                 <label for="egarloop" >AR Looped</label>
                                 <input
                                     type="radio" name="egtype" value="93" 
                                     class="midicctotal" id="egarloop"
                                         data-cclsb="14" data-displayvaluefunc="env"/>
                             </div>
-                            <div class="controller" id="egtypeselector">
+                            <div class="controller" >
                                 <label for="egopen" >Open</label>
                                 <input
                                     type="radio" name="egtype" value="124" 
