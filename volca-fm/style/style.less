@@ -1,0 +1,397 @@
+@HIGHLIGHT_COLOR:  #42f5d7;
+@SECONDARY_HIGHLIGHT_COLOR: #b5a46d;
+@PRIMARY_BACKGROUND: #2e2e2e;
+@ROW_SPACER: #565656;
+@SECONDARY_BACKGROUND: #e4e4e4;
+@TITLE_COLOR: #b0b0b0;
+@BORDER_STYLE: 2px solid;
+@BORDER_RADIUS_PRIMARY: 5px;
+@BORDER_RADIUS_SECONDARY: 3px;
+@FONT: 'Lato', sans-serif;
+@TITLE_FONT: 'Russo One', sans-serif;
+
+body {
+  font-family: @FONT;
+  background-color: @PRIMARY_BACKGROUND;
+  font-size: 22px;
+}
+
+#title-head {
+  font-family: @TITLE_FONT;
+  letter-spacing: 0.1em;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 13vw;
+  font-weight: 700;
+  text-align: center;
+  color: @TITLE_COLOR;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+#title-byline{
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 2vw;
+  font-weight: 400;
+  text-align: center;
+  color: @TITLE_COLOR;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+#title-byline a{
+  color: @TITLE_COLOR;
+}
+
+#subtitle-head{
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 3vw;
+  font-weight: 700;
+  text-align: center;
+  color: @TITLE_COLOR;
+  padding: 1rem;
+}
+#main-content{
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 0.8em;
+  & >  * {
+  margin-bottom: 2em;
+}
+}
+
+.table{
+  display:table;
+  background-color: #eeeeee;
+  margin-bottom: 1em;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1em;
+}
+.table-row{display:table-row;}
+.table-cell{
+  display:table-cell;
+}
+.controlpanel {
+  overflow: hidden;
+  padding: 1em;
+  border-width: 2px;
+  border-style: @BORDER_STYLE;
+  border-radius: @BORDER_RADIUS_PRIMARY;
+  background: @SECONDARY_BACKGROUND;
+  .controlflexlayout {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    & > * {
+      margin-left: 1em;
+      margin-bottom: 1em;
+      &:not(:last-child) {
+        border-right: 2px solid @ROW_SPACER;
+      }
+    }
+  }
+}
+
+#portSelector {
+  display: block;
+}
+
+#channelSelector{
+  display: block;
+}
+
+#saveLoadShare input, button, textarea{
+  display: block;
+}
+
+#saveLoadShare  textarea{
+  height: 10em;
+}
+
+#valueDisplay {
+  position: fixed;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 13px 15px;
+  top: 2em;
+  width: 3em;
+  left: 0;
+  right: 0;
+  color: @HIGHLIGHT_COLOR;
+  background-color: @PRIMARY_BACKGROUND;
+  border-style: @BORDER_STYLE;
+  border-radius: @BORDER_RADIUS_SECONDARY;
+  opacity: 0.9;
+  float: right;
+  display: none;
+  font-family: @TITLE_FONT;
+  font-size: 3.5vw;
+  text-align: center;
+  z-index: 10;
+
+}
+/*
+.fadingIn{
+    -webkit-animation: fade 0.3s linear forwards;
+    animation: fade 0.3s linear forwards;
+}
+
+.fadingOut{
+    -webkit-animation: fade 0.3s linear backwards;
+    animation: fade 0.3s linear backwards;
+}
+
+@-webkit-keyframes fade {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+@keyframes fade {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+*/
+
+.controlpanel h2{
+  margin-top: 0;
+  letter-spacing: 0.2em;
+}
+.info {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid @SECONDARY_HIGHLIGHT_COLOR;
+  border-radius: @BORDER_RADIUS_SECONDARY;
+  .header {
+    background: @SECONDARY_HIGHLIGHT_COLOR;
+    color: @PRIMARY_BACKGROUND;
+    font-size: 1.2em;
+    padding: 5px 20px;
+  }
+  .content {
+    padding: 20px;
+  }
+}
+.controlitemgroup{
+  border-width: 2px;
+  flex-grow: 1;
+  & > * {
+    margin-bottom: 0.5em;
+  }
+  .controller {
+    margin-top: 0.7em;
+  }
+  label{
+    font-weight: 400;
+    font-size: 0.8em;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.3em;
+    display: block;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  input{
+    display: inline-block;
+    //margin-bottom: 0.5em;
+  }
+  .cb_container {
+    display: block;
+    position: relative;
+    padding-left: 2em;
+    cursor: pointer;
+    font-size: 1em;
+    user-select: none;
+    &:hover input ~ .checkmark {
+      background-color: @SECONDARY_HIGHLIGHT_COLOR;
+    }
+    input[type=checkbox]{
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+      &:checked ~ .checkmark {
+        background-color: @SECONDARY_HIGHLIGHT_COLOR;
+        &:after {
+          display: block;
+        }
+      }
+    }
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 30px;
+      width: 30px;
+      border-radius: @BORDER_RADIUS_SECONDARY;
+      background-color: @PRIMARY_BACKGROUND;
+      &:after {
+        content: "";
+        position: absolute;
+        display: none;
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid @PRIMARY_BACKGROUND;
+        border-width: 0 6px 6px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+      }
+    }
+  }
+  input[type=text], textarea{
+    width: 95%;
+    display: inline-block;
+    font-family: @FONT;
+    font-weight: 400;
+    border: @BORDER_STYLE;
+    background-color: @PRIMARY_BACKGROUND;
+    color: @SECONDARY_HIGHLIGHT_COLOR;
+    font-size: 1em;
+    letter-spacing: 0.1em;
+    padding: 10px;
+  }
+  select{
+    width: 95%;
+    display: inline-block;
+    font-family: @FONT;
+    font-weight: 500;
+    font-size: 0.8em;
+    background-color: @PRIMARY_BACKGROUND;
+    color: @SECONDARY_HIGHLIGHT_COLOR;
+    height: 45px;
+    letter-spacing: 0.1em;
+  }
+  button{
+    width:95%;
+    background-color: @ROW_SPACER;
+    color: @SECONDARY_HIGHLIGHT_COLOR;
+    font-weight: 700;
+    border: @BORDER_STYLE @SECONDARY_HIGHLIGHT_COLOR;
+    border-radius: @BORDER_RADIUS_PRIMARY;
+    margin-bottom: 0.5em;
+    padding: 10px 10px;
+    font-size: 0.8em;
+    letter-spacing: 0.1em;
+  }
+  h3{
+    font-size: 1em;
+    letter-spacing: 0.2em;
+    margin-top: 0;
+    margin-bottom: 0.25em;
+  }
+}
+
+.envelopeCanvasContainer{
+  width: 100%;
+  height: 100%;
+  min-width: 500px;
+  min-height: 150px;
+  canvas{
+    position: absolute;
+  }
+}
+
+/*slider styling*/
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 95%;
+  display: inline-block;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 7px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  background: @PRIMARY_BACKGROUND;
+  border-radius: 0px;
+  border: 0px solid #010101;
+}
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: 1.1px 1.1px 6.5px #000000, 0px 0px 1.1px #0d0d0d;
+  border: 1.3px solid #000000;
+  height: 30px;
+  border-radius: @BORDER_RADIUS_SECONDARY;
+  width: 10px;
+  background: @HIGHLIGHT_COLOR;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -12px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: @PRIMARY_BACKGROUND;
+}
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 7px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  background: @PRIMARY_BACKGROUND;
+  border-radius: 0px;
+  border: 0px solid #010101;
+}
+input[type=range]::-moz-range-thumb {
+  box-shadow: 1.1px 1.1px 6.5px #000000, 0px 0px 1.1px #0d0d0d;
+  border: 1.3px solid #000000;
+  height: 25px;
+  border-radius: @BORDER_RADIUS_SECONDARY;
+  width: 12px;
+  background: @HIGHLIGHT_COLOR;
+  cursor: pointer;
+}
+
+
+/*
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 7px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #161717;
+  border: 0px solid #010101;
+  border-radius: 0px;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range]::-ms-fill-upper {
+  background: #1e1f1f;
+  border: 0px solid #010101;
+  border-radius: 0px;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range]::-ms-thumb {
+  box-shadow: 1.1px 1.1px 6.5px #000000, 0px 0px 1.1px #0d0d0d;
+  border: 1.3px solid #000000;
+  height: 19px;
+  width: 12px;
+  border-radius: 5px;
+  background: rgba(0, 227, 53, 0.93);
+  cursor: pointer;
+  height: 7px;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #1e1f1f;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #262727;
+}
+*/
