@@ -1,3 +1,4 @@
+'use strict';
 (function(r){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=r()}else if(typeof define==="function"&&define.amd){define([],r)}else{var e;if(typeof window!=="undefined"){e=window}else if(typeof global!=="undefined"){e=global}else if(typeof self!=="undefined"){e=self}else{e=this}e.base64js=r()}})(function(){var r,e,t;return function r(e,t,n){function o(i,a){if(!t[i]){if(!e[i]){var u=typeof require=="function"&&require;if(!a&&u)return u(i,!0);if(f)return f(i,!0);var d=new Error("Cannot find module '"+i+"'");throw d.code="MODULE_NOT_FOUND",d}var c=t[i]={exports:{}};e[i][0].call(c.exports,function(r){var t=e[i][1][r];return o(t?t:r)},c,c.exports,r,e,t,n)}return t[i].exports}var f=typeof require=="function"&&require;for(var i=0;i<n.length;i++)o(n[i]);return o}({"/":[function(r,e,t){"use strict";t.byteLength=c;t.toByteArray=v;t.fromByteArray=s;var n=[];var o=[];var f=typeof Uint8Array!=="undefined"?Uint8Array:Array;var i="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";for(var a=0,u=i.length;a<u;++a){n[a]=i[a];o[i.charCodeAt(a)]=a}o["-".charCodeAt(0)]=62;o["_".charCodeAt(0)]=63;function d(r){var e=r.length;if(e%4>0){throw new Error("Invalid string. Length must be a multiple of 4")}return r[e-2]==="="?2:r[e-1]==="="?1:0}function c(r){return r.length*3/4-d(r)}function v(r){var e,t,n,i,a;var u=r.length;i=d(r);a=new f(u*3/4-i);t=i>0?u-4:u;var c=0;for(e=0;e<t;e+=4){n=o[r.charCodeAt(e)]<<18|o[r.charCodeAt(e+1)]<<12|o[r.charCodeAt(e+2)]<<6|o[r.charCodeAt(e+3)];a[c++]=n>>16&255;a[c++]=n>>8&255;a[c++]=n&255}if(i===2){n=o[r.charCodeAt(e)]<<2|o[r.charCodeAt(e+1)]>>4;a[c++]=n&255}else if(i===1){n=o[r.charCodeAt(e)]<<10|o[r.charCodeAt(e+1)]<<4|o[r.charCodeAt(e+2)]>>2;a[c++]=n>>8&255;a[c++]=n&255}return a}function l(r){return n[r>>18&63]+n[r>>12&63]+n[r>>6&63]+n[r&63]}function h(r,e,t){var n;var o=[];for(var f=e;f<t;f+=3){n=(r[f]<<16)+(r[f+1]<<8)+r[f+2];o.push(l(n))}return o.join("")}function s(r){var e;var t=r.length;var o=t%3;var f="";var i=[];var a=16383;for(var u=0,d=t-o;u<d;u+=a){i.push(h(r,u,u+a>d?d:u+a))}if(o===1){e=r[t-1];f+=n[e>>2];f+=n[e<<4&63];f+="=="}else if(o===2){e=(r[t-2]<<8)+r[t-1];f+=n[e>>10];f+=n[e>>4&63];f+=n[e<<2&63];f+="="}i.push(f);return i.join("")}},{}]},{},[])("/")});
 
 var tempTitle = [115, 121, 110, 116, 104, 109, 97, 116, 97, 32];
@@ -5,7 +6,13 @@ var midi = null;  // global MIDIAccess object
 var midiOutPorts = null;
 var selectedMidiPort = null;
 var selectedMidiChannel = null;
-var isYamahaMode = false;
+const Modes = Object.freeze({
+    VOLCAFM: Symbol("volca-fm"),
+    VOLCAFM2: Symbol("volca-fm-2"),
+    YAMAHA: Symbol("Yamaha")
+});
+//var isYamahaMode = false;
+var mode = Modes.VOLCAFM;
 
 var sysexDumpData = null;  // we have to use this for Volca FM which only reponds to bulk data
 
@@ -20,7 +27,8 @@ var sysexParamThrottleTimerMs = 30;
 var patchLoadedEvent = new Event("synthmataPatchLoaded");
 
 // TODO: better plan for this to have user of module put it in a hidden textbox?
-var __init_patch__ = "8EMAAAEbUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAUGMAAAAyAAAAAAAAAFwAAgAAUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAT2MAAAAyAAAAAAAAAFwAAgAAUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAUGMAAAAyAAAAAAAAAGMAAgAAMjIyMjIyMjIfAAAAAAAAAAAAGHN5bnRobWF0YSB/TPc=";
+//var __init_patch__ = "8EMAAAEbUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAUGMAAAAyAAAAAAAAAFwAAgAAUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAT2MAAAAyAAAAAAAAAFwAAgAAUAAAUGMAAAAyAAAAAAAAAFwAAQAAUAAAUGMAAAAyAAAAAAAAAGMAAgAAMjIyMjIyMjIfAAAAAAAAAAAAGHN5bnRobWF0YSB/TPc=";
+var __init_patch__ = "8EMAAAEbUAAAUGMAAAAyAAAAAAAAAFwAAQAHUAAAUGMAAAAyAAAAAAAAAFwAAgAHUAAAUGMAAAAyAAAAAAAAAFwAAQAHUAAAT2MAAAAyAAAAAAAAAFwAAgAHUAAAUGMAAAAyAAAAAAAAAFwAAQAHUAAAUGMAAAAyAAAAAAAAAGMAAgAHMjIyMjIyMjIfAAAAAAAAAAAAGHN5bnRobWF0YSB/Ivc=";
 
 function loadInitPatch(){
     let patchRaw = base64js.toByteArray(__init_patch__);
@@ -49,18 +57,28 @@ function onMIDISuccess(result) {
 }
 
 function onMIDIFailure(msg) {
-    alert("Could not get MIDI access.\nPlease note that MIDI in the browser currently only works in Chrome and Opera.\nIf you declined MIDI access when prompted, please refresh the page.")
+    alert("Could not get MIDI access.\n\nPlease note that MIDI in the browser currently only works in Chrome/Chromium based web browsers such as Chrome, Opera, Edge (Safari does NOT support WebMIDI).\n\nIf you declined MIDI access when prompted, please refresh the page.")
     console.log("Failed to get MIDI access - " + msg);
 }
 
 function onMidiMessage(evt) {
-    var data    = evt.data;
+    var data = evt.data;
     if(data[0]!=0xF0)  return;  // only handle SYSEX messages
+    
     var channel=data[2] & 0xf;
-    if(channel != selectedMidiChannel) return;
-    if(!validateSysexData(data)) return;
-    loadSysex(data);
-    console.log("SYSEX received!");
+    
+    if(channel != selectedMidiChannel && channel != 0x7f) return; // if not aimed at our channel or marked "disregard channel"
+    
+    if(validateSysexData(data)){
+        loadSysex(data);
+        console.log("SYSEX received!");
+    }else if(data[1] == 0x7e && data[3] == 0x06 && data[4] == 0x02){  // identity reply we could handle
+        console.log("ID reply");
+        console.log(data);
+        // TODO fire "enquire" and respond to the identity 
+    }
+    
+    
 }
 
 function testTone() {
@@ -71,6 +89,13 @@ function testTone() {
         selectedMidiPort.send(noteOnMessage);
         selectedMidiPort.send(noteOffMessage, window.performance.now() + 1000.0);
     }
+}
+
+function enquire(){
+    // TODO: use this to detect the device
+    selectedMidiPort.send(
+        [0xf0, 0x7e, 0x7f, 0x06, 0x01, 0xf7]
+    )
 }
 
 function buildSetupPanel(midiAccess) {
@@ -124,20 +149,45 @@ function buildSetupPanel(midiAccess) {
     selectedMidiChannel = 0;
 
     // Korg/Yamaha Switch
-    let switchModes = function(e){ isYamahaMode = document.getElementById("modeYamaha").checked; sendSysexDump(); }
+    //let switchModes = function(e){ isYamahaMode = document.getElementById("modeYamaha").checked; sendSysexDump(); }
+    let switchModes = function(e) {
+        if(document.getElementById("modeYamaha").checked){
+            mode = Modes.YAMAHA;
+        }else if(document.getElementById("modeKorg").checked){
+            mode = Modes.VOLCAFM;
+        }else if(document.getElementById("modeKorg2").checked){
+            mode = Modes.VOLCAFM2;
+        }
+        sendSysexDump();
+        //console.log(mode);
+    };
 
     let modeKorgRadioLabel = document.createElement("label");
     modeKorgRadioLabel.setAttribute("for", "modeKorg");
-    modeKorgRadioLabel.textContent = "Korg Mode"
+    modeKorgRadioLabel.textContent = "Original Volca FM Mode"
     let modeKorgRadioInput = document.createElement("input");
     modeKorgRadioInput.id = "modeKorg"
     modeKorgRadioInput.setAttribute("type", "radio");
     modeKorgRadioInput.setAttribute("name", "mode");
     modeKorgRadioInput.setAttribute("value", "korg");
     modeKorgRadioInput.checked = true;
+    mode = Modes.VOLCAFM;
     modeKorgRadioInput.addEventListener("change", switchModes);
     former.appendChild(modeKorgRadioLabel);
     former.appendChild(modeKorgRadioInput);
+
+
+    let modeKorg2RadioLabel = document.createElement("label");
+    modeKorg2RadioLabel.setAttribute("for", "modeKorg2");
+    modeKorg2RadioLabel.textContent = "New Volca FM Mode"
+    let modeKorg2RadioInput = document.createElement("input");
+    modeKorg2RadioInput.id = "modeKorg2"
+    modeKorg2RadioInput.setAttribute("type", "radio");
+    modeKorg2RadioInput.setAttribute("name", "mode");
+    modeKorg2RadioInput.setAttribute("value", "korg2");
+    modeKorg2RadioInput.addEventListener("change", switchModes);
+    former.appendChild(modeKorg2RadioLabel);
+    former.appendChild(modeKorg2RadioInput);
     
     let modeYamahaRadioLabel = document.createElement("label");
     modeYamahaRadioLabel.setAttribute("for", "modeYamaha");
@@ -176,11 +226,20 @@ function buildSaveLoadSharePanel() {
     saveButton.onclick = saveSysex;
     container.appendChild(saveButton); 
 
+    let sendButton = document.createElement("button");
+    sendButton.id = "sysexSendButton";
+    sendButton.textContent = "Send Patch";
+    sendButton.onclick = function(event){sendSysexDump();};
+    container.appendChild(sendButton);
+
     let initPatchButton = document.createElement("button");
     initPatchButton.id = "initPatchButton";
     initPatchButton.textContent = "Init Patch";
     initPatchButton.onclick = function(){
-        loadInitPatch();
+        if(confirm("Initialize the patch?\n\nPlease note: This will clear the current patch in the editor!")){
+            loadInitPatch();
+        }
+        
     }
     container.appendChild(initPatchButton);
 
@@ -256,7 +315,7 @@ function fullRefreshSysexData() {
 }
 
 function handleValueChange(event){
-    if(isYamahaMode){
+    if(mode == Modes.YAMAHA){
         handleParamValueChange(event);
     }else{
         handleValueChangeVoiceDump(event);
@@ -344,12 +403,29 @@ function createSysexDumpBuffer() {
     // dump data, masked back against 0x7f
     // if i want to micro-optimise this, I can. I don't really want to though.
     
-    // This accounts for the non-standard behaviour of the Volca requiring the op on/off switches in the dump
-    let dumpLength = isYamahaMode ? (sysexDumpData.length - 1 ) : sysexDumpData.length;
+    // This accounts for the non-standard behaviour of the original Volca requiring the op on/off switches in the dump
+    let dumpLength = (mode == Modes.VOLCAFM2 || mode == Modes.YAMAHA) ? (sysexDumpData.length - 1 ) : sysexDumpData.length;
     
+    let tmpDump = new Uint8ClampedArray(sysexDumpData);
+    
+    if(mode == Modes.VOLCAFM2){
+        // TODO: this is a temporary fix for the operator on/off messages being unable to be handled on the vfm2 until we know the korg exclusive codes
+        // we set operator levels to zero if the operator is off. We have to do this before the checksum calculation or it'll be rejected.
+        // indicies to change:
+        // op6: 16; op5: 37; op4: 58; op3: 79; op2: 100; op1: 121
+        let opBits = tmpDump[155]
+        for(let i = 0; i < 6; i++){
+            if((opBits & (1 << i)) === 0){
+                // console.log(`op${i+1} is off`);
+                // console.log(121 - (21 * i));
+                tmpDump[121 - (21 * i)] = 0;
+            }
+        }
+    }
+
     let sum = 0;
     for (let i = 0; i < dumpLength; i++) {
-        sum += sysexDumpData[i];
+        sum += tmpDump[i];
     }
     sum &= 0xff;
     sum = (~sum) + 1;
@@ -362,12 +438,12 @@ function createSysexDumpBuffer() {
         0x00,                         // format number (0 = 1 voice)
         0x01,                         // 0b0bbbbbbb data byte count msb
         0x1b,                         // 0b0bbbbbbb data byte count lsb
-        ...(sysexDumpData.slice(0, dumpLength)),
+        ...(tmpDump.slice(0, dumpLength)),
         sum,                          // checksum
         0xf7                          // 0b1111_0111 ; EOX
     ];
 
-    //console.log(buffer);
+    console.log(buffer);
     return buffer;
 }
 
@@ -406,10 +482,10 @@ function handleValueChangeVoiceDump(event) {
                 value = ele.checked
             }
             if(value){
-                console.log(ele.value)
+                //console.log(ele.value)
                 sysexDumpData[parameterNo] |= mask;
             }else{
-                console.log(ele.value)
+                //console.log(ele.value)
                 sysexDumpData[parameterNo] &= ~mask;
             }
         }
@@ -419,12 +495,16 @@ function handleValueChangeVoiceDump(event) {
 
 function sendSysexDump() {
     let buffer = createSysexDumpBuffer();
-    console.log(buffer);
+    //console.log(buffer);
 
     if (sysexDumpThrottleTimer != null) {
         clearTimeout(sysexDumpThrottleTimer);
     }
     sysexDumpThrottleTimer = setTimeout(function () {
+        if(mode == Modes.VOLCAFM2){
+            // TODO: add the operator exclusive message to the buffer
+            
+        }
         selectedMidiPort.send(buffer);
     }, sysexDumpThrottleTimerMs);
     
@@ -441,7 +521,7 @@ function saveSysex() {
     let a = document.createElement("a");
     let url = URL.createObjectURL(file);
     a.href = url;
-    a.download = "dx7_patch.sysex";
+    a.download = "dx7_patch.syx";
     document.body.appendChild(a);
     a.click();
     setTimeout(function () {
@@ -579,10 +659,11 @@ function tryLoadSysex(event) {
 }
 
 function createSharablePatchLink(){
-    let tmpMode = isYamahaMode;
-    isYamahaMode = false;
+    let tmpMode = mode;
+    mode = Modes.VOLCAFM;
     let patchAsB64 = base64js.fromByteArray(createSysexDumpBuffer());
-    isYamahaMode = tmpMode;
+    console.log(patchAsB64);
+    mode = tmpMode;
     // abusing dom to parse the current url
     var parser = document.createElement('a');
     parser.href = window.location;

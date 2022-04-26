@@ -1,12 +1,21 @@
 body {
     font-family: 'Montserrat', sans-serif; 
-    background-color: #898989;
+    background-color: #1a1818;
 }
+
+a {
+  color: rgb(41, 163, 67);
+}
+
+a:visited{
+  color: rgb(71, 113, 77);;
+}
+
 #title-head {
     width: 80%;
     margin-left: auto;
     margin-right: auto;
-    font-size: 13vw; 
+    font-size: 11vw; 
     font-weight: 700;
     text-align: center;
     color: #ffffff;
@@ -18,7 +27,7 @@ body {
     width: 80%;
     margin-left: auto;
     margin-right: auto;
-    font-size: 2vw; 
+    font-size: 1.5vw; 
     font-weight: 400;
     text-align: center;
     color: #ffffff;
@@ -34,14 +43,15 @@ body {
     width: 80%;
     margin-left: auto;
     margin-right: auto;
-    font-size: 3vw; 
+    font-size: 2vw; 
     font-weight: 700;
     text-align: center;
     color: #ffffff;
     padding: 1rem;
 }
 #main-content{
-    width: 80%;
+  color: #dddddd;
+    width: 90%;
     margin-left: auto;
     margin-right: auto;
     font-size: 0.8em;
@@ -49,15 +59,15 @@ body {
 
 .table{
     display:table;
-    background-color: #eeeeee;
-    margin-bottom: 1em;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 1em;
+    width: 100%;
 }
-.table-row{display:table-row;}
+.table-row{
+  display:table-row;
+}
 .table-cell{
     display:table-cell;
+    padding-right: 1em;
+    
 }
 .controlpanel {
     overflow: hidden;
@@ -66,10 +76,10 @@ body {
     margin-bottom: 1em;
     margin-top: 1em;
     padding: 1em;
-    border-color: #bbbbbb;
+    border-color: #333333;
     border-width: 2px;
     border-style: dashed;   
-    background: #cccccc;
+    background: #222222;
 }
 
 #portSelector {
@@ -96,12 +106,12 @@ body {
     width: 3em;
     left: 0;
     right: 0;
-    color: rgb(41, 163, 67);
-    background-color: #444444;
-    border-color: #aaaaaa;
+    color: rgb(29, 196, 104);
+    background-color: #222;
+    border-color: #333;
     border-width: 2px;
     border-style: dashed;  
-    opacity: 0.7;
+    opacity: 0.85;
     float: right;
     display: none;
     font-family: 'Press Start 2P', cursive;
@@ -133,6 +143,7 @@ body {
 
 .controlpanel h2{
     margin-top: 0;
+    color: #eeeeee;
 }
 
 .controlflexlayout {
@@ -141,19 +152,42 @@ body {
     flex-wrap: wrap;
 }
 
+.copypaste{
+  flex: 0 1 100%;
+  margin: 4px;
+  padding: 6px;
+  background: #222222;
+  border-color: #333333;
+  border-width: 2px;
+  border-style: dashed;  
+}
+
+.copybutton, .pastebutton{
+  display: inline-block;
+  background-color: #555555;
+  color: rgb(41, 163, 67);
+  font-family: 'Montserrat', sans-serif; 
+  font-weight: 400;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  min-width: 100px;
+}
+
 .controlitemgroup{
     margin: 4px;
     padding: 6px;
-    background: #bbbbbb;
-    border-color: #aaaaaa;
+    background: #4b4b4b;
+    border-color: #3f3f3f;
     border-width: 2px;
     border-style: dashed;  
-    flex-grow: 1; 
+    flex: 1;  /*this is hacky but close enough for jazz*/
 }
 
+
 .controlitemgroup label{
+    color:#dddddd;
     font-weight: 400;
-    font-size: 1em;
+    font-size: 0.95em;
     margin-bottom: 0.5em;
     display: block;
     -webkit-touch-callout: none;
@@ -162,6 +196,7 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    white-space: nowrap;
 }
 .controlitemgroup input{
     display: inline-block;
@@ -184,6 +219,7 @@ body {
     font-weight: 700;
     background-color: #444444;
     color: rgb(41, 163, 67);
+    margin-bottom: 0.5em;
 }
 
 .controlitemgroup button{
@@ -195,10 +231,12 @@ body {
     margin-bottom: 0.5em;
 }
 
-.controlitemgroup h3{
+.controlitemgroup h3, .copypaste h3{
+    color: #dddddd;
     font-size: 1.3em;
     margin-top: 0;
     margin-bottom: 0.25em;
+    user-select: none;
 }
 
 .envelopeCanvasContainer{
@@ -222,16 +260,16 @@ input[type=range] {
   input[type=range]:focus {
     outline: none;
   }
-  input[type=range]::-webkit-slider-runnable-track {
+  input[type=range]:not(.input-knob)::-webkit-slider-runnable-track {
     width: 100%;
     height: 7px;
     cursor: pointer;
     box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-    background: #444444;
+    background: #111111;
     border-radius: 0px;
     border: 0px solid #010101;
   }
-  input[type=range]::-webkit-slider-thumb {
+  input[type=range]:not(.input-knob)::-webkit-slider-thumb {
     box-shadow: 1.1px 1.1px 6.5px #000000, 0px 0px 1.1px #0d0d0d;
     border: 1.3px solid #000000;
     height: 19px;
@@ -242,19 +280,19 @@ input[type=range] {
     -webkit-appearance: none;
     margin-top: -6px;
   }
-  input[type=range]:focus::-webkit-slider-runnable-track {
+  input[type=range]:not(.input-knob):focus::-webkit-slider-runnable-track {
     background: #262727;
   }
-  input[type=range]::-moz-range-track {
+  input[type=range]:not(.input-knob)::-moz-range-track{
     width: 100%;
     height: 7px;
     cursor: pointer;
     box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
-    background: #444444;
+    background: #111111;
     border-radius: 0px;
     border: 0px solid #010101;
   }
-  input[type=range]::-moz-range-thumb {
+  input[type=range]:not(.input-knob)::-moz-range-thumb{
     box-shadow: 1.1px 1.1px 6.5px #000000, 0px 0px 1.1px #0d0d0d;
     border: 1.3px solid #000000;
     height: 19px;
@@ -303,4 +341,12 @@ input[type=range] {
     background: #262727;
   }
   */
+
+.hiddenInstructions{
+    display: none;
+}
+
+.shownInstructions{
+    display: block;
+}
   
